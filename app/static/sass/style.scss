@@ -1,0 +1,26 @@
+$font-stack: sans-serif;
+
+@mixin vertical-flex() {
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    font-family: $font-stack;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    margin: 0;
+}
+
+.primary {
+    @include vertical-flex();
+    height: 100%;
+    width: 80%;
+    align-items: center;
+
+    .info {
+        @include vertical-flex();
+    }
+}

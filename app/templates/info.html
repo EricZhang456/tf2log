@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block head %}
+<title>{{ server_name }} - Info</title>
+{% endblock %}
+
+{% block body %}
+
+<main class="primary">
+    <div class="info">
+        <div class="info_header">
+            <h1>{{ server_name }}</h1>
+
+            <a href="steam://connect/{{ server_ip }}:{{ server_port }}">Connect</a>
+
+            <p class="info_header_current_map">{{ current_map }}</p>
+            {% if game_mode %}
+            <p class="info_header_game_mode">{{ game_mode }}</p>
+            {% endif %}
+            {% if next_map %}
+            <p class="info_header_next_map_text">Next Map<p>
+            <p class="info_header_next_map">{{ next_map }}</p>
+            {% if next_map_game_mode %}
+            <p class="info_header_next_map_game_mode">{{ next_map_game_mode }}</p>
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="info_rules">
+            <ul>
+                {% for key, value in server_rules.items() %}
+                <li>{{ key }}: {{ value }}</li>
+                {% endfor %}
+                </ul>
+        </div>
+        <div class="info_players">
+            <table class="info_players_table sort_table_info">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Score</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for each in player_list %}
+                    {% if each.name %}
+                    <tr>
+                        <td>{{ each.name }}</td>
+                        <td>{{ each.score }}</td>
+                        <td x-duration="{{ each.duration }}"><time datetime="{{ each.time }}">{{ each.time }}</time></td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <script async src="{{ url_for('static', filename='scripts/sort_table_info.js') }}"></script>
+    </div>
+</main>
+
+{% endblock %}
