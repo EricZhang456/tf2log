@@ -191,14 +191,14 @@ class CvarName:
     )
 
     @classmethod
-    def purne_rules_cvar_dict(cls, rules:dict) -> dict:
+    def __prune_rules_cvar_dict(cls, rules:dict) -> dict:
         return {key: rules[key] for key in cls.__rules_cvar_sort_target if key in cls.__rules_cvar_sort_target}
 
     @classmethod
     def rules_to_readable_dict(cls, rules: dict) -> dict:
-        purned_dict = cls.purne_rules_cvar_dict(rules)
+        prune_dict = cls.__prune_rules_cvar_dict(rules)
         readable_dict = {}
-        for key, value in purned_dict.items():
+        for key, value in prune_dict.items():
             if key in cls.rules_cvar_bool:
                 readable_bool_value = "On" if int(value) == 1 else "Off"
                 readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
