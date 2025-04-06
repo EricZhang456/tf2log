@@ -1,6 +1,6 @@
 .info {
     @include vertical-flex();
-    font-family: $info_font_stylized_stack;
+    font-family: $info-font-stylized-stack;
     width: 80%;
     background-color: $main-content-bg-color;
     
@@ -33,6 +33,9 @@
                 justify-content: center;
                 text-align: right;
                 margin-inline: 30px;
+                * {
+                    margin: 0;
+                }
                 .info_header_current_map {
                     font-size: 25px;
                     margin-bottom: 8px;
@@ -73,6 +76,7 @@
                         font-size: 25px;
                         color: $main-text-color;
                         text-decoration: none;
+                        user-select: none;
                         @include universal-drop-shadow();
                     }
                 }
@@ -96,6 +100,35 @@
                 .info_header_next_map_game_mode {
                     margin-top: 1px;
                     margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    .info_rules {
+        .info_rules_text {
+            margin: 30px;
+            text-transform: uppercase;
+        }
+        .info_rules_box {
+            width: 100%;
+            box-sizing: border-box;
+            background-color: $main-content-info-bg-color;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            padding: 20px;
+            .info_rules_batch {
+                margin-inline: 10px;
+                .info_rules_item {
+                    font-family: $info-font-regular-stack;
+                    display: flex;
+                    justify-content: space-between;
+                }
+                .info_rules_hr {
+                    border: 0.5px solid gray;
+                    margin: auto;
+                    margin-block: 1px;
+                    opacity: 0.3;
                 }
             }
         }

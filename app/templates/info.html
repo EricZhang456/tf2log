@@ -51,17 +51,23 @@
             </div>
         </div>
         <div class="info_rules">
-            <ul>
+            <p class="info_rules_text">Server Settings</p>
+            <dl class="info_rules_box">
                 {% for item in server_rules.items() | batch(16) %}
                 <div class="info_rules_batch">
                     {% for key, value in item %}
-                    <li>{{ key }}: {{ value }}</li>
+                    <div class="info_rules_item">
+                        <dt class="info_rules_key">{{ key }}</dt>
+                        <dd class="info_rules_value">{{ value }}</dd>
+                    </div>
+                    <hr class="info_rules_hr">
                     {% endfor %}
                 </div>
                 {% endfor %}
-                </ul>
+            </dl>
         </div>
         <div class="info_players">
+            <a class="info_players_text">Player List</a>
             <table class="info_players_table sort_table_info">
                 <thead>
                     <tr>

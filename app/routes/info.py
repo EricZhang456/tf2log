@@ -3,9 +3,9 @@ from flask import Blueprint, render_template, request
 import time
 import socket
 
-from utils.format_a2s import FormatA2S
-from utils.cvar_name import CvarName
-from utils.map_name import MapName
+from app.utils.format_a2s import FormatA2S
+from app.utils.cvar_name import CvarName
+from app.utils.map_name import MapName
 
 bp = Blueprint("info", __name__, url_prefix="/info")
 

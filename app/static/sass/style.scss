@@ -1,6 +1,7 @@
 $font-stack: sans-serif;
 
-$info_font_stylized_stack: "Cantarell", sans-serif;
+$info-font-stylized-stack: "Cantarell", sans-serif;
+$info-font-regular-stack: "Open Sans", sans-serif;
 
 $main-bg-color: #221f1c;
 $main-text-color: #fff;
@@ -25,6 +26,16 @@ $default-font-size: 16px;
 @font-face {
     font-family: "Cantarell";
     src: local("Cantarell"), url("/static/fonts/Cantarell-VF.otf") format("opentype");
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: local("Open Sans"), url("/static/fonts/OpenSans-Regular-webfont.woff2") format("woff2");
+}
+
+* {
+    margin: 0;
+    padding: 0;
 }
 
 body {
