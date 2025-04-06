@@ -6,29 +6,58 @@
 
 {% block body %}
 
+
+
 <main class="primary">
     <div class="info">
         <div class="info_header">
-            <h1>{{ server_name }}</h1>
-
-            <a href="steam://connect/{{ server_ip }}:{{ server_port }}">Connect</a>
-
-            <p class="info_header_current_map">{{ current_map }}</p>
-            {% if game_mode %}
-            <p class="info_header_game_mode">{{ game_mode }}</p>
-            {% endif %}
-            {% if next_map %}
-            <p class="info_header_next_map_text">Next Map<p>
-            <p class="info_header_next_map">{{ next_map }}</p>
-            {% if next_map_game_mode %}
-            <p class="info_header_next_map_game_mode">{{ next_map_game_mode }}</p>
-            {% endif %}
-            {% endif %}
+            <div class="info_header_server">
+                <div class="info_header_server_info">
+                    <h1 class="info_header_server_name">{{ server_name }}</h1>
+                    <p class="info_header_players">{{ player_count }} / {{ max_players }} Players</p>
+                </div>
+                <div class="info_header_server_map">
+                    <p class="info_header_current_map">{{ current_map }}</p>
+                    {% if game_mode %}
+                    <p class="info_header_game_mode">{{ game_mode }}</p>
+                    {% else %}
+                    <p class="info_header_game_mode">Unknown</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="info_actions">
+                <div class="info_action_button_tags">
+                    <div class="info_action_buttons">
+                        <a class="info_header_connect" href="steam://connect/{{ server_ip }}:{{ server_port }}">Connect</a>
+                        <a class="info_header_favorite" onclick="addServerToFavorite();">Favorite</a>
+                    </div>
+                    {% if server_tags %}
+                    <p class="info_action_tags_text">{{ server_tags }}</p>
+                    {% endif %}
+                </div>
+                {% if next_map %}
+                <div class="info_header_next_map_block">
+                    <p class="info_header_next_map_text">Next Map</p>
+                    <div class="info_header_next_map_display">
+                        <p class="info_header_next_map">{{ next_map }}</p>
+                        {% if next_map_game_mode %}
+                        <p class="info_header_next_map_game_mode">{{ next_map_game_mode }}</p>
+                        {% else %}
+                        <p class="info_header_next_map_game_mode">Unknown</p>
+                    {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
         </div>
         <div class="info_rules">
             <ul>
-                {% for key, value in server_rules.items() %}
-                <li>{{ key }}: {{ value }}</li>
+                {% for item in server_rules.items() | batch(16) %}
+                <div class="info_rules_batch">
+                    {% for key, value in item %}
+                    <li>{{ key }}: {{ value }}</li>
+                    {% endfor %}
+                </div>
                 {% endfor %}
                 </ul>
         </div>
@@ -55,6 +84,7 @@
             </table>
         </div>
         <script async src="{{ url_for('static', filename='scripts/sort_table_info.js') }}"></script>
+        <script defer src="{{ url_for('static', filename='scripts/server_favorites.js') }}"></script>
     </div>
 </main>
 

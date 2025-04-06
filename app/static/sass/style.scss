@@ -1,12 +1,36 @@
 $font-stack: sans-serif;
 
+$info_font_stylized_stack: "Cantarell", sans-serif;
+
+$main-bg-color: #221f1c;
+$main-text-color: #fff;
+$main-button-color: #575147;
+$main-content-bg-color: #393532;
+$main-content-info-bg-color: #48423b;
+
+$info-action-bg-color: #a39884;
+
+/* default firefox font size */
+$default-font-size: 16px;
+
 @mixin vertical-flex() {
     display: flex;
     flex-direction: column;
 }
 
+@mixin universal-drop-shadow() {
+    box-shadow: 3px 3px 10px gray;
+}
+
+@font-face {
+    font-family: "Cantarell";
+    src: local("Cantarell"), url("/static/fonts/Cantarell-VF.otf") format("opentype");
+}
+
 body {
     font-family: $font-stack;
+    background-color: $main-bg-color;
+    font-size: $default-font-size;
     width: 100vw;
     width: 100dvw;
     height: 100vh;
@@ -16,11 +40,9 @@ body {
 
 .primary {
     @include vertical-flex();
+    color: $main-text-color;
     height: 100%;
-    width: 80%;
     align-items: center;
 
-    .info {
-        @include vertical-flex();
-    }
+    @import "info.scss";
 }

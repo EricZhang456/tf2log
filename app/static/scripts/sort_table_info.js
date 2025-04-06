@@ -37,16 +37,16 @@ function sortTable(table, column, asc = true, sortDuration = false) {
     tBody.append(...sortedRows);
 
     table.querySelectorAll("th").forEach(th => th.classList.remove("th-sort-asc", "th-sort-desc"));
-	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
-	table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
+    table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
+    table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
 }
 
 document.querySelectorAll(".sort_table_info th").forEach(headerCell => {
-	headerCell.addEventListener("click", () => {
-		const tableElement = headerCell.parentElement.parentElement.parentElement;
-		const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
-		const currentIsAscending = headerCell.classList.contains("th-sort-asc");
+    headerCell.addEventListener("click", () => {
+        const tableElement = headerCell.parentElement.parentElement.parentElement;
+        const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
+        const currentIsAscending = headerCell.classList.contains("th-sort-asc");
 
-		sortTable(tableElement, headerIndex, !currentIsAscending);
-	});
+        sortTable(tableElement, headerIndex, !currentIsAscending);
+    });
 });

@@ -1,20 +1,22 @@
 import os
 
 from flask import Flask
-from sassutils.wsgi import SassMiddleware
 
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
-    app.wsgi_app = SassMiddleware(app.wsgi_app, {
-        "app": {
-            "sass_path": "static/sass",
-            "css_path": "static/css",
-            "wsgi_path": "/static/css",
-            "strip_extension": False,
-        }
-    })
+    # only build css on each request when in debug
+    if app.debug:
+        from sassutils.wsgi import SassMiddleware
+        app.wsgi_app = SassMiddleware(app.wsgi_app, {
+            "app": {
+                "sass_path": "static/sass",
+                "css_path": "static/css",
+                "wsgi_path": "/static/css",
+                "strip_extension": False,
+            }
+        })
 
     app.config.from_mapping(
         SECRET_KEY='dev',

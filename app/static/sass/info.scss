@@ -1,0 +1,103 @@
+.info {
+    @include vertical-flex();
+    font-family: $info_font_stylized_stack;
+    width: 80%;
+    background-color: $main-content-bg-color;
+    
+    .info_header {
+        .info_header_server {
+            display: flex;
+            justify-content: space-between;
+            background-color: $main-content-info-bg-color;
+            .info_header_server_info {
+                @include vertical-flex();
+                .info_header_server_name {
+                    font-size: 30px;
+                    font-weight: 600;
+                    margin: 30px;
+                    margin-right: 10px;
+                    margin-bottom: 10px;
+                    text-shadow: 3px 3px 20px gray;
+                }
+                .info_header_players {
+                    font-size: 25px;
+                    margin-inline: 30px;
+                    margin-top: 10px;
+                    margin-bottom: 30px;
+                }
+
+            }
+
+            .info_header_server_map {
+                @include vertical-flex();
+                justify-content: center;
+                text-align: right;
+                margin-inline: 30px;
+                .info_header_current_map {
+                    font-size: 25px;
+                    margin-bottom: 8px;
+                }
+                .info_header_game_mode {
+                    margin-top: 0;
+                }
+            }
+        }
+
+        .info_actions {
+            background-color: $info-action-bg-color;
+            display: flex;
+            justify-content: space-between;
+            min-height: 140px;
+            .info_action_button_tags {
+                @include vertical-flex();
+                justify-content: center;
+                padding-left: 40px;
+                .info_action_tags_text {
+                    margin-top: 10px;
+                    margin-bottom: 0;
+                    font-size: 15px;
+                }
+                .info_action_buttons {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    .info_header_favorite {
+                        /* reenable in js */
+                        display: none;
+                        cursor: pointer;
+                    }
+                    .info_header_connect, .info_header_favorite {
+                        background-color: $main-button-color;
+                        padding-block: 5px;
+                        padding-inline: 13px;
+                        font-size: 25px;
+                        color: $main-text-color;
+                        text-decoration: none;
+                        @include universal-drop-shadow();
+                    }
+                }
+            }
+            .info_header_next_map_block {
+                @include vertical-flex();
+                align-self: center;
+                text-align: right;
+                margin-inline: 30px;
+                .info_header_next_map_text {
+                    font-size: 28px;
+                    margin-bottom: 5px;
+                    margin-top: 0;
+                    text-shadow: 3px 3px 3px gray;
+                }
+                .info_header_next_map {
+                    font-size: 25px;
+                    margin-bottom: 0;
+                    margin-top: 0;
+                }
+                .info_header_next_map_game_mode {
+                    margin-top: 1px;
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+}

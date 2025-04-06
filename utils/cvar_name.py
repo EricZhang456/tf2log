@@ -132,11 +132,73 @@ class CvarName:
     rules_cvar_float = (
         "mp_respawnwavetime",
     )
-    
+
+    __rules_cvar_sort_target = (
+        # Limits
+        "mp_timelimit",
+        "mp_match_end_at_timelimit",
+        "mp_maxrounds",
+        "mp_winlimit",
+        "mp_windifference",
+        "mp_scrambleteams_auto_windifference",
+        "mp_windifference_min",
+        "mp_fraglimit",
+        # Typical Game Options
+        "mp_autoteambalance",
+        "mp_scrambleteams_auto",
+        "sv_voiceenable",
+        "sv_alltalk",
+        "tf_gravetalk",
+        "tf_weapon_criticals",
+        "tf_weapon_criticals_melee",
+        "tf_use_fixed_weaponspreads",
+        "tf_damage_disablespread",
+        "tf_classlimit",
+        "mp_forceautoteam",
+        "mp_stalemate_enable",
+        "mp_stalemate_meleeonly",
+        "mp_disable_respawn_times",
+        "mp_respawnwavetime",
+        "tf_playergib",
+        "mp_tournament",
+        "mp_highlander",
+        # Custom Game Mode Options
+        "mp_friendlyfire",
+        "mp_fadetoblack",
+        "mp_flashlight",
+        "tf_arena_max_streak",
+        "tf_arena_override_cap_enable_time",
+        "tf_arena_first_blood",
+        "tf_arena_force_class",
+        "tf_arena_use_queue",
+        "tf_ctf_bonus_time",
+        # Exotic Game Options
+        "sv_cheats",
+        "tf_allow_player_use",
+        "sv_pausable",
+        "sv_gravity",
+        "sv_accelerate",
+        "sv_airaccelerate",
+        "sv_friction",
+        "mp_falldamage",
+        # Misc
+        "tf_force_holidays_off",
+        "mp_holiday_nogifts",
+        "tf_powerup_mode",
+        "tf_medieval_autorp",
+        "tf_spec_xray",
+        "tv_enable",
+    )
+
+    @classmethod
+    def purne_rules_cvar_dict(cls, rules:dict) -> dict:
+        return {key: rules[key] for key in cls.__rules_cvar_sort_target if key in cls.__rules_cvar_sort_target}
+
     @classmethod
     def rules_to_readable_dict(cls, rules: dict) -> dict:
+        purned_dict = cls.purne_rules_cvar_dict(rules)
         readable_dict = {}
-        for key, value in rules.items():
+        for key, value in purned_dict.items():
             if key in cls.rules_cvar_bool:
                 readable_bool_value = "On" if int(value) == 1 else "Off"
                 readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
@@ -147,7 +209,7 @@ class CvarName:
                 readable_dict.update({cls.stock_cvar_readable_name.get(key): int(float(value))})
             else:
                 continue
-        return dict(sorted(readable_dict.items()))
+        return readable_dict
     
     @staticmethod
     def get_next_map(rules: dict) -> str | None:
