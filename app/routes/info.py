@@ -19,6 +19,7 @@ def get_info(server_ip):
     player_list = FormatA2S.players(server_ip, server_port)
     current_map_raw = server_info.get("map")
     server_tags = ", ".join(server_info.get("tags"))
+    server_steam_group = server_rules_raw.get("sv_steamgroup")
     next_map_raw = CvarName.get_next_map(server_rules_raw)
 
     game_mode = MapName.map_name_to_game_mode(current_map_raw)
@@ -43,6 +44,7 @@ def get_info(server_ip):
                            player_list = player_list,
                            server_rules = server_rules,
                            server_tags = server_tags,
+                           server_steam_group = server_steam_group,
                            server_name = server_info.get("name"),
                            current_map = current_map,
                            game_mode = game_mode,

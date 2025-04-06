@@ -30,6 +30,9 @@
                     <div class="info_action_buttons">
                         <a class="info_header_connect" href="steam://connect/{{ server_ip }}:{{ server_port }}">Connect</a>
                         <a class="info_header_favorite" onclick="addServerToFavorite();">Favorite</a>
+                        {% if server_steam_group %}
+                        <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
+                        {% endif %}
                     </div>
                     {% if server_tags %}
                     <p class="info_action_tags_text">{{ server_tags }}</p>
