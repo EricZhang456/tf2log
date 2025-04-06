@@ -196,9 +196,9 @@ class CvarName:
 
     @classmethod
     def rules_to_readable_dict(cls, rules: dict) -> dict:
-        prune_dict = cls.__prune_rules_cvar_dict(rules)
+        pruned_dict = cls.__prune_rules_cvar_dict(rules)
         readable_dict = {}
-        for key, value in prune_dict.items():
+        for key, value in pruned_dict.items():
             if key in cls.rules_cvar_bool:
                 readable_bool_value = "On" if int(value) == 1 else "Off"
                 readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
