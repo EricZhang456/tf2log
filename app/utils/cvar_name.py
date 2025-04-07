@@ -191,12 +191,17 @@ class CvarName:
     )
 
     @classmethod
-    def __prune_rules_cvar_dict(cls, rules:dict) -> dict:
-        return {key: rules[key] for key in cls.__rules_cvar_sort_target if key in cls.__rules_cvar_sort_target}
+    def __prune_rules_cvar_dict(cls, rules:dict) -> dict | None:
+        try:
+            return {key: rules[key] for key in cls.__rules_cvar_sort_target if key in cls.__rules_cvar_sort_target}
+        except KeyError:
+            return None
 
     @classmethod
-    def rules_to_readable_dict(cls, rules: dict) -> dict:
+    def rules_to_readable_dict(cls, rules: dict) -> dict | None:
         pruned_dict = cls.__prune_rules_cvar_dict(rules)
+        if pruned_dict is None:
+            return None
         readable_dict = {}
         for key, value in pruned_dict.items():
             if key in cls.rules_cvar_bool:

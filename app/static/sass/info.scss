@@ -116,6 +116,7 @@
         }
         .info_rules_box {
             width: 100%;
+            font-family: $info-font-regular-stack;
             box-sizing: border-box;
             background-color: $main-content-info-bg-color;
             display: grid;
@@ -124,7 +125,6 @@
             .info_rules_batch {
                 margin-inline: 10px;
                 .info_rules_item {
-                    font-family: $info-font-regular-stack;
                     display: flex;
                     justify-content: space-between;
                 }
@@ -134,6 +134,9 @@
                     margin-block: 1px;
                     opacity: 0.3;
                 }
+            }
+            .info_rules_error {
+                width: max-content;
             }
         }
     }
