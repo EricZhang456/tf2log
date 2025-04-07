@@ -35,7 +35,7 @@ class FormatA2S:
         return server_info
 
     @staticmethod
-    def rules (server_ip: str, server_port=271015) -> dict:
+    def rules(server_ip: str, server_port=271015) -> dict:
         server_address = (server_ip, server_port)
         return a2s.rules(server_address)
 

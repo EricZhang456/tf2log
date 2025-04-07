@@ -42,6 +42,7 @@ def get_info(server_ip):
             item["time"] = time.strftime("%H:%M:%S", time.gmtime(item["time"]))
 
     return render_template("info.html",
+                           server_name = server_info.get("name").replace("\x01", ""),
                            player_count = server_info.get("player_count"),
                            max_players = server_info.get("max_players"),
                            raw_map_name = server_info.get("map"),
@@ -54,7 +55,6 @@ def get_info(server_ip):
                            server_rules = server_rules,
                            server_tags = server_tags,
                            server_steam_group = server_steam_group,
-                           server_name = server_info.get("name"),
                            current_map = current_map,
                            game_mode = game_mode,
                            next_map = next_map,
