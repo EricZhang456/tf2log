@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, render_template, request, Response
-from app.extensions import cache
+from geoip2 import database
+from app.extensions import cache, geoip
 
 import time
 import socket
@@ -15,6 +16,7 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 @cache.cached(timeout=5)
 def get_info(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
+    server_ip = socket.gethostbyname(server_ip)
 
     server_info = FormatA2S.info(server_ip, server_port)
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
@@ -24,6 +26,8 @@ def get_info(server_ip):
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")
     next_map_raw = CvarName.get_next_map(server_rules_raw)
+
+    ip_geo = geoip.geoip_reader.city(server_ip)
 
     game_mode = MapName.map_name_to_game_mode(current_map_raw)
     current_map = MapName.map_name_to_readable_name(current_map_raw)
@@ -41,7 +45,9 @@ def get_info(server_ip):
                            player_count = server_info.get("player_count"),
                            max_players = server_info.get("max_players"),
                            raw_map_name = server_info.get("map"),
-                           server_ip = socket.gethostbyname(server_ip),
+                           server_ip = server_ip,
+                           country_name = ip_geo.country.name,
+                           state_name = ip_geo.subdivisions.most_specific.name,
                            server_port = server_port,
                            player_list = player_list,
                            server_rules = server_rules,

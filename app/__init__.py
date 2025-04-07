@@ -3,7 +3,7 @@ import json
 
 from flask import Flask
 
-from .extensions import db, cache
+from .extensions import db, cache, geoip
 from .routes import info
 
 def create_app(test_config=None):
@@ -23,18 +23,20 @@ def create_app(test_config=None):
 
     app.config.from_file("config.json", json.load)
 
-    if test_config is None:
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        app.config.from_mapping(test_config)
-
     try:
         os.makedirs(app.instance_path)
     except OSError:
         pass
     
+    for _, _, files in os.walk(app.instance_path):
+        if "GeoLite2-City.mmdb" not in files:
+            raise Exception("Cannot find GeoLite2 City database")
+        else:
+            app.config.update(GEOLITE2_DB_PATH=os.path.join(app.instance_path, "GeoLite2-City.mmdb"))
+    
     db.init_app(app)
     cache.init_app(app)
+    geoip.init_app(app)
 
     app.register_blueprint(info.bp)
 
