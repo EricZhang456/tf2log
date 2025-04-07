@@ -1,5 +1,6 @@
-from flask import Blueprint, current_app, render_template, request, Response
-from geoip2 import database
+from flask import Blueprint, current_app, render_template, request, Response, abort
+from socket import timeout, gaierror
+from a2s import BrokenMessageError, BufferExhaustedError
 from app.extensions import cache, geoip
 
 import time
@@ -19,6 +20,10 @@ def get_info(server_ip):
     server_ip = socket.gethostbyname(server_ip)
 
     server_info = FormatA2S.info(server_ip, server_port)
+
+    if server_info.get("appid") != 440:
+        return render_template("except.html", except_body="Server is not running TF2."), 404
+
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
     player_list = FormatA2S.players(server_ip, server_port)
     server_rules = CvarName.rules_to_readable_dict(server_rules_raw)
@@ -70,3 +75,23 @@ def get_map_thumbnail(map_name) -> str:
         return Response(thumbnail_url, mimetype='text/plain')
     else:
         return Response(status=404)
+    
+@bp.errorhandler(timeout)
+def handle_timeout(_):
+    return render_template("except.html", except_body="Timed out when fetching game server data."), 504
+
+@bp.errorhandler(gaierror)
+def handle_invalid_address(_):
+    return render_template("except.html", except_body="Invalid server address."), 400
+
+@bp.errorhandler(ConnectionRefusedError)
+def handle_conn_refused(_):
+    return render_template("except.html", except_body="Cannot connect to game server."), 502
+
+@bp.errorhandler(BrokenMessageError)
+def handle_broken_message(_):
+    return render_template("except.html", except_body="Cannot decode response from game server."), 502
+
+@bp.errorhandler(OSError)
+def handle_general_error(_):
+    return render_template("except.html", except_body="Internal server error."), 500

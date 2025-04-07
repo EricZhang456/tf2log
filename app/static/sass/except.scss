@@ -1,0 +1,10 @@
+.except {
+    @include vertical-flex();
+    width: 80%;
+    max-width: 1200px;
+    background-color: $main-content-bg-color;
+    font-family: $info-font-stylized-stack;
+    .except_text {
+        margin: 40px;
+    }
+}
