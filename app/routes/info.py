@@ -45,6 +45,7 @@ def get_info(server_ip):
                            player_count = server_info.get("player_count"),
                            max_players = server_info.get("max_players"),
                            raw_map_name = server_info.get("map"),
+                           bot_count = server_info.get("bot_count"),
                            server_ip = server_ip,
                            country_name = ip_geo.country.name,
                            state_name = ip_geo.subdivisions.most_specific.name,

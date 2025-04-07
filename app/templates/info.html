@@ -12,7 +12,11 @@
                 <div class="info_header_content">
                     <div class="info_header_server_info">
                         <h1 class="info_header_server_name">{{ server_name }}</h1>
+                        {% if bot_count %}
+                        <p class="info_header_players">{{ player_count }} / {{ max_players }} Players ({{ bot_count }} Bots)</p>
+                        {% else %}
                         <p class="info_header_players">{{ player_count }} / {{ max_players }} Players</p>
+                        {% endif %}
                     </div>
                     <div class="info_header_server_map">
                         <p class="info_header_current_map">{{ current_map }}</p>
