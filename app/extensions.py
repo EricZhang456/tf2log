@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_caching import Cache
-from flask import current_app
 
 from geoip2 import database
 
