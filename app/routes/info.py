@@ -1,5 +1,4 @@
 from flask import Blueprint, current_app, render_template, request, Response, abort
-from socket import timeout, gaierror
 from a2s import BrokenMessageError, BufferExhaustedError
 from app.extensions import cache, geoip
 
@@ -85,11 +84,11 @@ def get_map_thumbnail(map_name) -> str:
 def handle_nottf2(_):        
     return render_template("except.html", except_body="Server is not running TF2."), 404
 
-@bp.errorhandler(timeout)
+@bp.errorhandler(socket.timeout)
 def handle_timeout(_):
     return render_template("except.html", except_body="Timed out when fetching game server data."), 504
 
-@bp.errorhandler(gaierror)
+@bp.errorhandler(socket.gaierror)
 def handle_invalid_address(_):
     return render_template("except.html", except_body="Invalid server address."), 400
 
