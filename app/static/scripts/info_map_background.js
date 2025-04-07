@@ -8,7 +8,7 @@ const populateMapThumbnail = (map_name) => {
             infoHeader.style.setProperty("background-position", "center");
             infoHeader.style.setProperty("background-size", "cover");
         }
-    })
+    });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
