@@ -10,6 +10,7 @@ import requests
 from app.utils.format_a2s import FormatA2S
 from app.utils.cvar_name import CvarName
 from app.utils.map_name import MapName
+from app.utils.custom_except import NotTF2
 
 bp = Blueprint("info", __name__, url_prefix="/info")
 
@@ -25,7 +26,7 @@ def get_info(server_ip):
     server_info = FormatA2S.info(server_ip, server_port)
 
     if server_info.get("appid") != 440:
-        return render_template("except.html", except_body="Server is not running TF2."), 404
+        raise NotTF2
 
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
     player_list = FormatA2S.players(server_ip, server_port)
@@ -79,6 +80,11 @@ def get_map_thumbnail(map_name) -> str:
     else:
         return Response(status=404)
     
+        
+@bp.errorhandler(NotTF2)
+def handle_nottf2(_):        
+    return render_template("except.html", except_body="Server is not running TF2."), 404
+
 @bp.errorhandler(timeout)
 def handle_timeout(_):
     return render_template("except.html", except_body="Timed out when fetching game server data."), 504
@@ -92,6 +98,7 @@ def handle_conn_refused(_):
     return render_template("except.html", except_body="Cannot connect to game server."), 502
 
 @bp.errorhandler(BrokenMessageError)
+@bp.errorhandler(BufferExhaustedError)
 def handle_broken_message(_):
     return render_template("except.html", except_body="Cannot decode response from game server."), 502
 

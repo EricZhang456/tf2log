@@ -1,10 +1,16 @@
 import a2s
 
+from .custom_except import NotTF2
+
 class FormatA2S:
     @staticmethod
     def info(server_ip: str, server_port=27015) -> dict:
         server_address = (server_ip, server_port)
         server_info_raw = a2s.info(server_address)
+
+        if type(server_info_raw).__name__ == "GoldSrcInfo":
+            raise NotTF2
+
         server_info = {
             "protocol": server_info_raw.protocol,
             "version": server_info_raw.version,
