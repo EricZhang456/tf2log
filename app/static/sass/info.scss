@@ -23,13 +23,14 @@
                         margin: 30px;
                         margin-right: 10px;
                         margin-bottom: 10px;
-                        text-shadow: 3px 3px 20px gray;
+                        text-shadow: 3px 3px 20px gray, rgba(255,255,255,0.5) 0px 0px 30px;
                     }
                     .info_header_players {
                         font-size: 25px;
                         margin-inline: 30px;
                         margin-top: 10px;
                         margin-bottom: 30px;
+                        text-shadow: 3px 3px 20px gray;
                     }
 
                 }
@@ -138,8 +139,56 @@
     }
 
     .info_players {
+        @include vertical-flex();
         .info_players_text {
             margin: 30px;
+        }
+        .info_players_table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            thead {
+                tr {
+                    th {
+                        height: 50px;
+                        cursor: pointer;
+                        user-select: none;
+                        background-color: $main-content-info-bg-color;
+                        text-align: center;
+                    }
+                    .info_player_table_head_name {
+                        text-align: left;
+                        padding-inline: 30px;
+                    }
+                    .th-sort-asc::after {
+                        content: "\25b4";
+                    }
+                    .th-sort-desc::after {
+                        content: "\25be";
+                    }
+                }
+            }
+            tbody {
+                background-color: $main-content-info-bg-color;
+                border-top: 1px solid $info-player-list-border;
+                font-family: $info-font-regular-stack;
+                tr {
+                    td {
+                        text-align: center;
+                        padding: 5px;
+                    }
+                    .info_player_table_name {
+                        text-align: left;
+                        padding-left: 30px;
+                        padding-right: 10px;
+                    }
+                }
+                tr:last-child {
+                    td {
+                        padding-bottom: 20px;
+                    }
+                }
+            }
         }
     }
 }
