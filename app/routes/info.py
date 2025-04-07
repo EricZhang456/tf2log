@@ -12,6 +12,7 @@ from app.utils.map_name import MapName
 bp = Blueprint("info", __name__, url_prefix="/info")
 
 @bp.route("/<server_ip>")
+@cache.cached(timeout=5)
 def get_info(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
 
