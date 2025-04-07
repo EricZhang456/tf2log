@@ -2,6 +2,7 @@
     @include vertical-flex();
     font-family: $info-font-stylized-stack;
     width: 80%;
+    max-width: 1200px;
     background-color: $main-content-bg-color;
     
     .info_header {
@@ -9,39 +10,42 @@
             display: flex;
             justify-content: space-between;
             background-color: $main-content-info-bg-color;
-            .info_header_server_info {
-                @include vertical-flex();
-                .info_header_server_name {
-                    font-size: 30px;
-                    font-weight: 600;
-                    margin: 30px;
-                    margin-right: 10px;
-                    margin-bottom: 10px;
-                    text-shadow: 3px 3px 20px gray;
+            .info_header_content {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                backdrop-filter: blur(10px);
+                .info_header_server_info {
+                    @include vertical-flex();
+                    .info_header_server_name {
+                        font-size: 30px;
+                        font-weight: 600;
+                        margin: 30px;
+                        margin-right: 10px;
+                        margin-bottom: 10px;
+                        text-shadow: 3px 3px 20px gray;
+                    }
+                    .info_header_players {
+                        font-size: 25px;
+                        margin-inline: 30px;
+                        margin-top: 10px;
+                        margin-bottom: 30px;
+                    }
+
                 }
-                .info_header_players {
-                    font-size: 25px;
+
+                .info_header_server_map {
+                    @include vertical-flex();
+                    justify-content: center;
+                    text-align: right;
                     margin-inline: 30px;
-                    margin-top: 10px;
-                    margin-bottom: 30px;
-                }
-
-            }
-
-            .info_header_server_map {
-                @include vertical-flex();
-                justify-content: center;
-                text-align: right;
-                margin-inline: 30px;
-                * {
-                    margin: 0;
-                }
-                .info_header_current_map {
-                    font-size: 25px;
-                    margin-bottom: 8px;
-                }
-                .info_header_game_mode {
-                    margin-top: 0;
+                    .info_header_current_map {
+                        font-size: 25px;
+                        margin-bottom: 8px;
+                    }
+                    .info_header_game_mode {
+                        margin-top: 0;
+                    }
                 }
             }
         }
@@ -108,7 +112,6 @@
     .info_rules {
         .info_rules_text {
             margin: 30px;
-            text-transform: uppercase;
         }
         .info_rules_box {
             width: 100%;
@@ -131,6 +134,12 @@
                     opacity: 0.3;
                 }
             }
+        }
+    }
+
+    .info_players {
+        .info_players_text {
+            margin: 30px;
         }
     }
 }

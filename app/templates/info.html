@@ -6,23 +6,23 @@
 
 {% block body %}
 
-
-
 <main class="primary">
     <div class="info">
         <div class="info_header">
             <div class="info_header_server">
-                <div class="info_header_server_info">
-                    <h1 class="info_header_server_name">{{ server_name }}</h1>
-                    <p class="info_header_players">{{ player_count }} / {{ max_players }} Players</p>
-                </div>
-                <div class="info_header_server_map">
-                    <p class="info_header_current_map">{{ current_map }}</p>
-                    {% if game_mode %}
-                    <p class="info_header_game_mode">{{ game_mode }}</p>
-                    {% else %}
-                    <p class="info_header_game_mode">Unknown</p>
-                    {% endif %}
+                <div class="info_header_content">
+                    <div class="info_header_server_info">
+                        <h1 class="info_header_server_name">{{ server_name }}</h1>
+                        <p class="info_header_players">{{ player_count }} / {{ max_players }} Players</p>
+                    </div>
+                    <div class="info_header_server_map">
+                        <p class="info_header_current_map">{{ current_map }}</p>
+                        {% if game_mode %}
+                        <p class="info_header_game_mode">{{ game_mode }}</p>
+                        {% else %}
+                        <p class="info_header_game_mode">Unknown</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
             <div class="info_actions">
@@ -93,6 +93,7 @@
             </table>
         </div>
         <script async src="{{ url_for('static', filename='scripts/sort_table_info.js') }}"></script>
+        <script async id="info_map_background_script" src="{{ url_for('static', filename='scripts/info_map_background.js') }}" x-map-name="{{ raw_map_name }}"></script>
         <script defer src="{{ url_for('static', filename='scripts/server_favorites.js') }}"></script>
     </div>
 </main>

@@ -1,8 +1,10 @@
 import os
+import json
 
 from flask import Flask
 
-from .extensions import db
+from .extensions import db, cache
+from .routes import info
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -19,10 +21,7 @@ def create_app(test_config=None):
             }
         })
 
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        SQLALCHEMY_DATABASE_URI='sqlite:///db.sqlite3',
-    )
+    app.config.from_file("config.json", json.load)
 
     if test_config is None:
         app.config.from_pyfile('config.py', silent=True)
@@ -35,8 +34,8 @@ def create_app(test_config=None):
         pass
     
     db.init_app(app)
+    cache.init_app(app)
 
-    from .routes import info
     app.register_blueprint(info.bp)
 
     return app

@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, current_app, render_template, request, Response
+from app.extensions import cache
 
 import time
 import socket
+import requests
 
 from app.utils.format_a2s import FormatA2S
 from app.utils.cvar_name import CvarName
@@ -39,6 +41,7 @@ def get_info(server_ip):
     return render_template("info.html",
                            player_count = server_info.get("player_count"),
                            max_players = server_info.get("max_players"),
+                           raw_map_name = server_info.get("map"),
                            server_ip = socket.gethostbyname(server_ip),
                            server_port = server_port,
                            player_list = player_list,
@@ -50,3 +53,14 @@ def get_info(server_ip):
                            game_mode = game_mode,
                            next_map = next_map,
                            next_map_game_mode = next_map_game_mode)
+
+@bp.route("/thumbnail/<map_name>")
+@cache.cached(timeout=3600)
+def get_map_thumbnail(map_name) -> str:
+    teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
+    response = requests.get("https://teamwork.tf/api/v1/map-stats/mapthumbnail/{}?key={}".format(map_name, teamwork_secret_key))
+    thumbnail_url = response.json().get("thumbnail")
+    if thumbnail_url is not None:
+        return Response(thumbnail_url, mimetype='text/plain')
+    else:
+        return Response(status=404)
