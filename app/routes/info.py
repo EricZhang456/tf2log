@@ -18,8 +18,8 @@ def get_info(server_ip):
 
     server_info = FormatA2S.info(server_ip, server_port)
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
-    server_rules = CvarName.rules_to_readable_dict(server_rules_raw)
     player_list = FormatA2S.players(server_ip, server_port)
+    server_rules = CvarName.rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")

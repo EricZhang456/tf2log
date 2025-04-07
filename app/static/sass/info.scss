@@ -134,6 +134,9 @@
                     margin-block: 1px;
                     opacity: 0.3;
                 }
+                .info_rules_hr:last-child {
+                    display: none;
+                }
             }
             .info_rules_error {
                 width: max-content;
