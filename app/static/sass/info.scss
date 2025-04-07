@@ -154,6 +154,7 @@
                 tr {
                     th {
                         height: 50px;
+                        width: min-content;
                         cursor: pointer;
                         user-select: none;
                         background-color: $main-content-info-bg-color;
@@ -161,13 +162,14 @@
                     }
                     .info_player_table_head_name {
                         text-align: left;
+                        min-width: 50px;
                         padding-left: 30px;
                     }
                     .th-sort-asc::after {
-                        content: "\25b4";
+                        content: " \25b4";
                     }
                     .th-sort-desc::after {
-                        content: "\25be";
+                        content: " \25be";
                     }
                 }
             }

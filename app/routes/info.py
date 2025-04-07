@@ -35,9 +35,7 @@ def get_info(server_ip):
         if time.strftime("%H", time.gmtime(item["time"])) == '00':
             item["time"] = time.strftime("%M:%S", time.gmtime(item["time"]))
         else:
-            minutes = int(time.strftime("%H", time.gmtime(item["time"]))) * 60 + int(time.strftime("%M", time.gmtime(item["time"])))
-            seconds = time.strftime("%S", time.gmtime(item["time"]))
-            item["time"] = "{:n}:{}".format(minutes, seconds)
+            item["time"] = time.strftime("%H:%M:%S", time.gmtime(item["time"]))
 
     return render_template("info.html",
                            player_count = server_info.get("player_count"),
