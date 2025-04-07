@@ -17,8 +17,11 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 @cache.cached(timeout=5, query_string=True)
 def get_info(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
-    server_ip = socket.gethostbyname(server_ip)
 
+    if server_port < 0 or server_port > 65535:
+        return render_template("except.html", except_body="Invalid port number."), 400
+
+    server_ip = socket.gethostbyname(server_ip)
     server_info = FormatA2S.info(server_ip, server_port)
 
     if server_info.get("appid") != 440:
