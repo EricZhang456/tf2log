@@ -3,7 +3,7 @@ import json
 
 from flask import Flask
 
-from .extensions import db, cache, geoip, limiter
+from .extensions import db, cache, geoip, limiter, squeeze
 from .routes import info
 
 def create_app(test_config=None):
@@ -33,7 +33,8 @@ def create_app(test_config=None):
             raise Exception("Cannot find GeoLite2 City database")
         else:
             app.config.update(GEOLITE2_DB_PATH=os.path.join(app.instance_path, "GeoLite2-City.mmdb"))
-    
+
+    squeeze.init_app(app)
     db.init_app(app)
     cache.init_app(app)
     geoip.init_app(app)
