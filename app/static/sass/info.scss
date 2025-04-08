@@ -93,14 +93,21 @@
                         text-decoration: none;
                         user-select: none;
                         transition: background-color 0.2s ease-in-out;
-                        @include universal-drop-shadow();
-                    }                    
+                        transition: box-shadow 0.2s ease-in-out;
+                        @include universal-drop-shadow(10px);
+                    }
                     .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover,
                     .info_header_connect:focus, .info_header_favorite:focus, .info_header_steam_group:focus {
                         background-color: $main-button-color-hover;
+                        @include universal-drop-shadow(5px);
                     }
                     .info_header_connect:active, .info_header_favorite:active, .info_header_steam_group:active {
                         background-color: $main-button-color-active;
+                        @include universal-drop-shadow(20px);
+                    }
+                    .info_header_connect:not(:hover), .info_header_favorite:not(:hover), .info_header_steam_group:not(:hover) {
+                        background-color: $main-button-color;
+                        @include universal-drop-shadow(10px);
                     }
                 }
             }

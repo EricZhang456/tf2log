@@ -22,8 +22,8 @@ $default-font-size: 16px;
     flex-direction: column;
 }
 
-@mixin universal-drop-shadow() {
-    box-shadow: 3px 3px 10px gray;
+@mixin universal-drop-shadow($shadow-radius) {
+    box-shadow: 3px 3px $shadow-radius rgba(128, 128, 128, 0.9);
 }
 
 @font-face {
