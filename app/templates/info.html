@@ -37,7 +37,7 @@
                             <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_password_protected" width="20" height="20">
                             {% endif %}
                         </a>
-                        <a class="info_header_favorite" onclick="addServerToFavorite();">Favorite</a>
+                        <a class="info_header_favorite" href="javascript:void(0)" onclick="addServerToFavorite();">Favorite</a>
                         {% if server_steam_group %}
                         <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
                         {% endif %}
