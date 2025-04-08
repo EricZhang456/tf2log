@@ -1,5 +1,6 @@
 from flask import Blueprint, current_app, render_template, request, Response, abort
 from a2s import BrokenMessageError, BufferExhaustedError
+from geoip2.errors import AddressNotFoundError
 from app.extensions import cache, geoip
 
 import time
@@ -35,18 +36,22 @@ def get_info(server_ip):
     server_steam_group = server_rules_raw.get("sv_steamgroup")
     next_map_raw = MapName.resolve_workshop_map_name(CvarName.get_next_map(server_rules_raw))
     next_map_workshop_id = MapName.get_workshop_map_id(CvarName.get_next_map(server_rules_raw))
+    location = ""
 
-    ip_geo = geoip.geoip_reader.city(server_ip)
-    state_name = ip_geo.subdivisions.most_specific.name
-    city_name = ip_geo.city.name
-    country_name = ip_geo.country.name
-    location = country_name
-    if city_name is not None and state_name is not None:
-        location = "{}, {} - {}".format(city_name, state_name, country_name)
-    elif city_name is None:
-        localation = "{} - {}".format(state_name, country_name)
-    elif state_name is None:
-        location = "{} - {}".format(city_name, country_name)
+    try:
+        ip_geo = geoip.geoip_reader.city(server_ip)
+        state_name = ip_geo.subdivisions.most_specific.name
+        city_name = ip_geo.city.name
+        country_name = ip_geo.country.name
+        location = country_name
+        if city_name is not None and state_name is not None:
+            location = "{}, {} - {}".format(city_name, state_name, country_name)
+        elif city_name is None:
+            location = "{} - {}".format(state_name, country_name)
+        elif state_name is None:
+            location = "{} - {}".format(city_name, country_name)
+    except AddressNotFoundError:
+        pass
 
     game_mode = MapName.map_name_to_game_mode(current_map_raw)
     current_map = MapName.map_name_to_readable_name(current_map_raw)

@@ -45,7 +45,9 @@
                     {% if server_tags %}
                     <p class="info_action_tags_text">{{ server_tags }}</p>
                     {% endif %}
+                    {% if location %}
                     <p class="info_action_location">{{ location }}</p>
+                    {% endif %}
                 </div>
                 {% if next_map %}
                 <div class="info_header_next_map_block">
