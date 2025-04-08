@@ -31,19 +31,19 @@
             <div class="info_actions">
                 <div class="info_action_button_tags">
                     <div class="info_action_buttons">
-                        <a class="info_header_connect" href="steam://connect/{{ server_ip }}:{{ server_port }}">
+                        <a class="info_header_connect preload" href="steam://connect/{{ server_ip }}:{{ server_port }}">
                             Connect
                             {% if password %}
                             <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_password_protected" width="20" height="20">
                             {% endif %}
                         </a>
-                        <a class="info_header_favorite" href="javascript:void(0)" onclick="addServerToFavorite();">Favorite</a>
-                        <a class="info_header_sourcetv" href="javascript:void(0)">
+                        <a class="info_header_favorite preload" href="javascript:void(0)" onclick="addServerToFavorite();">Favorite</a>
+                        <a class="info_header_sourcetv preload" href="javascript:void(0)">
                             Watch
                             <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_sourcetv_password" width="20" height="20">
                         </a>
                         {% if server_steam_group %}
-                        <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
+                        <a class="info_header_steam_group preload" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
                         {% endif %}
                     </div>
                     {% if server_tags %}
@@ -117,6 +117,7 @@
                 </tbody>
             </table>
         </div>
+        <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
         <script fetchpriority="high" defer id="info_map_background_script" src="{{ url_for('static', filename='scripts/info_map_background.js') }}" x-map-name="{{ raw_map_name }}"></script>
         <script defer src="{{ url_for('static', filename='scripts/server_favorites.js') }}"></script>
         <script defer id="info_server_sourcetv_script" src="{{ url_for('static', filename='scripts/info_server_sourcetv.js') }}" x-server-ip="{{ server_ip }}" x-server-port="{{ server_port }}"></script>

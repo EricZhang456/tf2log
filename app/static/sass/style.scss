@@ -61,3 +61,7 @@ body {
     @import "info.scss";
     @import "except.scss";
 }
+
+.preload {
+    transition: none !important;
+}
