@@ -219,7 +219,7 @@ class CvarName:
                 readable_int_value = value if int(value) not in (0, -1) else "Off"
                 readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_int_value})
             elif key in cls.rules_cvar_float:
-                readable_dict.update({cls.stock_cvar_readable_name.get(key): int(float(value))})
+                readable_dict.update({cls.stock_cvar_readable_name.get(key): format(float(value), ".4g")})
             else:
                 continue
         return readable_dict
