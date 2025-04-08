@@ -1,8 +1,14 @@
 const populateMapThumbnail = (map_name) => {
     fetch(`/info/thumbnail/${map_name}`)
-    .then(response => response.text())
     .then((response) => {
-        if(response) {
+        if (response.status != 200) {
+            return;
+        } else {
+            return response.text();
+        }
+    })
+    .then((response) => {
+        if (response) {
             const infoHeader = document.querySelector(".info_header_server");
             infoHeader.style.setProperty("background-image", `url(${response})`);
             infoHeader.style.setProperty("background-position", "center");
