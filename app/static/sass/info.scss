@@ -77,6 +77,14 @@
                         display: none;
                         cursor: pointer;
                     }
+                    .info_header_connect {
+                        display: flex;
+                        align-items: center;
+                        .info_header_password_protected {
+                            margin-left: 10px;
+                            filter: invert(1);
+                        }
+                    }
                     .info_header_connect, .info_header_favorite, .info_header_steam_group {
                         background-color: $main-button-color;
                         padding-block: 5px;

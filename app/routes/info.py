@@ -36,6 +36,16 @@ def get_info(server_ip):
     next_map_raw = CvarName.get_next_map(server_rules_raw)
 
     ip_geo = geoip.geoip_reader.city(server_ip)
+    state_name = ip_geo.subdivisions.most_specific.name
+    city_name = ip_geo.city.name
+    country_name = ip_geo.country.name
+    location = country_name
+    if city_name is not None and state_name is not None:
+        location = "{}, {} - {}".format(city_name, state_name, country_name)
+    elif city_name is None:
+        localation = "{} - {}".format(state_name, country_name)
+    elif state_name is None:
+        location = "{} - {}".format(city_name, country_name)
 
     game_mode = MapName.map_name_to_game_mode(current_map_raw)
     current_map = MapName.map_name_to_readable_name(current_map_raw)
@@ -55,9 +65,9 @@ def get_info(server_ip):
                            max_players = server_info.get("max_players"),
                            raw_map_name = server_info.get("map"),
                            bot_count = server_info.get("bot_count"),
+                           password = server_info.get("password"),
                            server_ip = server_ip,
-                           country_name = ip_geo.country.name,
-                           state_name = ip_geo.subdivisions.most_specific.name,
+                           location = location,
                            server_port = server_port,
                            player_list = player_list,
                            server_rules = server_rules,

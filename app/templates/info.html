@@ -31,7 +31,12 @@
             <div class="info_actions">
                 <div class="info_action_button_tags">
                     <div class="info_action_buttons">
-                        <a class="info_header_connect" href="steam://connect/{{ server_ip }}:{{ server_port }}">Connect</a>
+                        <a class="info_header_connect" href="steam://connect/{{ server_ip }}:{{ server_port }}">
+                            Connect
+                            {% if password %}
+                            <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_password_protected" width="20" height="20">
+                            {% endif %}
+                        </a>
                         <a class="info_header_favorite" onclick="addServerToFavorite();">Favorite</a>
                         {% if server_steam_group %}
                         <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
@@ -40,14 +45,7 @@
                     {% if server_tags %}
                     <p class="info_action_tags_text">{{ server_tags }}</p>
                     {% endif %}
-                    {%if country_name %}
-                    <div class="info_action_location">
-                        {% if state_name %}
-                        <span class="info_action_location_state">{{ state_name }} - </span>
-                        {% endif %}
-                        <span class="info_action_location_country">{{ country_name }}</span>
-                    </div>
-                    {% endif %}
+                    <p class="info_action_location">{{ location }}</p>
                 </div>
                 {% if next_map %}
                 <div class="info_header_next_map_block">
