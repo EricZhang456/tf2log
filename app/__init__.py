@@ -11,8 +11,6 @@ def create_app(test_config=None):
     
     app.config.from_file("config.json", json.load)
 
-    print (app.config["ENV"])
-
     # only build css on each request when in debug
     if app.debug or app.config["ENV"] == "dev":
         from sassutils.wsgi import SassMiddleware

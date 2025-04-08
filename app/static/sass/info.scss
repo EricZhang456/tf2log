@@ -92,8 +92,7 @@
                         color: $main-text-color;
                         text-decoration: none;
                         user-select: none;
-                        transition: background-color 0.2s ease-in-out;
-                        transition: box-shadow 0.2s ease-in-out;
+                        transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
                         @include universal-drop-shadow(10px);
                     }
                     .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover,
