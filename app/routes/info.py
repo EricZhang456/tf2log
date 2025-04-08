@@ -33,7 +33,8 @@ def get_info(server_ip):
     current_map_raw = server_info.get("map")
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")
-    next_map_raw = CvarName.get_next_map(server_rules_raw)
+    next_map_raw = MapName.resolve_workshop_map_name(CvarName.get_next_map(server_rules_raw))
+    next_map_workshop_id = MapName.get_workshop_map_id(CvarName.get_next_map(server_rules_raw))
 
     ip_geo = geoip.geoip_reader.city(server_ip)
     state_name = ip_geo.subdivisions.most_specific.name
@@ -76,7 +77,8 @@ def get_info(server_ip):
                            current_map = current_map,
                            game_mode = game_mode,
                            next_map = next_map,
-                           next_map_game_mode = next_map_game_mode)
+                           next_map_game_mode = next_map_game_mode,
+                           next_map_workshop_id = next_map_workshop_id)
 
 @bp.route("/thumbnail/<map_name>")
 @cache.cached(timeout=3600)

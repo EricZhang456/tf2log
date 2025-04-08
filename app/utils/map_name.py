@@ -143,3 +143,28 @@ class MapName:
             return readable_map_name.replace("_", " ").title()
         else:
             return cls.map_special_names.get(map_name)
+        
+    @staticmethod
+    def resolve_workshop_map_name(map_name: str) -> str:
+        if map_name.startswith(r'workshop/'):
+            resolved_map_name = re.search(r'workshop/(.*)\.ugc[0-9]+', map_name)
+            if resolved_map_name is not None:
+                return resolved_map_name.group(1)
+            else:
+                return "Workshop Map"
+        else:
+            return map_name
+        
+    @staticmethod
+    def get_workshop_map_id(map_name: str) -> str | None:
+        if map_name.startswith(r'workshop/'):
+            workshop_verbose_map_name = re.search(r'workshop/.*\.ugc([0-9]+)', map_name)
+            workshop_concise_map_name = re.search(r'workshop/([0-9]+)', map_name)
+            if workshop_verbose_map_name is not None:
+                return workshop_verbose_map_name.group(1)
+            elif workshop_concise_map_name is not None:
+                return workshop_concise_map_name.group(1)
+            else:
+                return None
+        else:
+            return None

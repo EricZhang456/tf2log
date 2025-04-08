@@ -51,7 +51,11 @@
                 <div class="info_header_next_map_block">
                     <p class="info_header_next_map_text">Next Map</p>
                     <div class="info_header_next_map_display">
+                        {% if next_map_workshop_id %}
+                        <a href="https://steamcommunity.com/workshop/filedetails/?id={{ next_map_workshop_id }}" class="info_header_next_map">{{ next_map }}</a>
+                        {% else %}
                         <p class="info_header_next_map">{{ next_map }}</p>
+                        {% endif %}
                         {% if next_map_game_mode %}
                         <p class="info_header_next_map_game_mode">{{ next_map_game_mode }}</p>
                         {% else %}

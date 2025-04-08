@@ -34,7 +34,6 @@
                     }
 
                 }
-
                 .info_header_server_map {
                     @include vertical-flex();
                     justify-content: center;
@@ -120,6 +119,15 @@
                     font-size: 25px;
                     margin-bottom: 0;
                     margin-top: 0;
+                }
+                a.info_header_next_map {
+                    text-decoration: none;
+                }
+                a.info_header_next_map, a:visited.info_header_next_map, a:hover.info_header_next_map {
+                    color: $main-text-color;
+                }
+                a:hover.info_header_next_map, a:active.info_header_next_map {
+                    text-decoration: underline;
                 }
                 .info_header_next_map_game_mode {
                     margin-top: 1px;
