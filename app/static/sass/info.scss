@@ -84,7 +84,15 @@
                             filter: invert(1);
                         }
                     }
-                    .info_header_connect, .info_header_favorite, .info_header_steam_group {
+                    .info_header_sourcetv {
+                        display: none;
+                        align-items: center;
+                        .info_header_sourcetv_password {
+                            margin-left: 10px;
+                            filter: invert(1);
+                        }
+                    }
+                    .info_header_connect, .info_header_favorite, .info_header_steam_group, .info_header_sourcetv {
                         background-color: $main-button-color;
                         padding-block: 5px;
                         padding-inline: 12px;
@@ -95,16 +103,16 @@
                         transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
                         @include universal-drop-shadow(10px);
                     }
-                    .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover,
-                    .info_header_connect:focus, .info_header_favorite:focus, .info_header_steam_group:focus {
+                    .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover, .info_header_sourcetv:hover,
+                    .info_header_connect:focus, .info_header_favorite:focus, .info_header_steam_group:focus, .info_header_sourcetv:focus {
                         background-color: $main-button-color-hover;
                         @include universal-drop-shadow(5px);
                     }
-                    .info_header_connect:active, .info_header_favorite:active, .info_header_steam_group:active {
+                    .info_header_connect:active, .info_header_favorite:active, .info_header_steam_group:active, .info_header_sourcetv:active {
                         background-color: $main-button-color-active;
                         @include universal-drop-shadow(20px);
                     }
-                    .info_header_connect:not(:hover), .info_header_favorite:not(:hover), .info_header_steam_group:not(:hover) {
+                    .info_header_connect:not(:hover), .info_header_favorite:not(:hover), .info_header_steam_group:not(:hover), .info_header_sourcetv:not(:hover) {
                         background-color: $main-button-color;
                         @include universal-drop-shadow(10px);
                     }

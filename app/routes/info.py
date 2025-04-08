@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, request, Response, abort
+from flask import Blueprint, current_app, render_template, request, Response, jsonify
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from app.extensions import cache, geoip
@@ -10,7 +10,7 @@ import requests
 from app.utils.format_a2s import FormatA2S
 from app.utils.cvar_name import CvarName
 from app.utils.map_name import MapName
-from app.utils.custom_except import NotTF2
+from app.utils.custom_except import NotTF2, ServerSourceTV
 
 bp = Blueprint("info", __name__, url_prefix="/info")
 
@@ -27,6 +27,9 @@ def get_info(server_ip):
 
     if server_info.get("appid") != 440:
         raise NotTF2
+    
+    if server_port == server_info.get("stv_port"):
+        raise ServerSourceTV
 
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
     player_list = FormatA2S.players(server_ip, server_port)
@@ -45,11 +48,11 @@ def get_info(server_ip):
         country_name = ip_geo.country.name
         location = country_name
         if city_name is not None and state_name is not None:
-            location = "{}, {} - {}".format(city_name, state_name, country_name)
+            location = f"{city_name}, {state_name} - {country_name}"
         elif city_name is None:
-            location = "{} - {}".format(state_name, country_name)
+            location = f"{state_name} - {country_name}"
         elif state_name is None:
-            location = "{} - {}".format(city_name, country_name)
+            location = f"{city_name} - {country_name}"
     except AddressNotFoundError:
         pass
 
@@ -89,17 +92,36 @@ def get_info(server_ip):
 @cache.cached(timeout=3600)
 def get_map_thumbnail(map_name) -> str:
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
-    response = requests.get("https://teamwork.tf/api/v1/map-stats/mapthumbnail/{}?key={}".format(map_name, teamwork_secret_key))
+    response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}")
     thumbnail_url = response.json().get("thumbnail")
     if thumbnail_url is not None:
         return Response(thumbnail_url, mimetype='text/plain')
     else:
         return Response(status=404)
     
+@bp.route("/sourcetv/<server_ip>")
+@cache.cached(timeout=500, query_string=True)
+def get_source_tv(server_ip):
+    server_port = request.args.get("port", default=27015, type=int)
+    server_info = FormatA2S.info(server_ip, server_port)
+    sourcetv_port = server_info.get("stv_port")
+    sourcetv_info = FormatA2S.info(server_ip, sourcetv_port)
+    if sourcetv_info.get("max_players") == 0:
+        return Response(status=404)
+    else:
+        sourcetv_response = {
+            "address": f"{server_ip}:{sourcetv_port}",
+            "password": sourcetv_info.get("password"),
+        }
+        return jsonify(sourcetv_response)
         
 @bp.errorhandler(NotTF2)
 def handle_nottf2(_):        
     return render_template("except.html", except_body="Server is not running TF2."), 404
+
+@bp.errorhandler(ServerSourceTV)
+def handle_server_sourcetv(_):        
+    return render_template("except.html", except_body="Server is a SourceTV relay."), 400
 
 @bp.errorhandler(socket.timeout)
 def handle_timeout(_):
