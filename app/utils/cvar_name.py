@@ -62,7 +62,7 @@ class CvarName:
         "tf_medieval_autorp": "Medieval Mode Text Chat Filter",
         "tf_playergib": "Player Gib",
         "tf_powerup_mode": "Mannpower Powerup",
-        "tf_overtime_nag": "Overtime Announcer Nag",
+        "tf_overtime_nag": "Announcer Overtime Nag",
         "tf_spec_xray": "Spectator Xray",
         "tf_spells_enabled": "Players Drop Halloween Spells",
         "tf_weapon_criticals": "Random Crits",
@@ -141,7 +141,6 @@ class CvarName:
         "mp_windifference",
         "mp_windifference_min",
         "mp_scrambleteams_auto_windifference",
-        "mp_fraglimit",
         # Typical Game Options
         "mp_autoteambalance",
         "mp_scrambleteams_auto",
