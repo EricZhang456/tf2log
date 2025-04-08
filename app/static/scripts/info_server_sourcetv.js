@@ -1,7 +1,7 @@
 const showSourceTVButton = (serverIP, serverPort) => {
     fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`)
     .then((response) => {
-        if (response.status != 200) {
+        if (!response.ok) {
             return;
         } else {
             return response.json();

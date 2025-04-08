@@ -1,7 +1,7 @@
 const populateMapThumbnail = (map_name) => {
     fetch(`/info/thumbnail/${map_name}`)
     .then((response) => {
-        if (response.status != 200) {
+        if (!response.ok) {
             return;
         } else {
             return response.text();

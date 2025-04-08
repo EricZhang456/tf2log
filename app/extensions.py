@@ -7,7 +7,10 @@ from geoip2 import database
 
 db = SQLAlchemy()
 cache = Cache()
-limiter = Limiter(get_remote_address)
+limiter = Limiter(
+    key_func = get_remote_address,
+    default_limits = "120 per minute",
+)
 
 class GeoIP:
     def init_app(self, app):
