@@ -8,9 +8,13 @@ from .routes import info
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
+    
+    app.config.from_file("config.json", json.load)
+
+    print (app.config["ENV"])
 
     # only build css on each request when in debug
-    if app.debug:
+    if app.debug or app.config["ENV"] == "dev":
         from sassutils.wsgi import SassMiddleware
         app.wsgi_app = SassMiddleware(app.wsgi_app, {
             "app": {
@@ -20,8 +24,6 @@ def create_app(test_config=None):
                 "strip_extension": False,
             }
         })
-
-    app.config.from_file("config.json", json.load)
 
     try:
         os.makedirs(app.instance_path)
