@@ -3,7 +3,7 @@ import json
 
 from flask import Flask
 
-from .extensions import db, cache, geoip
+from .extensions import db, cache, geoip, limiter
 from .routes import info
 
 def create_app(test_config=None):
@@ -37,6 +37,7 @@ def create_app(test_config=None):
     db.init_app(app)
     cache.init_app(app)
     geoip.init_app(app)
+    limiter.init_app(app)
 
     app.register_blueprint(info.bp)
 

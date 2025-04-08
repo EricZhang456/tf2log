@@ -1,7 +1,7 @@
 from flask import Blueprint, current_app, render_template, request, Response, jsonify
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
-from app.extensions import cache, geoip
+from app.extensions import cache, geoip, limiter
 
 import time
 import socket
@@ -89,6 +89,7 @@ def get_info(server_ip):
                            next_map_workshop_id = next_map_workshop_id)
 
 @bp.route("/thumbnail/<map_name>")
+@limiter.limit('90 per minute')
 @cache.cached(timeout=3600)
 def get_map_thumbnail(map_name) -> str:
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
