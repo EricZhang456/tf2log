@@ -105,6 +105,8 @@ def get_source_tv(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
     server_info = FormatA2S.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
+    if sourcetv_port is None:
+        return Response(status=404)
     sourcetv_info = FormatA2S.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
         return Response(status=404)
