@@ -46,9 +46,10 @@ def get_info(server_ip):
         state_name = ip_geo.subdivisions.most_specific.name
         city_name = ip_geo.city.name
         country_name = ip_geo.country.name
-        location = country_name
         if city_name is not None and state_name is not None:
             location = f"{city_name}, {state_name} - {country_name}"
+        elif city_name is None and state_name is None:
+            location = country_name
         elif city_name is None:
             location = f"{state_name} - {country_name}"
         elif state_name is None:
