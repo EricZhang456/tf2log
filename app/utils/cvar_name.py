@@ -202,26 +202,29 @@ class CvarName:
         if pruned_dict is None:
             return None
         readable_dict = {}
-        for key, value in pruned_dict.items():
-            # this is the only cvar i am looking for that accepts 0/1/2 so i might 
-            # as well just write it here
-            if key == "tf_weapon_criticals_melee":
-                if ((int(pruned_dict.get("tf_weapon_criticals")) == 1 and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
-                    (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
-                    readable_dict.update({cls.stock_cvar_readable_name.get(key): "On"})
+        try:
+            for key, value in pruned_dict.items():
+                # this is the only cvar i am looking for that accepts 0/1/2 so i might 
+                # as well just write it here
+                if key == "tf_weapon_criticals_melee":
+                    if ((int(pruned_dict.get("tf_weapon_criticals")) == 1 and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
+                        (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
+                        readable_dict.update({cls.stock_cvar_readable_name.get(key): "On"})
+                    else:
+                        readable_dict.update({cls.stock_cvar_readable_name.get(key): "Off"})
+                if key in cls.rules_cvar_bool:
+                    readable_bool_value = "On" if int(value) == 1 else "Off"
+                    readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
+                elif key in cls.rules_cvars_int:
+                    readable_int_value = value if int(value) not in (0, -1) else "Off"
+                    readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_int_value})
+                elif key in cls.rules_cvar_float:
+                    readable_dict.update({cls.stock_cvar_readable_name.get(key): format(float(value), ".4g")})
                 else:
-                    readable_dict.update({cls.stock_cvar_readable_name.get(key): "Off"})
-            if key in cls.rules_cvar_bool:
-                readable_bool_value = "On" if int(value) == 1 else "Off"
-                readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
-            elif key in cls.rules_cvars_int:
-                readable_int_value = value if int(value) not in (0, -1) else "Off"
-                readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_int_value})
-            elif key in cls.rules_cvar_float:
-                readable_dict.update({cls.stock_cvar_readable_name.get(key): format(float(value), ".4g")})
-            else:
-                continue
-        return readable_dict
+                    continue
+            return readable_dict
+        except ValueError:
+            return None
     
     @staticmethod
     def get_next_map(rules: dict) -> str | None:
