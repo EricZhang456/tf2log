@@ -61,6 +61,56 @@ class MapName:
         "ctf_thundermountain",
     )
 
+    map_special_names = {
+        "ctf_doublecross": "Double Cross",
+        "ctf_doublecross_snowy": "Doublefrost",
+        "ctf_helltrain_event": "Helltrain",
+        "ctf_turbine_winter": "Turbine Center",
+        "cp_canaveral_5cp": "Canaveral",
+        "cp_sunshine_event": "Sinshine",
+        "cp_gravelpit_snowy": "Coal Pit",
+        "cp_ambush_event": "Erebus",
+        "cp_gravelpit": "Gravel Pit",
+        "cp_lavapit_final": "Lava Pit",
+        "cp_manor_event": "Mann Manor",
+        "cp_mercenarypark": "Mercenary Park",
+        "cp_mountainlab": "Mountain Lab",
+        "cp_degrootkeep": "DeGroot Keep",
+        "cp_degrootkeep_rats": "Sandcastle",
+        "pl_badwater": "Badwater Basin",
+        "pl_breadspace": "Bread Space",
+        "pl_cactuscanyon": "Cactus Canyon",
+        "pl_fifthcurve_event": "Brimstone",
+        "pl_goldrush": "Gold Rush",
+        "pl_rumble_event": "Gravestone",
+        "pl_sludgepit_event": "Ghoulpit",
+        "pl_hasslecastle": "Hassle Castle",
+        "pl_millstone_event": "Hellstone",
+        "pl_coal_event": "Polar",
+        "pl_precipice_event_final": "Precipice",
+        "pl_thundermountain": "Thunder Mountain",
+        "plr_bananabay": "Banana Bay",
+        "plr_hacksaw_event": "Bonesaw",
+        "plr_hightower_event": "Helltower",
+        "arena_lumberyard_event": "Graveyard",
+        "koth_bagel_event": "Cauldron",
+        "koth_viaduct_event": "Eyeaduct",
+        "koth_lakeside_event": "Ghost Fort",
+        "koth_king": "Kong King",
+        "koth_slaughter_event": "Laughter",
+        "koth_undergrove_event": "Moldergrove",
+        "koth_synthetic_event": "Sinthetic",
+        "koth_sawmill_event": "Soul-Mill",
+        "sd_doomsday_event": "Carnival of Carnage",
+        "mvm_coaltown": "Coal Town",
+        "ctf_thundermountain": "Thunder Mountain",
+        "pd_cursed_cove_event": "Cursed Cove",
+        "pd_pit_of_death_event": "Pit of Death",
+        "pd_snowville_event": "SnowVille",
+        "vsh_nucleus": "Nucleus VSH",
+        "vsh_tinyrock": "Tiny Rock",
+    }
+
     @classmethod
     def map_name_to_game_mode(cls, map_name: str) -> str | None:
         if map_name in cls.ad_maps:
@@ -82,11 +132,14 @@ class MapName:
 
     @classmethod
     def map_name_to_readable_name(cls, map_name: str) -> str:
-        game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
-        readable_map_name = map_name
-        if game_mode_pattern is not None:
-            if re.search(r'[a-zA-Z]+_.*_(final*)', map_name) is not None:
-                readable_map_name = re.sub(r'_final.*', '', readable_map_name)
-            if cls.gamemode_dict.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
-                readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
-        return readable_map_name.replace("_", " ").title()
+        if cls.map_special_names.get(map_name) is None:
+            game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
+            readable_map_name = map_name
+            if game_mode_pattern is not None:
+                if re.search(r'[a-zA-Z]+_.*_(final*)', map_name) is not None:
+                    readable_map_name = re.sub(r'_final.*', '', readable_map_name)
+                if cls.gamemode_dict.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
+                    readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
+            return readable_map_name.replace("_", " ").title()
+        else:
+            return cls.map_special_names.get(map_name)
