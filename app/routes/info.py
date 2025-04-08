@@ -15,6 +15,7 @@ from app.utils.custom_except import NotTF2, ServerSourceTV
 bp = Blueprint("info", __name__, url_prefix="/info")
 
 @bp.route("/<server_ip>")
+@limiter.limit('120 per minute')
 @cache.cached(timeout=5, query_string=True)
 def get_info(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
@@ -102,6 +103,7 @@ def get_map_thumbnail(map_name) -> str:
         return Response(status=404)
     
 @bp.route("/sourcetv/<server_ip>")
+@limiter.limit('120 per minute')
 @cache.cached(timeout=500, query_string=True)
 def get_source_tv(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
