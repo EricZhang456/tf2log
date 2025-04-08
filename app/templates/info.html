@@ -38,13 +38,13 @@
                             {% endif %}
                         </a>
                         <a class="info_header_favorite" href="javascript:void(0)" onclick="addServerToFavorite();">Favorite</a>
-                        {% if server_steam_group %}
-                        <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
-                        {% endif %}
                         <a class="info_header_sourcetv" href="javascript:void(0)">
                             Watch
                             <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_sourcetv_password" width="20" height="20">
                         </a>
+                        {% if server_steam_group %}
+                        <a class="info_header_steam_group" href="https://steamcommunity.com/gid/{{ server_steam_group }}">Steam Group</a>
+                        {% endif %}
                     </div>
                     {% if server_tags %}
                     <p class="info_action_tags_text">{{ server_tags }}</p>
