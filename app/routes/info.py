@@ -96,6 +96,8 @@ def get_info(server_ip: str):
 @limiter.limit("90 per minute")
 @cache.cached(timeout=3600)
 def get_map_thumbnail(map_name: str):
+    if request.headers.get("x-get-thumbnail") != "1":
+        return Response(status=400)
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
     response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}")
     thumbnail_url = response.json().get("thumbnail")
@@ -108,6 +110,8 @@ def get_map_thumbnail(map_name: str):
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
 def get_source_tv(server_ip: str):
+    if request.headers.get("x-get-sourcetv") != "1":
+        return Response(status=400)
     server_port = request.args.get("port", default=27015, type=int)
     server_info = FormatA2S.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")

@@ -1,5 +1,11 @@
+"use strict";
 const showSourceTVButton = (serverIP, serverPort) => {
-    fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`)
+    fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`, {
+        method: "GET",
+        headers: {
+            "x-get-sourcetv": "1"
+        }
+    })
     .then((response) => {
         if (!response.ok) {
             return;
