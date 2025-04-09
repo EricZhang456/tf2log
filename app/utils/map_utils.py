@@ -1,7 +1,7 @@
 import re
 
 class MapUtils:
-    gamemode_dict = {
+    GAMEMODE_DICT = {
         "ctf": "Capture the Flag",
         "cp": "Control Point",
         "tc": "Territorial Control",
@@ -20,7 +20,7 @@ class MapUtils:
         "tow": "Tug of War",
     }
 
-    ad_maps = (
+    AD_MAPS = (
         "cp_altitude",
         "cp_brew",
         "cp_carrier",
@@ -50,18 +50,18 @@ class MapUtils:
         "cp_overgrown",
     )
 
-    domination_maps = (
+    DOMINATION_MAPS = (
         "cp_standin_final",
     )
 
-    mannpower_maps = (
+    MANNPOWER_MAPS = (
         "ctf_foundry",
         "ctf_gorge",
         "ctf_hellfire",
         "ctf_thundermountain",
     )
 
-    map_special_names = {
+    MAP_SPECIAL_NAMES = {
         "ctf_doublecross": "Double Cross",
         "ctf_doublecross_snowy": "Doublefrost",
         "ctf_helltrain_event": "Helltrain",
@@ -113,18 +113,18 @@ class MapUtils:
 
     @classmethod
     def map_name_to_game_mode(cls, map_name: str) -> str | None:
-        if map_name in cls.ad_maps:
+        if map_name in cls.AD_MAPS:
             return r'Attack/Defend'
-        elif map_name in cls.mannpower_maps:
+        elif map_name in cls.MANNPOWER_MAPS:
             return "Mannpower"
-        elif map_name in cls.domination_maps:
+        elif map_name in cls.DOMINATION_MAPS:
             return "Domination"
         else:
             game_mode_str = re.search(r'([a-zA-Z]+)_', map_name)
             if game_mode_str is None:
                 return None
             else:
-                game_mode = cls.gamemode_dict.get(game_mode_str.group(1))
+                game_mode = cls.GAMEMODE_DICT.get(game_mode_str.group(1))
                 if game_mode is None:
                     return None
                 else:
@@ -132,17 +132,17 @@ class MapUtils:
 
     @classmethod
     def map_name_to_readable_name(cls, map_name: str) -> str:
-        if cls.map_special_names.get(map_name) is None:
+        if cls.MAP_SPECIAL_NAMES.get(map_name) is None:
             game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
             readable_map_name = map_name
             if game_mode_pattern is not None:
                 if re.search(r'[a-zA-Z]+_.*_(final*)', map_name) is not None:
                     readable_map_name = re.sub(r'_final.*', '', readable_map_name)
-                if cls.gamemode_dict.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
+                if cls.GAMEMODE_DICT.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
                     readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
             return readable_map_name.replace("_", " ").title()
         else:
-            return cls.map_special_names.get(map_name)
+            return cls.MAP_SPECIAL_NAMES.get(map_name)
         
     @staticmethod
     def resolve_workshop_map_name(map_name: str) -> str:

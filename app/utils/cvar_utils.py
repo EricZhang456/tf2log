@@ -1,5 +1,5 @@
 class CvarUtils:
-    stock_cvar_readable_name = {
+    STOCK_CVAR_READABLE_NAME = {
         "mp_autoteambalance": "Auto Team Balance",
         "mp_scrambleteams_auto": "Auto Team Scramble",
         "mp_disable_respawn_times": "Disable Respawn Times",
@@ -70,13 +70,13 @@ class CvarUtils:
         "tv_enable": "SourceTV",
     }
 
-    sm_cvar_readable_name = {
+    SM_CVAR_READABLE_NAME = {
         "metamod_version": "Metamod:Source Version",
         "sourcemod_version": "SourceMod Version",
         "sm_nextmap": "Next Map",
     }
 
-    rules_cvar_bool = (
+    RULES_CVAR_BOOL = (
         "mp_autoteambalance",
         "mp_disable_respawn_times",
         "mp_fadetoblack",
@@ -110,7 +110,7 @@ class CvarUtils:
         "tv_enable",
     )
 
-    rules_cvars_int = (
+    RULES_CVAR_INT = (
         "mp_fraglimit",
         "mp_maxrounds",
         "mp_scrambleteams_auto_windifference",
@@ -128,11 +128,11 @@ class CvarUtils:
         "tf_ctf_bonus_time",
     )
 
-    rules_cvar_float = (
+    RULES_CVAR_FLOAT = (
         "mp_respawnwavetime",
     )
 
-    __rules_cvar_sort_target = (
+    __RULES_CVAR_SORT_TARGET = (
         # Limits
         "mp_timelimit",
         "mp_match_end_at_timelimit",
@@ -191,7 +191,7 @@ class CvarUtils:
     @classmethod
     def __prune_rules_cvar_dict(cls, rules:dict) -> dict | None:
         pruned_dict = {}
-        for item in cls.__rules_cvar_sort_target:
+        for item in cls.__RULES_CVAR_SORT_TARGET:
             if rules.get(item) is not None:
                 pruned_dict.update({item: rules.get(item)})
         return pruned_dict if pruned_dict else None
@@ -209,17 +209,17 @@ class CvarUtils:
                 if key == "tf_weapon_criticals_melee":
                     if ((int(pruned_dict.get("tf_weapon_criticals")) == 1 and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
                         (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
-                        readable_dict.update({cls.stock_cvar_readable_name.get(key): "On"})
+                        readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): "On"})
                     else:
-                        readable_dict.update({cls.stock_cvar_readable_name.get(key): "Off"})
-                if key in cls.rules_cvar_bool:
+                        readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): "Off"})
+                if key in cls.RULES_CVAR_BOOL:
                     readable_bool_value = "On" if int(value) == 1 else "Off"
-                    readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_bool_value})
-                elif key in cls.rules_cvars_int:
+                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): readable_bool_value})
+                elif key in cls.RULES_CVAR_INT:
                     readable_int_value = value if int(value) not in (0, -1) else "Off"
-                    readable_dict.update({cls.stock_cvar_readable_name.get(key): readable_int_value})
-                elif key in cls.rules_cvar_float:
-                    readable_dict.update({cls.stock_cvar_readable_name.get(key): format(float(value), ".4g")})
+                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): readable_int_value})
+                elif key in cls.RULES_CVAR_FLOAT:
+                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): format(float(value), ".4g")})
                 else:
                     continue
             return readable_dict
