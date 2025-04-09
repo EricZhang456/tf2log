@@ -11,6 +11,10 @@ class ServerRegions(Enum):
     MIDDLE_EAST = 6
     AFRICA = 7
     WORLD = 255
+    
+    @classmethod
+    def _missing_(cls, _):
+        return cls.WORLD
 
 class ServerList:
     SERVERBROWSER_TF_GAMEMODES = ("vanilla", r'24/7', "dm", "gamemode", r'jump/surf', "mvm", "social")
