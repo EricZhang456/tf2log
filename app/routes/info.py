@@ -17,10 +17,11 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 @bp.route("/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
-def get_info(server_ip):
+def get_info(server_ip: str):
+    if server_ip.startswith("169.254"):
+        return render_template("except.html", except_body="SDR Fake IP not supported."), 400
     server_port = request.args.get("port", default=27015, type=int)
-
-    if server_port < 0 or server_port > 65535:
+    if server_port < 2000 or server_port > 65535:
         return render_template("except.html", except_body="Invalid port number."), 400
 
     server_ip = socket.gethostbyname(server_ip)
@@ -28,7 +29,6 @@ def get_info(server_ip):
 
     if server_info.get("appid") != 440:
         raise NotTF2
-    
     if server_port == server_info.get("stv_port"):
         raise ServerSourceTV
 
@@ -95,7 +95,7 @@ def get_info(server_ip):
 @bp.route("/thumbnail/<map_name>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=3600)
-def get_map_thumbnail(map_name) -> str:
+def get_map_thumbnail(map_name: str):
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
     response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}")
     thumbnail_url = response.json().get("thumbnail")
@@ -107,7 +107,7 @@ def get_map_thumbnail(map_name) -> str:
 @bp.route("/sourcetv/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
-def get_source_tv(server_ip):
+def get_source_tv(server_ip: str):
     server_port = request.args.get("port", default=27015, type=int)
     server_info = FormatA2S.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
