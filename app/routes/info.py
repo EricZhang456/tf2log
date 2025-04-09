@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, render_template, request, Response, jsonify
+from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from app.extensions import cache, geoip, limiter
@@ -152,4 +152,4 @@ def handle_broken_message(_):
 
 @bp.errorhandler(OSError)
 def handle_general_error(_):
-    return render_template("except.html", except_body="Internal server error."), 500
+    abort(500)

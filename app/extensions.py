@@ -9,6 +9,9 @@ from geoip2 import database
 def page_not_found(_):
     return render_template("except.html", except_body="Page not found."), 404
 
+def internal_server_error(_):
+    return render_template("except.html", except_body="Internal server error."), 500
+
 db = SQLAlchemy()
 cache = Cache()
 limiter = Limiter(
