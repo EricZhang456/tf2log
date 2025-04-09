@@ -1,4 +1,4 @@
-class CvarName:
+class CvarUtils:
     stock_cvar_readable_name = {
         "mp_autoteambalance": "Auto Team Balance",
         "mp_scrambleteams_auto": "Auto Team Scramble",

@@ -1,6 +1,6 @@
 import re
 
-class MapName:
+class MapUtils:
     gamemode_dict = {
         "ctf": "Capture the Flag",
         "cp": "Control Point",

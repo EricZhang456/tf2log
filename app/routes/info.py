@@ -8,8 +8,8 @@ import socket
 import requests
 
 from app.utils.format_a2s import FormatA2S
-from app.utils.cvar_name import CvarName
-from app.utils.map_name import MapName
+from app.utils.cvar_utils import CvarUtils
+from app.utils.map_utils import MapUtils
 from app.utils.custom_except import NotTF2, ServerSourceTV
 
 bp = Blueprint("info", __name__, url_prefix="/info")
@@ -34,12 +34,13 @@ def get_info(server_ip):
 
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
     player_list = FormatA2S.players(server_ip, server_port)
-    server_rules = CvarName.rules_to_readable_dict(server_rules_raw)
+    server_rules = CvarUtils.rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")
+    sourcetv_port = server_info.get("stv_port")
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")
-    next_map_raw = MapName.resolve_workshop_map_name(CvarName.get_next_map(server_rules_raw))
-    next_map_workshop_id = MapName.get_workshop_map_id(CvarName.get_next_map(server_rules_raw))
+    next_map_raw = MapUtils.resolve_workshop_map_name(CvarUtils.get_next_map(server_rules_raw))
+    next_map_workshop_id = MapUtils.get_workshop_map_id(CvarUtils.get_next_map(server_rules_raw))
     location = ""
 
     try:
@@ -58,10 +59,10 @@ def get_info(server_ip):
     except AddressNotFoundError:
         pass
 
-    game_mode = MapName.map_name_to_game_mode(current_map_raw)
-    current_map = MapName.map_name_to_readable_name(current_map_raw)
-    next_map = MapName.map_name_to_readable_name(next_map_raw)
-    next_map_game_mode = MapName.map_name_to_game_mode(next_map_raw)
+    game_mode = MapUtils.map_name_to_game_mode(current_map_raw)
+    current_map = MapUtils.map_name_to_readable_name(current_map_raw)
+    next_map = MapUtils.map_name_to_readable_name(next_map_raw)
+    next_map_game_mode = MapUtils.map_name_to_game_mode(next_map_raw)
 
     for item in player_list:
         item.update({"duration": int(item.get("time"))})
@@ -78,8 +79,9 @@ def get_info(server_ip):
                            bot_count = server_info.get("bot_count"),
                            password = server_info.get("password"),
                            server_ip = server_ip,
-                           location = location,
                            server_port = server_port,
+                           location = location,
+                           sourcetv_port = sourcetv_port,
                            player_list = player_list,
                            server_rules = server_rules,
                            server_tags = server_tags,
@@ -88,8 +90,7 @@ def get_info(server_ip):
                            game_mode = game_mode,
                            next_map = next_map,
                            next_map_game_mode = next_map_game_mode,
-                           next_map_workshop_id = next_map_workshop_id,
-                           )
+                           next_map_workshop_id = next_map_workshop_id)
 
 @bp.route("/thumbnail/<map_name>")
 @limiter.limit("90 per minute")
@@ -110,6 +111,8 @@ def get_source_tv(server_ip):
     server_port = request.args.get("port", default=27015, type=int)
     server_info = FormatA2S.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
+    if sourcetv_port != server_port:
+        return Response(status=400)
     if sourcetv_port is None:
         return Response(status=404)
     sourcetv_info = FormatA2S.info(server_ip, sourcetv_port)

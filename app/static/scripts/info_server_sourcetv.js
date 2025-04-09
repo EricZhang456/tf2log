@@ -12,7 +12,7 @@ const showSourceTVButton = (serverIP, serverPort) => {
             const sourceTVButton = document.querySelector(".info_header_sourcetv");
             sourceTVButton.setAttribute("href", `steam://connect/${response.address}`);
             sourceTVButton.style.setProperty("display", "flex");
-            if(response.password) {
+            if (response.password) {
                 document.querySelector(".info_header_sourcetv_password").style.setProperty("display", "block");
             }
         }
@@ -21,5 +21,5 @@ const showSourceTVButton = (serverIP, serverPort) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     const sourceTVScript = document.getElementById("info_server_sourcetv_script")
-    showSourceTVButton(sourceTVScript.getAttribute("x-server-ip"), sourceTVScript.getAttribute("x-server-port"));
+    showSourceTVButton(sourceTVScript.getAttribute("x-server-ip"), sourceTVScript.getAttribute("x-sourcetv-port"));
 });
