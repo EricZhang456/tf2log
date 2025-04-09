@@ -21,8 +21,11 @@ def populate_server_db(app: Flask) -> None:
                 server.max_players = 0 if item.get("maxPlayers") is None else item.get("maxPlayers")
                 server.location = ServerRegions.WORLD if item.get("region") is None else ServerRegions(item.get("region"))
                 server.vanilla = False
+                server.mvm = False
                 if game_mode == "vanilla" or game_mode == r'24/7':
                     if not any(i in item.get("keywords") for i in NON_VANILLA_TAGS):
                         server.vanilla = True
+                if game_mode == "mvm":
+                    server.mvm = True
                 db.session.add(server)
         db.session.commit()

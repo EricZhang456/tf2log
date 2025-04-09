@@ -9,3 +9,4 @@ class Server(db.Model):
     location: Mapped[ServerRegions]
     max_players: Mapped[int]
     vanilla: Mapped[bool]
+    mvm: Mapped[bool]
