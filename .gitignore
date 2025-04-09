@@ -175,6 +175,8 @@ cython_debug/
 
 .vscode
 
+migrations/
+
 .sass-cache/
 *.css.map
 *.sass.map

@@ -1,5 +1,6 @@
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from flask_caching import Cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -13,6 +14,7 @@ def internal_server_error(_):
     return render_template("except.html", except_body="Internal server error."), 500
 
 db = SQLAlchemy()
+migrate = Migrate()
 cache = Cache()
 limiter = Limiter(
     key_func = get_remote_address,

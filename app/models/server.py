@@ -8,4 +8,5 @@ class Server(db.Model):
     server_map: Mapped[str]
     max_players: Mapped[int]
     vac: Mapped[bool]
+    vanilla: Mapped[bool]
     sourcetv: Mapped[bool]
