@@ -1,9 +1,11 @@
 import a2s
 
 from .custom_except import NotTF2
+from app.extensions import cache
 
 class FormatA2S:
     @staticmethod
+    @cache.memoize(5)
     def info(server_ip: str, server_port=27015) -> dict:
         server_address = (server_ip, server_port)
         server_info_raw = a2s.info(server_address)
@@ -41,11 +43,13 @@ class FormatA2S:
         return server_info
 
     @staticmethod
+    @cache.memoize(300)
     def rules(server_ip: str, server_port=271015) -> dict:
         server_address = (server_ip, server_port)
         return a2s.rules(server_address)
 
     @staticmethod
+    @cache.memoize(5)
     def players(server_ip: str, server_port=27015) -> list[dict]:
         server_address = (server_ip, server_port)
         server_players = []
