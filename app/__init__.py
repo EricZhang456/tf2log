@@ -3,9 +3,8 @@ import json
 
 from flask import Flask
 
-from .extensions import db, migrate, cache, geoip, limiter, steamutils, page_not_found, internal_server_error
+from .extensions import cache, geoip, limiter, steamutils, page_not_found, internal_server_error
 from .routes import info
-from .models.server import *
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -38,8 +37,6 @@ def create_app(test_config=None):
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, internal_server_error)
 
-    db.init_app(app)
-    migrate.init_app(app, db)
     cache.init_app(app)
     geoip.init_app(app)
     limiter.init_app(app)
