@@ -33,6 +33,7 @@ def get_info(server_ip: str):
         raise ServerSourceTV
 
     server_rules_raw = FormatA2S.rules(server_ip, server_port)
+    server_rules_raw["tf2log_vac"] = 1 if server_info.get("vac") else 0
     player_list = FormatA2S.players(server_ip, server_port)
     server_rules = CvarUtils.rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")

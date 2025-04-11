@@ -1,5 +1,6 @@
 class CvarUtils:
     STOCK_CVAR_READABLE_NAME = {
+        "tf2log_vac": "Valve Anti-Cheat",
         "mp_autoteambalance": "Auto Team Balance",
         "mp_scrambleteams_auto": "Auto Team Scramble",
         "mp_disable_respawn_times": "Disable Respawn Times",
@@ -77,6 +78,7 @@ class CvarUtils:
     }
 
     RULES_CVAR_BOOL = (
+        "tf2log_vac",
         "mp_autoteambalance",
         "mp_disable_respawn_times",
         "mp_fadetoblack",
@@ -133,6 +135,8 @@ class CvarUtils:
     )
 
     __RULES_CVAR_SORT_TARGET = (
+        # Fake Cvar for VAC status
+        "tf2log_vac",
         # Limits
         "mp_timelimit",
         "mp_match_end_at_timelimit",
