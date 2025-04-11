@@ -2,4 +2,16 @@
 {% endblock %}
 
 {% block body %}
+<div class="target">
+    {% for item in server_list %}
+    <p>{{ item["name"] }}</p>
+    <p>{{ item["ip"] }}</p>
+    <p>{{ item["map"] }}</p>
+    {% if item["bots"] == 0 %}
+    <p>{{ item["players"] }} / {{ item["maxPlayers"] }}</p>
+    {% else %}
+    <p>{{ item["players"] }} / {{ item["maxPlayers"] }} ({{ item["bots"] }})</p>
+    {% endif %}
+    {% endfor %}
+</div>
 {% endblock %}

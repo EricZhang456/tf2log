@@ -1,5 +1,5 @@
 from enum import Enum
-import requests
+import aiohttp
 
 class ServerRegions(Enum):
     US_EAST = 0
@@ -17,12 +17,15 @@ class ServerRegions(Enum):
         return cls.WORLD
 
 class ServerList:
-    SERVERBROWSER_TF_GAMEMODES = ("vanilla", r'24/7', "dm", "gamemode", r'jump/surf', "mvm", "social")
-    SERVERBROWSER_TF_ENDPOINT = "https://serverbrowser.tf/api/servers/all"
+    SERVERBROWSER_TF_GAMEMODES = ("vanilla", "24/7", "dm", "gamemode", "jump/surf", "mvm", "social")
+    __SERVERBROWSER_TF_ENDPOINT = "https://serverbrowser.tf/api/servers/all"
 
     @classmethod
-    def fetch_servers(cls, game_mode: str) -> list:
+    async def fetch_servers(cls, aiohttp_session: aiohttp.ClientSession, game_mode: str) -> list:
         if game_mode not in cls.SERVERBROWSER_TF_GAMEMODES:
             raise ValueError
         params = {"hasUsersPlaying": "0", "category": game_mode}
-        return requests.get(cls.SERVERBROWSER_TF_ENDPOINT, params=params).json()
+        async with aiohttp_session.get(cls.__SERVERBROWSER_TF_ENDPOINT, params=params) as r:
+            if r.status != 200:
+                r.raise_for_status()
+            return await r.json()

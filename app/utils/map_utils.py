@@ -114,7 +114,7 @@ class MapUtils:
     @classmethod
     def map_name_to_game_mode(cls, map_name: str) -> str | None:
         if map_name in cls.AD_MAPS:
-            return r'Attack/Defend'
+            return "Attack/Defend"
         elif map_name in cls.MANNPOWER_MAPS:
             return "Mannpower"
         elif map_name in cls.DOMINATION_MAPS:
