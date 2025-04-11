@@ -121,7 +121,7 @@
         </div>
         <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/info/reanimate_button.js') }}"></script>
         <script fetchpriority="high" defer id="info_map_background_script" src="{{ url_for('static', filename='scripts/info/info_map_background.js') }}" x-map-name="{{ raw_map_name }}"></script>
-        <script defer src="{{ url_for('static', filename='scripts/server_favorites.js') }}"></script>
+        <script defer src="{{ url_for('static', filename='scripts/info/server_favorites.js') }}"></script>
         {% if sourcetv_port %}
         <script defer id="info_server_sourcetv_script" src="{{ url_for('static', filename='scripts/info/info_server_sourcetv.js') }}" x-server-ip="{{ server_ip }}" x-sourcetv-port="{{ sourcetv_port }}"></script>
         {% endif %}

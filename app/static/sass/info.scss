@@ -55,6 +55,7 @@
             display: flex;
             justify-content: space-between;
             min-height: 140px;
+            box-shadow: 0 10px 15px -10px black;
             .info_action_button_tags {
                 @include vertical-flex();
                 justify-content: center;
