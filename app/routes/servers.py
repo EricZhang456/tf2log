@@ -75,10 +75,6 @@ async def get_server_list():
                             "bots": item.get("bots")})
     return render_template("servers.html", server_list = server_list, length = len(server_list))
 
-@bp.route("/asdfd")
-def asdf():
-    return render_template("servers.html")
-
 @bp.route("/server_count")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=600)
