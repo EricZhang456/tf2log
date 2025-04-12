@@ -9,16 +9,13 @@
     <p>{{ item["ip"] }}</p>
     <p>{{ item["map"] }}</p>
     <p>{{ item["tags"] }}</p>
+    <p>{{ item["region"] }}</p>
     {% if item["game_mode"] %}
     <p>{{ item["game_mode"] }}</p>
     {% else %}
     <p>Unknown</p>
     {% endif %}
-    {% if item["vanilla"] %}
-    <p>Vanilla</p>
-    {% else %}
-    <p>Custom</p>
-    {% endif %}
+    <p>{{ item["vanilla"] }}</p>
     {% if item["bots"] == 0 %}
     <p>{{ item["players"] }} / {{ item["maxPlayers"] }}</p>
     {% else %}

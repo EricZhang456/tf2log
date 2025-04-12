@@ -3,7 +3,8 @@ from app.extensions import limiter, cache
 
 import asyncio, aiohttp
 
-from app.utils.server_list import ServerList
+from app.utils.param_bool import param_bool
+from app.utils.server_list import ServerList, ServerRegions
 from app.utils.map_utils import MapUtils
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
@@ -12,29 +13,33 @@ bp = Blueprint("servers", __name__, url_prefix="/servers")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
 async def get_server_list():
-    has_user_playing = request.args.get("has_user_playing", default=False, type=bool)
-    vanilla = request.args.get("vanilla", default=True, type=bool)
-    alltalk = request.args.get("alltalk", default=False, type=bool)
-    nocrits = request.args.get("nocrits", default=False, type=bool)
-    gravity = request.args.get("gravity", default=False, type=bool)
-    increased_maxplayers = request.args.get("increased_maxplayers", default=False, type=bool)
-    respawntimes = request.args.get("respawntimes", default=False, type=bool)
-    friendlyfire = request.args.get("friendlyfire", default=False, type=bool)
-    dmgspread = request.args.get("dmgspread", default=False, type=bool)
-    norespawntime = request.args.get("norespawntime", default=False, type=bool)
-    replay = request.args.get("replay", default=False, type=bool)
+    has_user_playing = request.args.get("has_user_playing", default=False, type=param_bool)
+    region = ServerRegions(request.args.get("region", default=None, type=int))
+    vanilla = request.args.get("vanilla", default=True, type=param_bool)
+    alltalk = request.args.get("alltalk", default=False, type=param_bool)
+    nocrits = request.args.get("nocrits", default=False, type=param_bool)
+    gravity = request.args.get("gravity", default=False, type=param_bool)
+    increased_maxplayers = request.args.get("increased_maxplayers", default=False, type=param_bool)
+    respawntimes = request.args.get("respawntimes", default=False, type=param_bool)
+    friendlyfire = request.args.get("friendlyfire", default=False, type=param_bool)
+    dmgspread = request.args.get("dmgspread", default=False, type=param_bool)
+    norespawntime = request.args.get("norespawntime", default=False, type=param_bool)
+    replay = request.args.get("replay", default=False, type=param_bool)
     server_list_raw = []
     server_list = []
+    game_mode_list = ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA if vanilla else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, has_user_playing)) 
-                       for item in (ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA 
-                                    if vanilla else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)]
+        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, has_user_playing))
+                       for item in game_mode_list]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         server_list_raw.extend(item)
     for item in server_list_raw:
+        if vanilla and MapUtils.map_name_to_game_mode(item.get("map")) is None:
+            continue
         server_tags = tuple(item.get("keywords").split(","))
-        if ((alltalk and "alltalk" not in server_tags)
+        if ((region != ServerRegions(item.get("region")))
+            or (alltalk and "alltalk" not in server_tags)
             or (nocrits and "nocrits" not in server_tags)
             or (gravity and "gravity" not in server_tags)
             or (increased_maxplayers and "increased_maxplayers" not in server_tags)
@@ -44,11 +49,16 @@ async def get_server_list():
             or (friendlyfire and "friendlyfire" not in server_tags)
             or (replay and "replays" not in server_tags)):
             continue
+        vanilla_status = "Vanilla"
+        if any(i in server_tags for i in ServerList.NON_VANILLA_TAGS):
+            vanilla_status = "Custom Vanilla"
+        if MapUtils.map_name_to_game_mode(item.get("map")) is None:
+            vanilla_status = "Custom"
         server_list.append({"name": item.get("name"), 
                             "ip": item.get("ip"),
                             "tags": ", ".join(server_tags),
-                            "vanilla": False if (any(i in item.get("keywords") for i in ServerList.NON_VANILLA_TAGS)
-                                                or MapUtils.map_name_to_game_mode(item.get("map")) is None) else True,
+                            "region": ServerList.get_region_str(item.get("region")),
+                            "vanilla": vanilla_status,
                             "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
                             "map": MapUtils.map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
