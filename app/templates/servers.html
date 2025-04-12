@@ -141,14 +141,18 @@
                 {% for item in server_list %}
                 <div class="server_list_item">
                     <div class="server_list_details">
-                        <a href="javascript:void(0);" class="server_list_name">{{ item["name"] }}</a>
+                        <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" class="server_list_name">{{ item["name"] }}</a>
                         <span class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</span>
                     </div>
                     <div class="server_list_misc">
-                        <p class="server_list_item_player_count">12 / 14</p>
+                        {% if item["bots"] == 0 %}
+                        <p class="server_list_item_player_count">{{ item["players"] }} / {{ item["maxPlayers"] }}</p>
+                        {% else %}
+                        <p class="server_list_item_player_count">{{ item["players"] }} / {{ item["maxPlayers"] }} ({{ item["bots"] }})</p>
+                        {% endif %}
                         <div class="server_list_item_icons">
-                            <img src="{{ url_for('static', filename='svg/play-fill.svg') }}" class="server_list_connect" height="15" width="15">
-                            <img src="{{ url_for('static', filename='svg/star.svg') }}" class="server_list_favorite" height="15" width="15">
+                            <a href="steam://connect/{{ item['ip'] }}"><img src="{{ url_for('static', filename='svg/play-fill.svg') }}" class="server_list_connect" height="15" width="15"></a>
+                            <a href="javascript:void(0);"><img src="{{ url_for('static', filename='svg/star.svg') }}" class="server_list_favorite" height="15" width="15"></a>
                         </div>
                     </div>
                 </div>
@@ -157,29 +161,6 @@
         </div>
     </div>
 </div>
-
-<!-- <p>{{ length }}</p>
-<div class="target">
-    {% for item in server_list %}
-    <p>{{ item["name"] }}</p>
-    <p>{{ item["ip"] }}</p>
-    <p>{{ item["map"] }}</p>
-    <p>{{ item["tags"] }}</p>
-    <p>{{ item["region"] }}</p>
-    {% if item["game_mode"] %}
-    <p>{{ item["game_mode"] }}</p>
-    {% else %}
-    <p>Unknown</p>
-    {% endif %}
-    <p>{{ item["vanilla"] }}</p>
-    {% if item["bots"] == 0 %}
-    <p>{{ item["players"] }} / {{ item["maxPlayers"] }}</p>
-    {% else %}
-    <p>{{ item["players"] }} / {{ item["maxPlayers"] }} ({{ item["bots"] }})</p>
-    {% endif %}
-    <hr>
-    {% endfor %}
-</div> -->
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
 {% endblock %}

@@ -17,7 +17,7 @@ async def get_server_list():
     has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
     not_full = request.args.get("not_full", default=False, type=param_bool)
     no_password = request.args.get("password", default=False, type=param_bool)
-    region_param = request.args.get("region", default=None, type=int)
+    region_param = request.args.get("region", default=-1, type=int)
     region = None if region_param == -1 else ServerRegions(region_param)
     vanilla = request.args.get("vanilla", default=True, type=param_bool)
     alltalk = request.args.get("alltalk", default=False, type=param_bool)

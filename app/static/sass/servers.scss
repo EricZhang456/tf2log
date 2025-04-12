@@ -141,13 +141,13 @@
             .server_list_header_align_right {
                 display: flex;
                 margin-left: auto;
-                margin-right: 95px;
+                margin-right: 125px;
                 .server_list_sort_hint {
                     margin-right: 5px;
                 }
                 .server_list_sort {
                     margin-inline: 5px;
-                    margin-right: 10px;
+                    margin-right: 40px;
                     color: $server-hint-color;
                 }
             }
@@ -197,7 +197,8 @@
                         }
                     }
                     .server_list_item_player_count {
-                        width: max-content;
+                        width: 100px;
+                        text-align: center;
                     }
                 }
             }
