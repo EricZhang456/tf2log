@@ -37,7 +37,7 @@ class FormatA2S:
         }
 
         if server_info_raw.keywords:
-            server_info["tags"] = list(filter(None, server_info_raw.keywords.split(",")))
+            server_info["tags"] = tuple(filter(None, server_info_raw.keywords.split(",")))
         
         optional_attrs = ("port", "steam_id", "stv_port", "stv_name", "game_id")
         for item in optional_attrs:
