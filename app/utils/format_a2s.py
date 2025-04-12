@@ -10,7 +10,6 @@ class FormatA2S:
     @cache.memoize(5)
     @retry.retry(TimeoutError, tries=5, delay=1)
     def info(server_ip: str, server_port=27015) -> dict:
-        print("hi")
         server_address = (server_ip, server_port)
         server_info_raw = a2s.info(server_address)
 

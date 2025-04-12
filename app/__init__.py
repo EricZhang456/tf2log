@@ -4,12 +4,15 @@ import json
 from flask import Flask
 
 from .extensions import cache, geoip, limiter, page_not_found, internal_server_error
-from .routes import info, servers
+from .routes import info, servers, index
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     
     app.config.from_file("config.json", json.load)
+
+    if app.config.get("ENV") not in ("dev", "prod"):
+        raise Exception("Invalid ENV")
 
     # only build css on each request when in debug
     if app.debug or app.config["ENV"] == "dev":
@@ -44,5 +47,6 @@ def create_app(test_config=None):
 
     app.register_blueprint(info.bp)
     app.register_blueprint(servers.bp)
+    app.register_blueprint(index.bp)
 
     return app

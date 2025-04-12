@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<main class="primary">
+<div class="primary">
     <div class="info">
         <div class="info_header">
             <div class="info_header_server">
@@ -119,7 +119,7 @@
                 </tbody>
             </table>
         </div>
-        <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/info/reanimate_button.js') }}"></script>
+        <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
         <script fetchpriority="high" defer id="info_map_background_script" src="{{ url_for('static', filename='scripts/info/info_map_background.js') }}" x-map-name="{{ raw_map_name }}"></script>
         <script defer src="{{ url_for('static', filename='scripts/info/server_favorites.js') }}"></script>
         {% if sourcetv_port %}
@@ -127,5 +127,5 @@
         {% endif %}
         <script defer src="{{ url_for('static', filename='scripts/info/sort_table_info.js') }}"></script>
     </div>
-</main>
+</div>
 {% endblock %}

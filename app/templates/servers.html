@@ -1,8 +1,164 @@
+{% extends "base.html" %}
+
 {% block head %}
+<title>Server List</title>
 {% endblock %}
 
 {% block body %}
-<p>{{ length }}</p>
+
+
+<div class="primary">
+    <div class="server">
+        <div class="server_header">
+            <h1 class="server_header_title">Server List</h1>
+            <div class="server_header_stats">
+                <p class="server_header_server_count">
+                    <span id="server_header_server_count_number">---</span> Servers
+                </p>
+                <p class="server_header_player_count">
+                    <span id="server_header_player_count_number">---</span> Players Online
+                </p>
+            </div>
+        </div>
+        <div class="server_search">
+            <img src="{{ url_for('static', filename='svg/search.svg') }}" class="server_search_icon" height="12" width="12">
+            <input type="search" placeholder="Search for server..." class="server_search_text" id="server_search_box">
+        </div>
+        <div class="server_filter">
+            <div class="server_filter_hint">
+                <img src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12">
+                <p class="server_filter_text">Filter</p>
+                <p class="server_filter_hint_text" id="server_filter_hint">Has user playing, Server is not full, Alltalk</p>
+            </div>
+            <form class="server_filter_form">
+                <div class="server_filter_data">
+                    <fieldset class="server_filter_typical">
+                        <legend>General</legend>
+                        <div class="server_filter_full">
+                            <input type="checkbox" id="server_filter_full" name="server_filter_full">
+                            <label for="server_filter_full">Server is not full</label>
+                        </div>
+                        <div class="server_filter_has_users_playing">
+                            <input type="checkbox" id="server_filter_has_users_playing" name="server_filter_has_users_playing">
+                            <label for="server_filter_has_users_playing">Has users playing</label>
+                        </div>
+                        <div class="server_filter_no_password">
+                            <input type="checkbox" id="server_filter_no_password" name="server_filter_no_password">
+                            <label for="server_filter_no_password">Is not password proteched</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="server_filter_vanilla">
+                        <legend>Presets</legend>
+                        <div class="server_filter_vanilla_vanilla">
+                            <input type="radio" id="server_filter_vanilla" name="server_filter_vanilla" value="server_filter_vanilla">
+                            <label for="server_filter_vanilla">Vanilla</label>
+                        </div>
+                        <div class="server_filter_vanilla_custom">
+                            <input type="radio" id="server_filter_vanilla_custom" name="server_filter_vanilla" value="server_filter_vanilla_custom">
+                            <label for="server_filter_vanilla_custom">Vanilla Custom</label>
+                        </div>
+                        <div class="server_filter_preset_custom">
+                            <input type="radio" id="server_filter_custom" name="server_filter_vanilla" value="server_filter_custom">
+                            <label for="server_filter_custom">Custom</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="server_filter_custom">
+                        <legend>Other</legend>
+                        <div class="server_filter_alltalk">
+                            <input type="checkbox" id="server_filter_alltalk" name="server_filter_alltalk">
+                            <label for="server_filter_alltalk">Global voice chat</label>
+                        </div>
+                        <div class="server_filter_nocrits">
+                            <input type="checkbox" id="server_filter_nocrits" name="server_filter_nocrits">
+                            <label for="server_filter_nocrits">No random crits</label>
+                        </div>
+                        <div class="server_filter_dmgspread">
+                            <input type="checkbox" id="server_filter_dmgspread" name="server_filter_dmgspread">
+                            <label for="server_filter_dmgspread">Random damage spread</label>
+                        </div>
+                        <div class="server_filter_increased_max_players">
+                            <input type="checkbox" id="server_filter_increased_maxplayers" name="server_filter_increased_maxplayers">
+                            <label for="server_filter_increased_maxplayers">Increased max players</label>
+                        </div>
+                        <div class="server_filter_norespawntime">
+                            <input type="checkbox" id="server_filter_norespawntime" name="server_filter_norespawntime">
+                            <label for="server_filter_norespawntime">No respawn time</label>
+                        </div>
+                        <div class="server_filter_respawntimes">
+                            <input type="checkbox" id="server_filter_respawntimes" name="server_filter_respawntimes">
+                            <label for="server_filter_respawntimes">Modified respawn time</label>
+                        </div>
+                        <div class="server_filter_friendlyfire">
+                            <input type="checkbox" id="server_filter_friendlyfire" name="server_filter_friendlyfire">
+                            <label for="server_filter_friendlyfire">Friendly fire</label>
+                        </div>
+                        <div class="server_filter_gravity">
+                            <input type="checkbox" id="server_filter_gravity" name="server_filter_gravity">
+                            <label for="server_filter_gravity">Modified gravity</label>
+                        </div>
+                        <div class="server_filter_replay">
+                            <input type="checkbox" id="server_filter_replay" name="server_filter_replay">
+                            <label for="server_filter_replay">Replay</label>
+                        </div>
+                    </fieldset>
+                    <fieldset class="server_filter_region">
+                        <legend>Region</legend>
+                        <select class="server_filter_region_select">
+                            <option value="-1">All</option>
+                            <option value="0">US East</option>
+                            <option value="1">US West</option>
+                            <option value="2">South America</option>
+                            <option value="3">Europe</option>
+                            <option value="4">Asia</option>
+                            <option value="5">Australia</option>
+                            <option value="6">Middle East</option>
+                            <option value="7">Africa</option>
+                            <option value="255">World</option>
+                        </select>
+                    </fieldset>
+                </div>
+                <a href="javascript:void(0);" class="server_filter_button preload">Apply Filters</a>
+            </form>
+        </div>
+        <div class="server_list">
+            <div class="server_list_header">
+                <p class="server_list_text">Servers</p>
+                <div class="server_list_header_align_right">
+                    <span class="server_list_sort_hint">Sort By</span>
+                    <div class="server_list_sort">
+                        <span class="server_list_sort_name">Name</span>
+                        ,
+                        <span class="server_list_sort_map">Map</span>
+                        ,
+                        <span class="server_list_sort_mode">Game Mode</span>
+                        ,
+                        <span class="server_list_sort_region">Region</span>
+                    </div>
+                    <p class="server_list_player_count_hint">Players</p>
+                </div>
+            </div>
+            <div class="target server_list_servers">
+                {% for item in server_list %}
+                <div class="server_list_item">
+                    <div class="server_list_details">
+                        <a href="javascript:void(0);" class="server_list_name">{{ item["name"] }}</a>
+                        <span class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</span>
+                    </div>
+                    <div class="server_list_misc">
+                        <p class="server_list_item_player_count">12 / 14</p>
+                        <div class="server_list_item_icons">
+                            <img src="{{ url_for('static', filename='svg/play-fill.svg') }}" class="server_list_connect" height="15" width="15">
+                            <img src="{{ url_for('static', filename='svg/star.svg') }}" class="server_list_favorite" height="15" width="15">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- <p>{{ length }}</p>
 <div class="target">
     {% for item in server_list %}
     <p>{{ item["name"] }}</p>
@@ -23,5 +179,7 @@
     {% endif %}
     <hr>
     {% endfor %}
-</div>
+</div> -->
+<script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
+<script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
 {% endblock %}

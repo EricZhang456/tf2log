@@ -3,6 +3,7 @@ from app.extensions import limiter, cache
 
 import asyncio, aiohttp
 
+from app.utils.parse_hostname import parse_hostname
 from app.utils.param_bool import param_bool
 from app.utils.server_list import ServerList, ServerRegions
 from app.utils.map_utils import MapUtils
@@ -13,8 +14,11 @@ bp = Blueprint("servers", __name__, url_prefix="/servers")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
 async def get_server_list():
-    has_user_playing = request.args.get("has_user_playing", default=False, type=param_bool)
-    region = ServerRegions(request.args.get("region", default=None, type=int))
+    has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
+    not_full = request.args.get("not_full", default=False, type=param_bool)
+    no_password = request.args.get("password", default=False, type=param_bool)
+    region_param = request.args.get("region", default=None, type=int)
+    region = None if region_param == -1 else ServerRegions(region_param)
     vanilla = request.args.get("vanilla", default=True, type=param_bool)
     alltalk = request.args.get("alltalk", default=False, type=param_bool)
     nocrits = request.args.get("nocrits", default=False, type=param_bool)
@@ -38,7 +42,10 @@ async def get_server_list():
         if vanilla and MapUtils.map_name_to_game_mode(item.get("map")) is None:
             continue
         server_tags = tuple(item.get("keywords").split(","))
-        if ((region != ServerRegions(item.get("region")))
+        server_addr = parse_hostname(item.get("ip"))
+        if ((region and region != ServerRegions(item.get("region")))
+            or (not_full and (item.get("players") == item.get("maxPlayers")))
+            or (no_password and item.get("visibility") != 0)
             or (alltalk and "alltalk" not in server_tags)
             or (nocrits and "nocrits" not in server_tags)
             or (gravity and "gravity" not in server_tags)
@@ -56,6 +63,8 @@ async def get_server_list():
             vanilla_status = "Custom"
         server_list.append({"name": item.get("name"), 
                             "ip": item.get("ip"),
+                            "addr": server_addr[0],
+                            "port": server_addr[1],
                             "tags": ", ".join(server_tags),
                             "region": ServerList.get_region_str(item.get("region")),
                             "vanilla": vanilla_status,
@@ -66,10 +75,14 @@ async def get_server_list():
                             "bots": item.get("bots")})
     return render_template("servers.html", server_list = server_list, length = len(server_list))
 
+@bp.route("/asdfd")
+def asdf():
+    return render_template("servers.html")
+
 @bp.route("/server_count")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=600)
-async def get_sever_count():
+async def get_server_count():
     server_count = 0
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False)) 

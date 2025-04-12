@@ -1,0 +1,206 @@
+.server {
+    font-family: $info-font-stylized-stack;
+    height: 100%;
+    width: 80%;
+    max-width: 1200px;
+    background-color: $main-content-bg-color;
+
+    .server_header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 140px;
+        .server_header_title {
+            font-size: 30px;
+            font-weight: 600;
+            margin-left: 50px;
+        }
+        .server_header_stats {
+            margin-right: 30px;
+            @include vertical-flex();
+            gap: 5px;
+            align-items: end;
+            .server_header_server_count {
+                font-size: 20px;
+            }
+            .server_header_player_count {
+                font-size: 25px;
+            }
+        }
+    }
+    .server_search {
+        display: flex;
+        align-items: center;
+        background-color: $main-content-info-bg-color;
+        height: 25px;
+        width: 100%;
+        .server_search_icon {
+            margin-left: 30px;
+            filter: invert(1);
+        }
+        .server_search_text {
+            all: unset;
+            width: 100%;
+            color: $server-hint-color;
+            font-size: 12px;
+            font-family: $info-font-regular-stack;
+            font-style: italic;
+            margin-left: 20px;
+            margin-right: 10px;
+        }
+    }
+    .server_filter {
+        font-family: $info-font-regular-stack;
+        margin-top: 5px;
+        @include vertical-flex();
+        fieldset {
+            border: none;
+            legend {
+                margin-bottom: 5px;
+                color: $server-hint-color;
+            }
+        }
+        .server_filter_hint {
+            display: flex;
+            align-items: center;
+            height: 22px;
+            width: 100%;
+            font-size: 12px;
+            .server_filter_icon {
+                margin-left: 30px;
+                filter: invert(1);
+            }
+            .server_filter_text {
+                margin-left: 20px;
+            }
+            .server_filter_hint_text {
+                color: $server-hint-color;
+                font-style: italic;
+                margin-left: 10px;
+            }
+        }
+        .server_filter_form {
+            display: none;
+            /* display: flex; */
+            flex-wrap: wrap;
+            font-size: 15px;
+            margin: 10px;
+            box-sizing: border-box;
+            background-color: $main-content-info-bg-color;
+            padding: 20px;
+            label {
+                margin-left: 10px;
+            }
+            .server_filter_data {
+                width: 100%;
+                display: flex;
+                .server_filter_typical, .server_filter_vanilla, .server_filter_custom, .server_filter_region {
+                    @include vertical-flex();
+                    width: 250px;
+                    gap: 1px;
+                }
+                .server_filter_region {
+                    width: 150px;
+                }
+            }
+            .server_filter_button {
+                margin-left: auto;
+                background-color: $main-button-color;
+                font-size: initial;
+                padding-block: 5px;
+                padding-inline: 15px;
+                color: $main-text-color;
+                text-decoration: none;
+                user-select: none;
+                transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+                box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+            }
+            .server_filter_button:hover, .server_filter_button:focus {
+                box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+                background-color: $main-button-color-hover;
+            }
+            .server_filter_button:active {
+                box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+                background-color: $main-button-color-active;
+            }
+            .server_filter_button:not(:hover) {
+                box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+                background-color: $main-button-color;
+            }
+        }
+    }
+    .server_list {
+        @include vertical-flex();
+        .server_list_header {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            margin-left: 30px;
+            margin-block: 10px;
+            height: 22px;
+            .server_list_header_align_right {
+                display: flex;
+                margin-left: auto;
+                margin-right: 95px;
+                .server_list_sort_hint {
+                    margin-right: 5px;
+                }
+                .server_list_sort {
+                    margin-inline: 5px;
+                    margin-right: 10px;
+                    color: $server-hint-color;
+                }
+            }
+        }
+        .server_list_servers {
+            .server_list_item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+                height: 60px;
+                background-color: $info-action-bg-color;
+                .server_list_details {
+                    @include vertical-flex();
+                    gap: 1px;
+                    margin-left: 25px;
+                    margin-right: 10px;
+                    min-width: 0;
+                    .server_list_name, .server_list_info {
+                        min-width: 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+                    .server_list_name, a:hover.server_list_name, a:visited.server_list_name {
+                        font-size: 20px;
+                        color: $main-text-color;
+                        text-decoration: none;
+                    }
+                    a:hover.server_list_name, a:active.server_list_name {
+                        text-decoration: underline;
+                    }
+                    .server_list_info {
+                        font-size: 12px;
+                    }
+                }
+                .server_list_misc {
+                    margin-left: auto;
+                    display: flex;
+                    padding-right: 30px;
+                    .server_list_item_icons {
+                        margin-left: 20px;
+                        display: flex;
+                        align-items: center;
+                        gap: 15px;
+                        .server_list_connect, .server_list_favorite {
+                            filter: invert(1);
+                        }
+                    }
+                    .server_list_item_player_count {
+                        width: max-content;
+                    }
+                }
+            }
+        }
+    }
+}
