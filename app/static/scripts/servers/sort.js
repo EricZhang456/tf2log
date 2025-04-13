@@ -64,7 +64,7 @@ const sortServerItems = (asc = true, sortColumn) => {
             sortRegionButton.classList.toggle("sort_desc", !asc);
             break;
     }
-}
+};
 
 sortPlayerCountButton.addEventListener("click", () => {
     sortServerItems(!sortPlayerCountButton.classList.contains("sort_asc"), 1);

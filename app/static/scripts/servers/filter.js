@@ -46,7 +46,7 @@ const queryRegion = urlParams.get("region");
 const populateFilteredServerCount = () => {
     const filteredServerCount = document.querySelectorAll(".server_list_item").length;
     document.getElementById("server_list_filtered_server_count").innerHTML = `(${filteredServerCount})`;
-}
+};
 
 const setFilterFormInput = () => {
     filterServerFull.checked = Boolean(parseInt(queryServerFull));
@@ -96,7 +96,7 @@ const setFilterFormInput = () => {
     if (queryRegion === null) {
         filterRegion.selectedIndex = 0;
     }
-}
+};
 
 const toggleFilters = () => {
     if (filterForm.style.display === "none") {
@@ -104,7 +104,7 @@ const toggleFilters = () => {
     } else {
         filterForm.style.display = "none";
     }
-}
+};
 
 const reenableCustomFilters = () => {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
@@ -113,7 +113,7 @@ const reenableCustomFilters = () => {
         item.disabled = false;
         item.labels.item(0).style.color = enabledTextColor;
     });
-}
+};
 
 const disableCustomFilters = () => {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
@@ -123,7 +123,7 @@ const disableCustomFilters = () => {
         item.disabled = true;
         item.labels.item(0).style.color = disabledTextColor;
     });
-}
+};
 
 filterPresetVanilla.addEventListener("click", () => disableCustomFilters());
 filterPresetSemiVanilla.addEventListener("click" , () => reenableCustomFilters());
@@ -139,7 +139,7 @@ const getPreset = () => {
         }
     });
     return presetValue;
-}
+};
 
 const constructFilterUrlParams = () => {
     const targetFilterElements = [filterServerFull, filterHasUserPlaying, filterNoPassword, filterAlltalk,
@@ -152,7 +152,7 @@ const constructFilterUrlParams = () => {
     targetUrl.searchParams.set("vanilla", getPreset());
     targetUrl.searchParams.set("region", filterRegion.value);
     return targetUrl.toString();
-}
+};
 
 const filterApply = () => {
     const filteredURL = constructFilterUrlParams();
@@ -188,7 +188,7 @@ const filterApply = () => {
         window.history.pushState({}, '', filteredURL);
         populateFilteredServerCount();
     });
-}
+};
 
 const populateFilterHint = () => {
     let filterHintText = new Array();
@@ -206,7 +206,7 @@ const populateFilterHint = () => {
         filterHintText.push(filterRegion.options[filterRegion.selectedIndex].text);
     }
     filterHint.innerHTML = filterHintText.join(", ");
-}
+};
 
 filterForm.addEventListener("change", () => {
     populateFilterHint();

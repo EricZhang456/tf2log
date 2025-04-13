@@ -3,9 +3,7 @@ from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from app.extensions import cache, geoip, limiter
 
-import time
-import socket
-import requests
+import time, socket, requests
 
 from app.utils.format_a2s import FormatA2S
 from app.utils.cvar_utils import CvarUtils

@@ -4,7 +4,7 @@ const fetchServerCount = () => {
     .then((reponse) => {
         document.getElementById("server_header_server_count_number").innerHTML = reponse;
     });
-}
+};
 
 const fetchPlayerCount = () => {
     fetch("/servers/player_count")
@@ -12,7 +12,7 @@ const fetchPlayerCount = () => {
     .then((reponse) => {
         document.getElementById("server_header_player_count_number").innerHTML = reponse;
     });
-}
+};
 
 document.addEventListener("DOMContentLoaded" , () => {
     fetchServerCount();

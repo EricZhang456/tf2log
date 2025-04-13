@@ -22,7 +22,7 @@ const showSourceTVButton = (serverIP, serverPort) => {
             }
         }
     })
-}
+};
 
 document.addEventListener("DOMContentLoaded", () => {
     const sourceTVScript = document.getElementById("info_server_sourcetv_script")

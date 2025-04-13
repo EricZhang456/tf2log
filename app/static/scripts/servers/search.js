@@ -11,7 +11,7 @@ const setSearchBoxStyle = (value) => {
         searchBox.style.color = hintColor;
         searchBox.style.fontStyle = "italic";
     }
-}
+};
 
 searchBox.addEventListener("input", (field) => {
     const value = field.target.value.trim().toLowerCase();

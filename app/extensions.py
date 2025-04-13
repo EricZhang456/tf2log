@@ -5,6 +5,8 @@ from flask_limiter.util import get_remote_address
 
 from geoip2 import database
 
+from .utils.steam_utils import SteamUtils
+
 def page_not_found(_):
     return render_template("except.html", except_body="Page not found."), 404
 
@@ -22,3 +24,5 @@ class GeoIP:
         self.geoip_reader = database.Reader(app.config["GEOLITE2_DB_PATH"])
 
 geoip = GeoIP()
+
+steamutils = SteamUtils()

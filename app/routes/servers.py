@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, Response
 from enum import Enum
-from app.extensions import limiter, cache
+from app.extensions import limiter, cache, steamutils
 
 import asyncio, aiohttp
 
@@ -97,15 +97,60 @@ async def get_server_list():
                             "bots": item.get("bots")})
     subview_header = request.headers.get("x-fetch-subview")
     if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
-        return render_template("servers_item.html", show_server_list = True, server_list = server_list)
+        return render_template("servers_item.html", server_list = server_list)
     else:
-        return render_template("servers.html", server_list = server_list)
+        return render_template("servers.html", server_list = server_list, show_server_list = True)
 
 @bp.route("/favorites")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5)
 def get_favorites():
     return render_template("servers.html", show_server_list = False)
+
+@bp.route("/fetch_favorites_subview", methods=["POST"])
+@limiter.limit("90 per minute")
+@cache.cached(timeout=5)
+async def get_favorites_subview():
+    request_data = request.get_json()
+    servers = request_data.get("servers")
+    server_list = []
+    fetch_tasks = []
+    async with aiohttp.ClientSession() as session:
+        for item in servers:
+            server_ip = item.get("server_ip")
+            server_port = item.get("server_port")
+            fetch_tasks.append(asyncio.create_task(steamutils.get_server_info(session, server_ip, server_port)))
+            fetch_result = await asyncio.gather(*fetch_tasks)
+    for item in fetch_result:
+        server_addr = parse_hostname(item.get("addr"))
+        server_tags = tuple(item.get("gametype").split(","))
+        vanilla_status = GamePresets.VANILLA
+        if any(i in server_tags for i in ServerList.NON_VANILLA_TAGS):
+            vanilla_status = GamePresets.SEMI_VANILLA
+        if MapUtils.map_name_to_game_mode(item.get("map")) is None:
+            vanilla_status = GamePresets.CUSTOM
+        match vanilla_status:
+            case GamePresets.VANILLA:
+                vanilla_str = "Vanilla"
+            case GamePresets.SEMI_VANILLA:
+                vanilla_str = "Custom Vanilla"
+            case GamePresets.CUSTOM:
+                vanilla_str = "Custom"
+        server_list.append({"name": item.get("name"), 
+                            "ip": item.get("addr"),
+                            "addr": server_addr[0],
+                            "port": server_addr[1],
+                            "password": False,
+                            "tags": ", ".join(server_tags),
+                            "region": ServerList.get_region_str(item.get("region")),
+                            "vanilla": vanilla_str,
+                            "raw_map": item.get("map"),
+                            "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
+                            "map": MapUtils.map_name_to_readable_name(item.get("map")),
+                            "players": item.get("players"),
+                            "maxPlayers": item.get("max_players"),
+                            "bots": item.get("bots")})
+    return render_template("servers_item.html", server_list = server_list)
 
 @bp.route("/server_count")
 @limiter.limit("90 per minute")

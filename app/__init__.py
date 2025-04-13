@@ -3,7 +3,7 @@ import json
 
 from flask import Flask
 
-from .extensions import cache, geoip, limiter, page_not_found, internal_server_error
+from .extensions import cache, geoip, limiter, steamutils, page_not_found, internal_server_error
 from .routes import info, servers, index
 
 def create_app(test_config=None):
@@ -44,6 +44,8 @@ def create_app(test_config=None):
     cache.init_app(app)
     geoip.init_app(app)
     limiter.init_app(app)
+
+    steamutils.init_app(app)
 
     app.register_blueprint(info.bp)
     app.register_blueprint(servers.bp)
