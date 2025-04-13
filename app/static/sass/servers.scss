@@ -1,6 +1,5 @@
 .server {
     font-family: $info-font-stylized-stack;
-    height: 100%;
     width: 80%;
     max-width: 1200px;
     background-color: $main-content-bg-color;
@@ -159,7 +158,7 @@
                 align-items: center;
                 margin-bottom: 5px;
                 height: 60px;
-                background-color: $info-action-bg-color;
+                background-color: $server-item-bg-color;
                 .server_list_details {
                     @include vertical-flex();
                     gap: 1px;
@@ -210,6 +209,9 @@
                         text-align: center;
                     }
                 }
+            }
+            .server_list_item:nth-last-child(1 of :not(.hide)) {
+                margin-bottom: 30px;
             }
         }
     }
