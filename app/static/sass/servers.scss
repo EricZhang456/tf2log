@@ -29,7 +29,7 @@
         }
     }
     .server_search {
-        display: flex;
+        display: none;
         align-items: center;
         background-color: $main-content-info-bg-color;
         height: 25px;
@@ -50,9 +50,10 @@
         }
     }
     .server_filter {
+        display: none;
         font-family: $info-font-regular-stack;
         margin-top: 5px;
-        @include vertical-flex();
+        flex-direction: column;
         fieldset {
             border: none;
             legend {

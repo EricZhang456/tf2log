@@ -178,6 +178,7 @@ const filterApply = () => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    document.querySelector(".server_filter").style.display = "flex";
     filterForm.style.display = "none";
     setFilterFormInput();
     populateFilteredServerCount();

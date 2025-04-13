@@ -1,5 +1,5 @@
 {% for item in server_list %}
-<div class="server_list_item" x-server-name="{{ item['name'] }}" x-server-map="{{ item['raw_map'] }}" x-server-region="{{ item['region'] }}" x-server-mode="{{ item['game_mode'] }}" x-player-count="{{ item['players'] - item['bots'] }}">
+<div class="server_list_item" x-server-name="{{ item['name'] }}" x-server-readable-map="{{ item['map'] }}" x-server-map="{{ item['raw_map'] }}" x-server-region="{{ item['region'] }}" x-server-mode="{{ item['game_mode'] }}" x-player-count="{{ item['players'] - item['bots'] }}">
     <div class="server_list_details">
         <div class="server_list_name_password">
             {% if item["password"] %}
