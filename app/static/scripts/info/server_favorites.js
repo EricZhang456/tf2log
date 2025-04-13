@@ -20,7 +20,6 @@ const addServerToFavorite = () => {
         }
     });
     if (!duplicateServer) {
-        console.log("hi");
         favoritedServers.push(serverObj);
         window.localStorage.setItem("favorited_servers", JSON.stringify(favoritedServers));
     }
