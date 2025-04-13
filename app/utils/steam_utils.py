@@ -18,8 +18,7 @@ class SteamUtils:
             "filter": f"\\gameaddr\\{server_ip}:{server_port}",
             "limit": "1",
         }
-        proxy = "http://127.0.0.1:7890"
-        async with aiohttp_session.get(self.__STEAMWORKS_SEVRER_LIST_ENDPOINT, params=query_params, proxy=proxy) as r:
+        async with aiohttp_session.get(self.__STEAMWORKS_SEVRER_LIST_ENDPOINT, params=query_params) as r:
             if r.status != 200:
                 r.raise_for_status()
             else:

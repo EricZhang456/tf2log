@@ -9,7 +9,7 @@ const populateFilteredServerCount = () => {
 
 const fetchServers = () => {
     fetchingHint.style.display = "block";
-    if (favoritedServersStorage === null) {
+    if (favoritedServersStorage === null || !JSON.parse(favoritedServersStorage).length) {
         fetchingHint.style.fontStyle = "normal";
         fetchingHint.innerHTML = "No favorited servers."
         return;
