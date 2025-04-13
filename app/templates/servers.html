@@ -1,14 +1,23 @@
 {% extends "base.html" %}
 
 {% block head %}
+{% if show_favorites %}
 <title>Server List</title>
+{% else %}
+<title>Favorites</title>
+{% endif %}
 {% endblock %}
 
 {% block body %}
 <div class="primary">
     <div class="server">
         <div class="server_header">
+            {% if show_server_list %}
             <h1 class="server_header_title">Server List</h1>
+            {% else %}
+            <h1 class="server_header_title">Favorites</h1>
+            {% endif %}
+            {% if show_server_list %}
             <div class="server_header_stats">
                 <p class="server_header_server_count">
                     <span id="server_header_server_count_number">---</span> Servers
@@ -17,11 +26,13 @@
                     <span id="server_header_player_count_number">---</span> Players Online
                 </p>
             </div>
+            {% endif %}
         </div>
         <div class="server_search">
             <img src="{{ url_for('static', filename='svg/search.svg') }}" class="server_search_icon" height="12" width="12">
             <input type="search" placeholder="Search for server..." class="server_search_text" id="server_search_box">
         </div>
+        {% if show_server_list %}
         <div class="server_filter">
             <div class="server_filter_hint">
                 <img src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
@@ -122,6 +133,7 @@
                 <a href="javascript:void(0);" id="server_filter_button" class="server_filter_button preload" onclick="filterApply();">Apply Filters</a>
             </form>
         </div>
+        {% endif %}
         <div class="server_list">
             <div class="server_list_header">
                 <p class="server_list_text">Servers <span id="server_list_filtered_server_count"></span></p>
@@ -143,14 +155,18 @@
                 <p>Fetching server list...</p>
             </div>
             <div class="server_list_servers target">
+                {% if show_server_list %}
                 {% include "servers_item.html" %}
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
-<script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/sort.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/search.js') }}"></script>
+{% if show_server_list %}
+<script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
+{% endif %}
 {% endblock %}
