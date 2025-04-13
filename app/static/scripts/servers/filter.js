@@ -110,7 +110,6 @@ const reenableCustomFilters = () => {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
                             filterFriendlyFire, filterGravity, filterGravity];
     targetElements.forEach((item) => {
-        item.checked = false;
         item.disabled = false;
         item.labels.item(0).style.color = enabledTextColor;
     });
@@ -181,9 +180,32 @@ const filterApply = () => {
     });
 }
 
+const populateFilterHint = () => {
+    let filterHintText = new Array();
+    const targetElements = [filterServerFull, filterHasUserPlaying, filterNoPassword,
+                            filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
+                            filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
+                            filterIncreasedMaxPlayers, filterNoRespawnTime, filterRespawnTimes,
+                            filterFriendlyFire, filterGravity, filterReplay]
+    targetElements.forEach((item) => {
+        if (item.checked) {
+            filterHintText.push(item.labels.item(0).innerHTML);
+        }
+    });
+    if (filterRegion.selectedIndex != 0) {
+        filterHintText.push(filterRegion.options[filterRegion.selectedIndex].text);
+    }
+    filterHint.innerHTML = filterHintText.join(", ");
+}
+
+filterForm.addEventListener("change", () => {
+    populateFilterHint();
+});
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".server_filter").style.display = "flex";
     filterForm.style.display = "none";
     setFilterFormInput();
     populateFilteredServerCount();
+    populateFilterHint();
 });
