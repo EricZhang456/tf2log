@@ -16,7 +16,7 @@
         <p class="server_list_item_player_count">{{ item["players"] }} / {{ item["maxPlayers"] }} ({{ item["bots"] }})</p>
         {% endif %}
         <div class="server_list_item_icons">
-            <a href="steam://connect/{{ item['ip'] }}"><img src="{{ url_for('static', filename='svg/play-fill.svg') }}" class="server_list_connect" height="15" width="15"></a>
+            <a href="steam://connect/{{ item['ip'] }}"><img src="{{ url_for('static', filename='svg/play-fill.svg') }}" class="server_list_connect" height="18" width="18"></a>
             <a href="javascript:void(0);"><img src="{{ url_for('static', filename='svg/star.svg') }}" class="server_list_favorite" height="15" width="15"></a>
         </div>
     </div>
