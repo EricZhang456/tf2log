@@ -43,6 +43,11 @@ const queryGravity = urlParams.get("gravity");
 const queryReplay = urlParams.get("replay");
 const queryRegion = urlParams.get("region");
 
+const populateFilteredServerCount = () => {
+    const filteredServerCount = document.querySelectorAll(".server_list_item").length;
+    document.getElementById("server_list_filtered_server_count").innerHTML = `(${filteredServerCount})`;
+}
+
 const setFilterFormInput = () => {
     filterServerFull.checked = Boolean(parseInt(queryServerFull));
     filterHasUserPlaying.checked = Boolean(parseInt(queryHasUserPlaying));
@@ -155,6 +160,7 @@ const filterApply = () => {
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");
     fetchingHint.style.display = "block";
+    document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";
     fetch(filteredURL, {
         method: "GET",
@@ -167,10 +173,12 @@ const filterApply = () => {
         fetchingHint.style.display = "none";
         target.innerHTML = response;
         window.history.pushState({}, '', filteredURL);
+        populateFilteredServerCount();
     });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     filterForm.style.display = "none";
     setFilterFormInput();
+    populateFilteredServerCount();
 });

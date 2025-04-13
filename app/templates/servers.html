@@ -124,7 +124,7 @@
         </div>
         <div class="server_list">
             <div class="server_list_header">
-                <p class="server_list_text">Servers</p>
+                <p class="server_list_text">Servers <span id="server_list_filtered_server_count"></span></p>
                 <div class="server_list_header_align_right">
                     <span class="server_list_sort_hint">Sort By</span>
                     <div class="server_list_sort">
@@ -149,6 +149,6 @@
     </div>
 </div>
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
-<script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
+<script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
 {% endblock %}
