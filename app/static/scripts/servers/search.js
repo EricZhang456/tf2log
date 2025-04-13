@@ -29,5 +29,6 @@ searchBox.addEventListener("input", (field) => {
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".server_search").style.display = "flex";
+    searchBox.value = "";
     setSearchBoxStyle(searchBox.value);
 });

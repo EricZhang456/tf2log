@@ -159,6 +159,10 @@ const filterApply = () => {
     const filteredURL = constructFilterUrlParams();
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");
+    const searchBox = document.getElementById("server_search_box");
+    searchBox.value = "";
+    searchBox.style.color = "#aba8a5";
+    searchBox.style.fontStyle = "italic";
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";
