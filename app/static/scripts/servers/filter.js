@@ -159,9 +159,19 @@ const filterApply = () => {
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");
     const searchBox = document.getElementById("server_search_box");
+    const sortPlayerCountButton = document.querySelector(".server_list_player_count_hint");
+    const sortNameButton = document.querySelector(".server_list_sort_name");
+    const sortMapButton = document.querySelector(".server_list_sort_map");
+    const sortGameModeButton = document.querySelector(".server_list_sort_mode");
+    const sortRegionButton = document.querySelector(".server_list_sort_region");
     searchBox.value = "";
     searchBox.style.color = "#aba8a5";
     searchBox.style.fontStyle = "italic";
+    const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
+    sortElements.forEach((item) => {
+       item.classList.remove("sort_asc", "sort_desc"); 
+    });
+    
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";

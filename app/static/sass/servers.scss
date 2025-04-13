@@ -63,7 +63,7 @@
         .server_filter_hint {
             display: flex;
             align-items: center;
-            height: 22px;
+            min-height: 22px;
             width: 100%;
             font-size: 12px;
             .server_filter_icon {
