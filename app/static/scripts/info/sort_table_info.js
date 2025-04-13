@@ -17,8 +17,8 @@ const sortTable = (table, column, asc = true) => {
                 bCol = parseInt(bColObj.textContent);
                 break;
             case 2:
-                aCol = parseInt(aColObj.getAttribute("x-duration"));
-                bCol = parseInt(bColObj.getAttribute("x-duration"));
+                aCol = parseInt(aColObj.getAttribute("data-duration"));
+                bCol = parseInt(bColObj.getAttribute("data-duration"));
                 break;
             default:
                 aCol = aColObj.textContent.trim();

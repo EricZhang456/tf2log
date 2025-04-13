@@ -12,24 +12,24 @@ const sortServerItems = (asc = true, sortColumn) => {
         let aValue, bValue;
         switch (sortColumn) {
             case 1:
-                aValue = parseInt(a.getAttribute("x-player-count"));
-                bValue = parseInt(b.getAttribute("x-player-count"));
+                aValue = parseInt(a.getAttribute("data-player-count"));
+                bValue = parseInt(b.getAttribute("data-player-count"));
                 break;
             case 2:
-                aValue = a.getAttribute("x-server-name").trim().toLowerCase();
-                bValue = b.getAttribute("x-server-name").trim().toLowerCase();
+                aValue = a.getAttribute("data-server-name").trim().toLowerCase();
+                bValue = b.getAttribute("data-server-name").trim().toLowerCase();
                 break;
             case 3:
-                aValue = a.getAttribute("x-server-readable-map").trim().toLowerCase();
-                bValue = b.getAttribute("x-server-readable-map").trim().toLowerCase();
+                aValue = a.getAttribute("data-server-readable-map").trim().toLowerCase();
+                bValue = b.getAttribute("data-server-readable-map").trim().toLowerCase();
                 break;
             case 4:
-                aValue = a.getAttribute("x-server-mode").trim().toLowerCase();
-                bValue = b.getAttribute("x-server-mode").trim().toLowerCase();
+                aValue = a.getAttribute("data-server-mode").trim().toLowerCase();
+                bValue = b.getAttribute("data-server-mode").trim().toLowerCase();
                 break;
             case 5:
-                aValue = a.getAttribute("x-server-region").trim().toLowerCase();
-                bValue = b.getAttribute("x-server-region").trim().toLowerCase();
+                aValue = a.getAttribute("data-server-region").trim().toLowerCase();
+                bValue = b.getAttribute("data-server-region").trim().toLowerCase();
                 break;
         }
         return aValue > bValue ? (1 * sortDir) : (-1 * sortDir);

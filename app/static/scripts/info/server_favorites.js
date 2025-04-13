@@ -1,7 +1,9 @@
+const favoriteScriptTag = document.currentScript;
 const favoriteButton = document.querySelector(".info_header_favorite");
 favoriteButton.style.display = "block";
 
 const addServerToFavorite = () => {
-    // TODO: implement favorite function
-    console.log("Favorite button clicked");
+    const serverIP = favoriteScriptTag.getAttribute("data-server-ip");
+    const serverPort = favoriteScriptTag.getAttribute("data-server-port");
+
 };

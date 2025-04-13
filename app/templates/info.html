@@ -112,7 +112,7 @@
                     <tr>
                         <td class="info_player_table_name">{{ each.name }}</td>
                         <td class="info_player_table_score">{{ each.score }}</td>
-                        <td class="info_player_table_time" x-duration="{{ each.duration }}"><time datetime="{{ each.time }}">{{ each.time }}</time></td>
+                        <td class="info_player_table_time" data-duration="{{ each.duration }}"><time datetime="{{ each.time }}">{{ each.time }}</time></td>
                     </tr>
                     {% endif %}
                     {% endfor %}
@@ -120,10 +120,10 @@
             </table>
         </div>
         <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
-        <script fetchpriority="high" defer id="info_map_background_script" src="{{ url_for('static', filename='scripts/info/info_map_background.js') }}" x-map-name="{{ raw_map_name }}"></script>
-        <script defer src="{{ url_for('static', filename='scripts/info/server_favorites.js') }}"></script>
+        <script fetchpriority="high" defer id="info_map_background_script" src="{{ url_for('static', filename='scripts/info/info_map_background.js') }}" data-map-name="{{ raw_map_name }}"></script>
+        <script defer src="{{ url_for('static', filename='scripts/info/server_favorites.js') }}" data-server-ip="{{ server_ip }}" data-server-port="{{ server_port }}"></script>
         {% if sourcetv_port %}
-        <script defer id="info_server_sourcetv_script" src="{{ url_for('static', filename='scripts/info/info_server_sourcetv.js') }}" x-server-ip="{{ server_ip }}" x-sourcetv-port="{{ sourcetv_port }}"></script>
+        <script defer id="info_server_sourcetv_script" src="{{ url_for('static', filename='scripts/info/info_server_sourcetv.js') }}" data-server-ip="{{ server_ip }}" data-sourcetv-port="{{ sourcetv_port }}"></script>
         {% endif %}
         <script defer src="{{ url_for('static', filename='scripts/info/sort_table_info.js') }}"></script>
     </div>

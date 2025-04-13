@@ -23,5 +23,5 @@ const populateMapThumbnail = (map_name) => {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    populateMapThumbnail(document.getElementById("info_map_background_script").getAttribute("x-map-name"));
+    populateMapThumbnail(document.getElementById("info_map_background_script").getAttribute("data-map-name"));
 });

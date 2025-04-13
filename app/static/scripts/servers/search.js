@@ -16,10 +16,10 @@ const setSearchBoxStyle = (value) => {
 searchBox.addEventListener("input", (field) => {
     const value = field.target.value.trim().toLowerCase();
     document.querySelectorAll(".server_list_item").forEach((server) => {
-        const visible = server.getAttribute("x-server-name").toLowerCase().includes(value) 
-                        || server.getAttribute("x-server-readable-map").toLowerCase().includes(value)
-                        || server.getAttribute("x-server-mode").toLowerCase().includes(value)
-                        || server.getAttribute("x-server-region").toLocaleLowerCase().includes(value);
+        const visible = server.getAttribute("data-server-name").toLowerCase().includes(value) 
+                        || server.getAttribute("data-server-readable-map").toLowerCase().includes(value)
+                        || server.getAttribute("data-server-mode").toLowerCase().includes(value)
+                        || server.getAttribute("data-server-region").toLocaleLowerCase().includes(value);
         server.classList.toggle("hide", !visible);
     });
     setSearchBoxStyle(value);
