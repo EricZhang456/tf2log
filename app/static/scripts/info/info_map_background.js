@@ -1,9 +1,8 @@
-"use strict";
 const populateMapThumbnail = (map_name) => {
     fetch(`/info/thumbnail/${map_name}`, {
         method: "GET",
         headers: {
-            "x-get-thumbnail": '1'
+            "x-get-thumbnail": "1"
         }
     })
     .then((response) => {

@@ -1,4 +1,3 @@
-"use strict";
 const showSourceTVButton = (serverIP, serverPort) => {
     fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`, {
         method: "GET",
@@ -17,9 +16,9 @@ const showSourceTVButton = (serverIP, serverPort) => {
         if (response) {
             const sourceTVButton = document.querySelector(".info_header_sourcetv");
             sourceTVButton.setAttribute("href", `steam://connect/${response.address}`);
-            sourceTVButton.style.setProperty("display", "flex");
+            sourceTVButton.style.display = "flex";
             if (response.password) {
-                document.querySelector(".info_header_sourcetv_password").style.setProperty("display", "block");
+                document.querySelector(".info_header_sourcetv_password").style.display = "block";
             }
         }
     })

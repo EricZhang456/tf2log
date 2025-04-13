@@ -1,5 +1,5 @@
 def param_bool(value: str):
-    if value.lower == "true" or value == "1":
+    if value.lower() == "true" or (value.isnumeric() and int(value) >= 1):
         return True
     else:
         return False

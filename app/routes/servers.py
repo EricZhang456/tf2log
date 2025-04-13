@@ -89,12 +89,16 @@ async def get_server_list():
                             "tags": ", ".join(server_tags),
                             "region": ServerList.get_region_str(item.get("region")),
                             "vanilla": vanilla_str,
+                            "raw_map": item.get("map"),
                             "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
                             "map": MapUtils.map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
                             "maxPlayers": item.get("maxPlayers"),
                             "bots": item.get("bots")})
-    return render_template("servers.html", server_list = server_list)
+    if request.headers.get("x-fetch-subview" != "1"):
+        return render_template("servers.html", server_list = server_list)
+    else:
+        return render_template("servers_item.html", server_list = server_list)
 
 @bp.route("/server_count")
 @limiter.limit("90 per minute")

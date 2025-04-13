@@ -1,4 +1,3 @@
-"use strict";
 function sortTable(table, column, asc = true, sortDuration = false) {
     const sortDir = asc ? 1 : -1;
     const tBody = table.tBodies[0];

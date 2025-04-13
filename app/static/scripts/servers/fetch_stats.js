@@ -1,4 +1,3 @@
-"use strict";
 const fetchServerCount = () => {
     fetch("/servers/server_count")
     .then((respnse) => respnse.text())

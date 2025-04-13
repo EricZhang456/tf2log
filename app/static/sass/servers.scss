@@ -68,6 +68,7 @@
             font-size: 12px;
             .server_filter_icon {
                 margin-left: 30px;
+                cursor: pointer;
                 filter: invert(1);
             }
             .server_filter_text {
@@ -81,7 +82,6 @@
         }
         .server_filter_form {
             display: none;
-            /* display: flex; */
             flex-wrap: wrap;
             font-size: 15px;
             margin: 10px;
