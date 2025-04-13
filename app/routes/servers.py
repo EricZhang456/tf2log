@@ -122,6 +122,8 @@ async def get_favorites_subview():
             fetch_tasks.append(asyncio.create_task(steamutils.get_server_info(session, server_ip, server_port)))
             fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
+        if item is None:
+            continue
         server_addr = parse_hostname(item.get("addr"))
         server_tags = tuple(item.get("gametype").split(","))
         vanilla_status = GamePresets.VANILLA
