@@ -1,4 +1,4 @@
-function sortTable(table, column, asc = true, sortDuration = false) {
+const sortTable = (table, column, asc = true) => {
     const sortDir = asc ? 1 : -1;
     const tBody = table.tBodies[0];
     const rows = Array.from(tBody.querySelectorAll("tr"));
@@ -7,7 +7,6 @@ function sortTable(table, column, asc = true, sortDuration = false) {
         let aCol, bCol;
         const aColObj = a.querySelector(`td:nth-child(${column + 1})`);
         const bColObj = b.querySelector(`td:nth-child(${column + 1})`);
-
         switch (column) {
             case 0:
                 aCol = aColObj.textContent.trim().toLowerCase();
@@ -26,8 +25,7 @@ function sortTable(table, column, asc = true, sortDuration = false) {
                 bCol = bColObj.textContent.trim();
                 break;
         }
-
-        return aCol > bCol ? (1 * sortDir) : (-1 * sortDir)
+        return aCol > bCol ? (1 * sortDir) : (-1 * sortDir);
     });
 
     while (tBody.firstChild) {
@@ -46,7 +44,6 @@ document.querySelectorAll(".sort_table_info th").forEach(headerCell => {
         const tableElement = headerCell.parentElement.parentElement.parentElement;
         const headerIndex = Array.prototype.indexOf.call(headerCell.parentElement.children, headerCell);
         const currentIsAscending = headerCell.classList.contains("th-sort-asc");
-
         sortTable(tableElement, headerIndex, !currentIsAscending);
     });
 });

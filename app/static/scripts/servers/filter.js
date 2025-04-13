@@ -67,7 +67,7 @@ const setFilterFormInput = () => {
             case "2": filterPresetSemiVanilla.checked = true; break;
             case "3": filterPresetCustom.checked = true; break;
             case "4": filterPresetAll.checked = true; break;
-            default: filterPresetVanilla.checked = true;
+            default: filterPresetVanilla.checked = true; break;
         }
     }
     if (queryRegion) {
@@ -82,7 +82,7 @@ const setFilterFormInput = () => {
             case "6": filterRegion.selectedIndex = 7; break;
             case "7": filterRegion.selectedIndex = 8; break;
             case "255": filterRegion.selectedIndex = 9; break;
-            default: filterRegion.selectedIndex = 9;
+            default: filterRegion.selectedIndex = 9; break;
         }
     }
 
