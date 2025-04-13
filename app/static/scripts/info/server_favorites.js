@@ -15,9 +15,9 @@ const addServerToFavorite = () => {
     const serverObj = {server_ip: serverIP, server_port: serverPort};
     let duplicateServer = false;
     favoritedServers.some((item) => {
-        if (item.server_ip === item.server_ip && item.server_port === serverObj.server_port) {
+        if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
             duplicateServer = true;
-        };
+        }
     });
     if (!duplicateServer) {
         console.log("hi");
