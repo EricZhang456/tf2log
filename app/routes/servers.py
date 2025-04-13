@@ -95,10 +95,11 @@ async def get_server_list():
                             "players": item.get("players"),
                             "maxPlayers": item.get("maxPlayers"),
                             "bots": item.get("bots")})
-    if request.headers.get("x-fetch-subview" != "1"):
-        return render_template("servers.html", server_list = server_list)
-    else:
+    subview_header = request.headers.get("x-fetch-subview")
+    if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
         return render_template("servers_item.html", server_list = server_list)
+    else:
+        return render_template("servers.html", server_list = server_list)
 
 @bp.route("/server_count")
 @limiter.limit("90 per minute")

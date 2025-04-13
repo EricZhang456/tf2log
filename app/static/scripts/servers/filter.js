@@ -152,6 +152,10 @@ const constructFilterUrlParams = () => {
 
 const filterApply = () => {
     const filteredURL = constructFilterUrlParams();
+    const target = document.querySelector(".target");
+    const fetchingHint = document.querySelector(".server_list_fetching");
+    fetchingHint.style.display = "block";
+    target.innerHTML = "";
     fetch(filteredURL, {
         method: "GET",
         headers: {
@@ -160,7 +164,8 @@ const filterApply = () => {
     })
     .then((response) => response.text())
     .then((response) => {
-        document.querySelector("target").innerHTML = response;
+        fetchingHint.style.display = "none";
+        target.innerHTML = response;
         window.history.pushState({}, '', filteredURL);
     });
 }

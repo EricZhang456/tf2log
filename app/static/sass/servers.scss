@@ -212,4 +212,11 @@
             }
         }
     }
+    .server_list_fetching {
+        display: none;
+        text-align: center;
+        margin-block: 30px;
+        color: $server-hint-color;
+        font-style: italic;
+    }
 }
