@@ -24,4 +24,4 @@ const addServerToFavorite = () => {
         favoritedServers.push(serverObj);
         window.localStorage.setItem("favorited_servers", JSON.stringify(favoritedServers));
     }
-};
+}
