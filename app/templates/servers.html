@@ -139,8 +139,13 @@
                 {% for item in server_list %}
                 <div class="server_list_item">
                     <div class="server_list_details">
-                        <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" class="server_list_name">{{ item["name"] }}</a>
-                        <span class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</span>
+                        <div class="server_list_name_password">
+                            {% if item["password"] %}
+                            <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="server_list_password" width="18" height="18">
+                            {% endif %}
+                            <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" class="server_list_name">{{ item["name"] }}</a>
+                        </div>
+                        <div class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</div>
                     </div>
                     <div class="server_list_misc">
                         {% if item["bots"] == 0 %}

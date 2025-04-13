@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, Response
+from enum import Enum
 from app.extensions import limiter, cache
 
 import asyncio, aiohttp
@@ -10,6 +11,16 @@ from app.utils.map_utils import MapUtils
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
+class GamePresets(Enum):
+    VANILLA = 1
+    SEMI_VANILLA = 2
+    CUSTOM = 3
+    ALL = 4
+
+    @classmethod
+    def _missing_(cls, _):
+        return cls.VANILLA
+
 @bp.route("/")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
@@ -19,7 +30,7 @@ async def get_server_list():
     no_password = request.args.get("password", default=False, type=param_bool)
     region_param = request.args.get("region", default=-1, type=int)
     region = None if region_param == -1 else ServerRegions(region_param)
-    vanilla = request.args.get("vanilla", default=True, type=param_bool)
+    vanilla = GamePresets(request.args.get("vanilla", default=1, type=int))
     alltalk = request.args.get("alltalk", default=False, type=param_bool)
     nocrits = request.args.get("nocrits", default=False, type=param_bool)
     gravity = request.args.get("gravity", default=False, type=param_bool)
@@ -31,7 +42,9 @@ async def get_server_list():
     replay = request.args.get("replay", default=False, type=param_bool)
     server_list_raw = []
     server_list = []
-    game_mode_list = ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA if vanilla else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM
+    game_mode_list = (ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA 
+                    if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA 
+                    else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, has_user_playing))
                        for item in game_mode_list]
@@ -39,8 +52,6 @@ async def get_server_list():
     for item in fetch_result:
         server_list_raw.extend(item)
     for item in server_list_raw:
-        if vanilla and MapUtils.map_name_to_game_mode(item.get("map")) is None:
-            continue
         server_tags = tuple(item.get("keywords").split(","))
         server_addr = parse_hostname(item.get("ip"))
         if ((region and region != ServerRegions(item.get("region")))
@@ -56,24 +67,34 @@ async def get_server_list():
             or (friendlyfire and "friendlyfire" not in server_tags)
             or (replay and "replays" not in server_tags)):
             continue
-        vanilla_status = "Vanilla"
+        vanilla_status = GamePresets.VANILLA
         if any(i in server_tags for i in ServerList.NON_VANILLA_TAGS):
-            vanilla_status = "Custom Vanilla"
+            vanilla_status = GamePresets.SEMI_VANILLA
         if MapUtils.map_name_to_game_mode(item.get("map")) is None:
-            vanilla_status = "Custom"
+            vanilla_status = GamePresets.CUSTOM
+        match vanilla_status:
+            case GamePresets.VANILLA:
+                vanilla_str = "Vanilla"
+            case GamePresets.SEMI_VANILLA:
+                vanilla_str = "Custom Vanilla"
+            case GamePresets.CUSTOM:
+                vanilla_str = "Custom"
+        if vanilla != vanilla_status and vanilla != GamePresets.ALL:
+            continue
         server_list.append({"name": item.get("name"), 
                             "ip": item.get("ip"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
+                            "password": item.get("visibility"),
                             "tags": ", ".join(server_tags),
                             "region": ServerList.get_region_str(item.get("region")),
-                            "vanilla": vanilla_status,
+                            "vanilla": vanilla_str,
                             "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
                             "map": MapUtils.map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
                             "maxPlayers": item.get("maxPlayers"),
                             "bots": item.get("bots")})
-    return render_template("servers.html", server_list = server_list, length = len(server_list))
+    return render_template("servers.html", server_list = server_list)
 
 @bp.route("/server_count")
 @limiter.limit("90 per minute")

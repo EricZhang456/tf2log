@@ -165,6 +165,14 @@
                     margin-left: 25px;
                     margin-right: 10px;
                     min-width: 0;
+                    .server_list_name_password {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        .server_list_password {
+                            filter: invert(1);
+                        }
+                    }
                     .server_list_name, .server_list_info {
                         min-width: 0;
                         overflow: hidden;
