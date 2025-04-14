@@ -1,3 +1,5 @@
+const target = document.querySelector(".target");
+
 let favoritedServers;
 
 const getFavoritedServers = () => {
@@ -58,3 +60,9 @@ const attachFavoriteEventListener = () => {
 document.addEventListener("DOMContentLoaded", () => {
     attachFavoriteEventListener();
 });
+
+const observer = new MutationObserver((_) => {
+    attachFavoriteEventListener();
+});
+
+observer.observe(target, {childList: true})
