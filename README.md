@@ -29,7 +29,7 @@ pip install -r requirements.txt
     flask --app tf2log run --debug
     ```
 
-    - In a production environment, you probably want to use a [WSGI web server](https://flask.palletsprojects.com/en/stable/deploying/). If you're using `gnuicorn`, run
+    - In a production environment, you probably want to use a [WSGI web server](https://flask.palletsprojects.com/en/stable/deploying/). If you're using `gunicorn`, run
     ```sh
     gunicorn -w 4 'tf2log:create_app()'
     ```
