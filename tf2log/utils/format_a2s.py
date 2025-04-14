@@ -3,7 +3,7 @@ import a2s, retry
 from socket import timeout
 
 from .custom_except import NotTF2
-from app.extensions import cache
+from tf2log.extensions import cache
 
 class FormatA2S:
     @staticmethod

@@ -1,14 +1,14 @@
 from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
-from app.extensions import cache, geoip, limiter
+from tf2log.extensions import cache, geoip, limiter
 
 import time, socket, requests
 
-from app.utils.format_a2s import FormatA2S
-from app.utils.cvar_utils import CvarUtils
-from app.utils.map_utils import MapUtils
-from app.utils.custom_except import NotTF2, ServerSourceTV
+from tf2log.utils.format_a2s import FormatA2S
+from tf2log.utils.cvar_utils import CvarUtils
+from tf2log.utils.map_utils import MapUtils
+from tf2log.utils.custom_except import NotTF2, ServerSourceTV
 
 bp = Blueprint("info", __name__, url_prefix="/info")
 

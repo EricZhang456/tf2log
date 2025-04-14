@@ -1,13 +1,13 @@
 from flask import Blueprint, render_template, request, Response, make_response
 from enum import Enum
-from app.extensions import limiter, cache, steamutils
+from tf2log.extensions import limiter, cache, steamutils
 
 import asyncio, aiohttp
 
-from app.utils.parse_hostname import parse_hostname
-from app.utils.param_bool import param_bool
-from app.utils.server_list import ServerList, ServerRegions
-from app.utils.map_utils import MapUtils
+from tf2log.utils.parse_hostname import parse_hostname
+from tf2log.utils.param_bool import param_bool
+from tf2log.utils.server_list import ServerList, ServerRegions
+from tf2log.utils.map_utils import MapUtils
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
