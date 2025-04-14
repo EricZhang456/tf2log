@@ -1,6 +1,7 @@
 const fetchingHint = document.querySelector(".server_list_fetching");
 const target = document.querySelector(".target");
 const favoritedServersStorage = window.localStorage.getItem("favorited_servers")
+const missingFavoritesHint = document.currentScript.getAttribute("data-missing-favorites-text");
 
 const populateFilteredServerCount = () => {
     const filteredServerCount = document.querySelectorAll(".server_list_item").length;
@@ -11,7 +12,7 @@ const fetchServers = () => {
     fetchingHint.style.display = "block";
     if (favoritedServersStorage === null || !JSON.parse(favoritedServersStorage).length) {
         fetchingHint.style.fontStyle = "normal";
-        fetchingHint.innerHTML = "No favorited servers."
+        fetchingHint.innerHTML = missingFavoritesHint;
         return;
     }
     const favoritedServers = JSON.parse(favoritedServersStorage);

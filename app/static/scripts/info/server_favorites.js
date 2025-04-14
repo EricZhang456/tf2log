@@ -6,6 +6,9 @@ const serverIP = favoriteScriptTag.getAttribute("data-server-ip");
 const serverPort = favoriteScriptTag.getAttribute("data-server-port");
 const serverObj = {server_ip: serverIP, server_port: serverPort};
 
+const favoriteHint = favoriteScriptTag.getAttribute("data-favorite-text");
+const removeFavoriteHint = favoriteScriptTag.getAttribute("data-remove-favorite-text");
+
 let duplicateServer = false;
 let favoritedServers;
 
@@ -21,19 +24,19 @@ const getFavoritedServers = () => {
 const checkFavoriteDuplicate = () => {
     getFavoritedServers();
     if (favoritedServers.length) {
-        favoritedServers.some((item) => {
+        for (const item of favoritedServers) {
             if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
                 duplicateServer = true;
-                favoriteButton.innerHTML = "Remove from favorites";
+                favoriteButton.innerHTML = removeFavoriteHint;
                 return;
             } else {
                 duplicateServer = false;
-                favoriteButton.innerHTML = "Favorite";
+                favoriteButton.innerHTML = favoriteHint;
             }
-        });
+        }
     } else {
         duplicateServer = false;
-        favoriteButton.innerHTML = "Favorite";
+        favoriteButton.innerHTML = favoriteHint;
     }
 };
 

@@ -1,3 +1,6 @@
+const favoritedAltText = document.currentScript.getAttribute("data-favorited-alt-text");
+const removeFavoriteAltText = document.currentScript.getAttribute("data-remove-favorite-alt-text");
+
 let favoritedServers;
 
 const getFavoritedServers = () => {
@@ -60,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 const observer = new MutationObserver((_) => {
-    console.log("hi");
     attachFavoriteEventListener();
 });
 

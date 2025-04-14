@@ -169,9 +169,9 @@
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/sort.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/search.js') }}"></script>
-<script defer src="{{ url_for('static', filename='scripts/servers/favorites.js') }}"></script>
+<script defer src="{{ url_for('static', filename='scripts/servers/favorites.js') }}" data-favorited-alt-text="Favorite" data-remove-favorite-alt-text="Remove from favorites"></script>
 {% if show_server_list %}
-<script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
+<script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}" data-missing-favorites-text="No favorited servers."></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
 {% else %}
 <script defer src="{{ url_for('static', filename='scripts/favorites/fetch.js') }}"></script>
