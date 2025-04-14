@@ -27,6 +27,19 @@
             }
         }
     }
+    .server_favorites_back, a:hover.server_favorites_back, a:visited.server_favorites_back {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        margin-left: 30px;
+        font-size: 12px;
+        min-height: 22px;
+        color: $main-text-color;
+        text-decoration: none;
+    }
+    a:hover.server_favorites_back, a:active.server_favorites_back {
+        text-decoration: underline;
+    }
     .server_search {
         display: none;
         align-items: center;
@@ -78,6 +91,15 @@
                 color: $server-hint-color;
                 font-style: italic;
                 margin-left: 10px;
+            }
+            .server_filter_favorites, a:hover.server_filter_favorites, a:visited.server_filter_favorites {
+                color: $main-text-color;
+                margin-left: auto;
+                margin-right: 30px;
+                text-decoration: none;
+            }
+            a:hover.server_filter_favorites, a:active.server_filter_favorites {
+                text-decoration: underline;
             }
         }
         .server_filter_form {

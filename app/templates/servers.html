@@ -32,12 +32,16 @@
             <img src="{{ url_for('static', filename='svg/search.svg') }}" class="server_search_icon" height="12" width="12">
             <input type="search" placeholder="Search for server..." class="server_search_text" id="server_search_box">
         </div>
+        {% if not show_server_list %}
+        <a href="{{ url_for('servers.get_server_list') }}" class="server_favorites_back">Back to server list</a>
+        {% endif %}
         {% if show_server_list %}
         <div class="server_filter">
             <div class="server_filter_hint">
                 <img src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
                 <p class="server_filter_text">Filter</p>
                 <p class="server_filter_hint_text" id="server_filter_hint"></p>
+                <a href="{{ url_for('servers.get_favorites') }}" class="server_filter_favorites">Go to favorites</a>
             </div>
             <form class="server_filter_form">
                 <div class="server_filter_data">
