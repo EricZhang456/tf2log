@@ -16,7 +16,7 @@ const getFavoritedServers = () => {
     } else {
         favoritedServers = JSON.parse(favoritedServersStorage);
     }
-}
+};
 
 const checkFavoriteDuplicate = () => {
     getFavoritedServers();
@@ -25,6 +25,7 @@ const checkFavoriteDuplicate = () => {
             if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
                 duplicateServer = true;
                 favoriteButton.innerHTML = "Remove from favorites";
+                return;
             } else {
                 duplicateServer = false;
                 favoriteButton.innerHTML = "Favorite";
@@ -42,7 +43,8 @@ const addServerToFavorite = () => {
         favoritedServers.push(serverObj);
         window.localStorage.setItem("favorited_servers", JSON.stringify(favoritedServers));
     } else {
-        filteredFavorites = favoritedServers.filter(item => item.server_ip !== serverObj.server_ip && item.server_port !== serverObj.server_port);
+        let filteredFavorites = favoritedServers;
+        filteredFavorites = favoritedServers.filter(item => !(item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port));
         window.localStorage.setItem("favorited_servers", JSON.stringify(filteredFavorites));
     }
     checkFavoriteDuplicate();
