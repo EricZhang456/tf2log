@@ -6,7 +6,7 @@ from flask import Flask
 from .extensions import cache, geoip, limiter, steamutils, page_not_found, internal_server_error
 from .routes import info, servers, index
 
-def create_app(test_config=None):
+def create_app():
     app = Flask(__name__, instance_relative_config=True)
     
     app.config.from_file("config.json", json.load)
@@ -14,7 +14,6 @@ def create_app(test_config=None):
     if app.config.get("ENV") not in ("dev", "prod"):
         raise Exception("Invalid ENV")
 
-    # only build css on each request when in debug
     if app.debug or app.config["ENV"] == "dev":
         from sassutils.wsgi import SassMiddleware
         app.wsgi_app = SassMiddleware(app.wsgi_app, {
@@ -25,6 +24,12 @@ def create_app(test_config=None):
                 "strip_extension": False,
             }
         })
+    else:
+        import sass
+        if not os.path.exists("tf2log/static/css"):
+            os.makedirs("tf2log/static/css")
+        with open("tf2log/static/css/style.scss.css", "w") as f:
+            f.write(sass.compile(filename="tf2log/static/sass/style.scss", output_style="compressed"))
 
     try:
         os.makedirs(app.instance_path)
