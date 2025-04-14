@@ -18,7 +18,7 @@ def create_app(test_config=None):
     if app.debug or app.config["ENV"] == "dev":
         from sassutils.wsgi import SassMiddleware
         app.wsgi_app = SassMiddleware(app.wsgi_app, {
-            "app": {
+            "tf2log": {
                 "sass_path": "static/sass",
                 "css_path": "static/css",
                 "wsgi_path": "/static/css",
