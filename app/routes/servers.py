@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, Response
+from flask import Blueprint, render_template, request, Response, make_response
 from enum import Enum
 from app.extensions import limiter, cache, steamutils
 
@@ -109,7 +109,6 @@ def get_favorites():
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])
 @limiter.limit("90 per minute")
-@cache.cached(timeout=5)
 async def get_favorites_subview():
     request_data = request.get_json()
     servers = request_data.get("servers")
@@ -152,7 +151,11 @@ async def get_favorites_subview():
                             "players": item.get("players"),
                             "maxPlayers": item.get("max_players"),
                             "bots": item.get("bots")})
-    return render_template("servers_item.html", server_list = server_list)
+    response = make_response(render_template("servers_item.html", server_list = server_list))
+    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
+    response.headers.set("Pragma", "no-cache")
+    response.headers.set("Expires", "0")
+    return response
 
 @bp.route("/server_count")
 @limiter.limit("90 per minute")
