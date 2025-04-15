@@ -1,0 +1,15 @@
+.footer {
+    font-family: $info-font-stylized-stack;
+    color: $server-hint-color;
+    margin-bottom: 30px;
+    text-align: center;
+    font-style: italic;
+    font-size: 12px;
+    a, a:visited {
+        color: $server-hint-color;
+        text-decoration: none;
+    }
+    a:hover, a:active {
+        text-decoration: underline;
+    }
+}
