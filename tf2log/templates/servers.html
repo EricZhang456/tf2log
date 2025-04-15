@@ -38,7 +38,7 @@
         {% if show_server_list %}
         <div class="server_filter">
             <div class="server_filter_hint">
-                <img title="Filter" src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
+                <input type="image" title="Filter" src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
                 <p class="server_filter_text">Filter</p>
                 <p class="server_filter_hint_text" id="server_filter_hint"></p>
                 <a href="{{ url_for('servers.get_favorites') }}" class="server_filter_favorites">Go to favorites</a>
