@@ -19,6 +19,7 @@
             @include vertical-flex();
             gap: 5px;
             align-items: end;
+            text-align: right;
             .server_header_server_count {
                 font-size: 20px;
             }
