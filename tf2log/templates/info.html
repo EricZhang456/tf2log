@@ -34,14 +34,14 @@
                         <a class="info_header_connect preload" href="steam://connect/{{ server_ip }}:{{ server_port }}">
                             Connect
                             {% if password %}
-                            <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_password_protected" width="20" height="20">
+                            <img title="Server is password protected" src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_password_protected" width="20" height="20">
                             {% endif %}
                         </a>
                         <a class="info_header_favorite preload" href="javascript:void(0)" onclick="addServerToFavorite();">Favorite</a>
                         {% if sourcetv_port %}
                         <a class="info_header_sourcetv preload" href="javascript:void(0)">
                             Watch
-                            <img src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_sourcetv_password" width="20" height="20">
+                            <img hint="SourceTV is password protected" src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="info_header_sourcetv_password" width="20" height="20">
                         </a>
                         {% endif %}
                         {% if server_steam_group %}

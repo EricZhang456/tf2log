@@ -26,29 +26,28 @@ const filterForm = document.querySelector(".server_filter_form");
 const filterHint = document.getElementById("server_filter_hint");
 const filterButton = document.getElementById("server_filter_button");
 
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const queryServerFull = urlParams.get("not_full");
-const queryHasUserPlaying = urlParams.get("has_user_playing");
-const queryNoPassword = urlParams.get("password");
-const queryPreset = urlParams.get("vanilla");
-const queryAlltalk = urlParams.get("alltalk")
-const queryNocrits = urlParams.get("nocrits")
-const queryDmgSpread = urlParams.get("dmgspread");
-const queryIncreasedMaxPlayers = urlParams.get("increased_maxplayers");
-const queryNoRespawnTime = urlParams.get("norespawntime");
-const queryRespawnTimes = urlParams.get("respawntimes");
-const queryFriendlyFire = urlParams.get("friendlyfire");
-const queryGravity = urlParams.get("gravity");
-const queryReplay = urlParams.get("replay");
-const queryRegion = urlParams.get("region");
-
 const populateFilteredServerCount = () => {
     const filteredServerCount = document.querySelectorAll(".server_list_item").length;
     document.getElementById("server_list_filtered_server_count").innerHTML = `(${filteredServerCount})`;
 };
 
 const setFilterFormInput = () => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const queryServerFull = urlParams.get("not_full");
+    const queryHasUserPlaying = urlParams.get("has_user_playing");
+    const queryNoPassword = urlParams.get("password");
+    const queryPreset = urlParams.get("vanilla");
+    const queryAlltalk = urlParams.get("alltalk")
+    const queryNocrits = urlParams.get("nocrits")
+    const queryDmgSpread = urlParams.get("dmgspread");
+    const queryIncreasedMaxPlayers = urlParams.get("increased_maxplayers");
+    const queryNoRespawnTime = urlParams.get("norespawntime");
+    const queryRespawnTimes = urlParams.get("respawntimes");
+    const queryFriendlyFire = urlParams.get("friendlyfire");
+    const queryGravity = urlParams.get("gravity");
+    const queryReplay = urlParams.get("replay");
+    const queryRegion = urlParams.get("region");
     filterServerFull.checked = Boolean(parseInt(queryServerFull));
     filterHasUserPlaying.checked = Boolean(parseInt(queryHasUserPlaying));
     filterNoPassword.checked = Boolean(parseInt(queryNoPassword));
@@ -103,6 +102,8 @@ const toggleFilters = () => {
         filterForm.style.display = "flex";
     } else {
         filterForm.style.display = "none";
+        setFilterFormInput();
+        populateFilterHint();
     }
 };
 
@@ -175,6 +176,7 @@ const filterApply = () => {
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";
+    window.history.pushState({}, '', filteredURL);
     fetch(filteredURL, {
         method: "GET",
         headers: {
@@ -185,7 +187,6 @@ const filterApply = () => {
     .then((response) => {
         fetchingHint.style.display = "none";
         target.innerHTML = response;
-        window.history.pushState({}, '', filteredURL);
         populateFilteredServerCount();
     });
 };

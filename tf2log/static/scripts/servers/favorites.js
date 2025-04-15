@@ -29,8 +29,10 @@ const setStar = (serverObj, serverFavoriteElement) => {
     const serverFavoriteImg = serverFavoriteElement.firstElementChild;
     if (checkFavoriteDuplicate(serverObj)) {
         serverFavoriteImg.src = "/static/svg/star-fill.svg";
+        serverFavoriteImg.title = removeFavoriteAltText;
     } else {
         serverFavoriteImg.src = "/static/svg/star.svg";
+        serverFavoriteImg.title = favoritedAltText;
     }
 }
 

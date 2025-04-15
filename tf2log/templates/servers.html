@@ -29,7 +29,7 @@
             {% endif %}
         </div>
         <div class="server_search">
-            <img src="{{ url_for('static', filename='svg/search.svg') }}" class="server_search_icon" height="12" width="12">
+            <img title="Search" src="{{ url_for('static', filename='svg/search.svg') }}" class="server_search_icon" height="12" width="12">
             <input type="search" placeholder="Search for server..." class="server_search_text" id="server_search_box">
         </div>
         {% if not show_server_list %}
@@ -38,7 +38,7 @@
         {% if show_server_list %}
         <div class="server_filter">
             <div class="server_filter_hint">
-                <img src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
+                <img title="Filter" src="{{ url_for('static', filename='svg/funnel.svg') }}" class="server_filter_icon" height="12" width="12" onclick="toggleFilters();" role="button">
                 <p class="server_filter_text">Filter</p>
                 <p class="server_filter_hint_text" id="server_filter_hint"></p>
                 <a href="{{ url_for('servers.get_favorites') }}" class="server_filter_favorites">Go to favorites</a>
@@ -169,7 +169,7 @@
 <script fetchpriority="high" defer src="{{ url_for('static', filename='scripts/reanimate_button.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/sort.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/search.js') }}"></script>
-<script defer src="{{ url_for('static', filename='scripts/servers/favorites.js') }}" data-favorited-alt-text="Favorite" data-remove-favorite-alt-text="Remove from favorites"></script>
+<script defer src="{{ url_for('static', filename='scripts/servers/favorites.js') }}" data-favorited-alt-text="Add to favorites" data-remove-favorite-alt-text="Remove from favorites"></script>
 {% if show_server_list %}
 <script defer src="{{ url_for('static', filename='scripts/servers/filter.js') }}"></script>
 <script defer src="{{ url_for('static', filename='scripts/servers/fetch_stats.js') }}"></script>
