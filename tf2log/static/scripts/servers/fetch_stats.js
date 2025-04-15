@@ -7,7 +7,6 @@ const fetchServerCount = () => {
 };
 
 const fetchPlayerCount = () => {
-    console.log("hi");
     fetch("/servers/player_count")
     .then((respnse) => respnse.text())
     .then((reponse) => {

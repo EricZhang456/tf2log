@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, Response, make_response
+import asyncio
+import aiohttp
+
 from enum import Enum
+from flask import Blueprint, render_template, request, Response, make_response
+
 from tf2log.extensions import limiter, cache, steamutils
-
-import asyncio, aiohttp
-
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
 from tf2log.utils.server_list import ServerList, ServerRegions
@@ -42,11 +43,12 @@ async def get_server_list():
     replay = request.args.get("replay", default=False, type=param_bool)
     server_list_raw = []
     server_list = []
-    game_mode_list = (ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA 
-                    if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA 
+    game_mode_list = (ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA
+                    if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA
                     else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, has_user_playing))
+        fetch_tasks = [asyncio.create_task(
+                        ServerList.fetch_servers(session, item, has_user_playing))
                        for item in game_mode_list]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
@@ -81,7 +83,7 @@ async def get_server_list():
                 vanilla_str = "Custom"
         if vanilla != vanilla_status and vanilla != GamePresets.ALL:
             continue
-        server_list.append({"name": item.get("name"), 
+        server_list.append({"name": item.get("name"),
                             "ip": item.get("ip"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
@@ -118,7 +120,8 @@ async def get_favorites_subview():
         for item in servers:
             server_ip = item.get("server_ip")
             server_port = item.get("server_port")
-            fetch_tasks.append(asyncio.create_task(steamutils.get_server_info(session, server_ip, server_port)))
+            fetch_tasks.append(asyncio.create_task(
+                                steamutils.get_server_info(session, server_ip, server_port)))
             fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         if item is None:
@@ -137,7 +140,7 @@ async def get_favorites_subview():
                 vanilla_str = "Custom Vanilla"
             case GamePresets.CUSTOM:
                 vanilla_str = "Custom"
-        server_list.append({"name": item.get("name"), 
+        server_list.append({"name": item.get("name"),
                             "ip": item.get("addr"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
@@ -163,7 +166,7 @@ async def get_favorites_subview():
 async def get_server_count():
     server_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False)) 
+        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
                        for item in (ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
@@ -176,7 +179,7 @@ async def get_server_count():
 async def get_player_count():
     player_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False)) 
+        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
                        for item in (ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
