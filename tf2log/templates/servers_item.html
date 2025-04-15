@@ -5,7 +5,7 @@
             {% if item["password"] %}
             <img title="Server is password protected" src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="server_list_password" width="18" height="18">
             {% endif %}
-            <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" class="server_list_name">{{ item["name"] }}</a>
+            <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" title="{{ item['name'] }}" class="server_list_name">{{ item["name"] }}</a>
         </div>
         <div class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</div>
     </div>
