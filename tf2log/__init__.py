@@ -26,10 +26,10 @@ def create_app():
         })
     else:
         import sass
-        if not os.path.exists("tf2log/static/css"):
-            os.makedirs("tf2log/static/css")
-        with open("tf2log/static/css/style.scss.css", "w") as f:
-            f.write(sass.compile(filename="tf2log/static/sass/style.scss", output_style="compressed"))
+        if not os.path.exists(os.path.join(app.static_folder, "css")):
+            os.makedirs(os.path.join(app.static_folder, "css"))
+        with open(os.path.join(app.static_folder, "css/style.scss.css"), "w") as f:
+            f.write(sass.compile(filename=os.path.join(app.static_folder, "sass/style.scss"), output_style="compressed"))
 
     try:
         os.makedirs(app.instance_path)
