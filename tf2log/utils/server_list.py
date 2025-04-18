@@ -12,7 +12,7 @@ class ServerRegions(Enum):
     MIDDLE_EAST = 6
     AFRICA = 7
     WORLD = 255
-    
+
     @classmethod
     def _missing_(cls, _):
         return cls.WORLD
@@ -22,7 +22,8 @@ class ServerList:
     SERVERBROWSER_TF_GAMEMODES_NO_MVM = ("vanilla", "24/7", "dm", "gamemode", "jump/surf", "social")
     SERVERBROWSER_TF_GAMEMODES_VANILLA = ("vanilla", "24/7")
     __SERVERBROWSER_TF_ENDPOINT = "https://serverbrowser.tf/api/servers/all"
-    NON_VANILLA_TAGS = ("fadetoblack", "friendlyfire", "gravity", "highlander", "nocrits", "norespawntime", "respawntimes", "fixedspread")
+    NON_VANILLA_TAGS = ("fadetoblack", "friendlyfire", "gravity", "highlander",
+                        "nocrits", "norespawntime", "respawntimes", "fixedspread")
 
     REGION_STR = {
         0: "US East",
@@ -45,7 +46,9 @@ class ServerList:
             return resolved_resgion
 
     @classmethod
-    async def fetch_servers(cls, aiohttp_session: aiohttp.ClientSession, game_mode: str, has_user_playing: bool = False) -> list:
+    async def fetch_servers(cls,
+                            aiohttp_session: aiohttp.ClientSession,
+                            game_mode: str, has_user_playing: bool = False) -> list:
         if game_mode not in cls.SERVERBROWSER_TF_GAMEMODES:
             raise ValueError
         params = {"hasUsersPlaying": "1" if has_user_playing else "0", "category": game_mode}

@@ -1,9 +1,11 @@
+import time
+import socket
+import requests
+
 from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from tf2log.extensions import cache, geoip, limiter
-
-import time, socket, requests
 
 from tf2log.utils.format_a2s import FormatA2S
 from tf2log.utils.cvar_utils import CvarUtils
@@ -98,13 +100,14 @@ def get_map_thumbnail(map_name: str):
     if request.headers.get("x-get-thumbnail") != "1":
         return Response(status=400)
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
-    response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}")
+    response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}",
+                            timeout=300)
     thumbnail_url = response.json().get("thumbnail")
     if thumbnail_url is not None:
         return Response(thumbnail_url, mimetype='text/plain')
     else:
         return Response(status=404)
-    
+
 @bp.route("/sourcetv/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
@@ -127,31 +130,37 @@ def get_source_tv(server_ip: str):
             "password": sourcetv_info.get("password"),
         }
         return jsonify(sourcetv_response)
-        
+
 @bp.errorhandler(NotTF2)
-def handle_nottf2(_):        
-    return render_template("except.html", except_body="Server is not running TF2."), 404
+def handle_nottf2(_):
+    return render_template("except.html",
+                           except_body="Server is not running TF2."), 404
 
 @bp.errorhandler(ServerSourceTV)
-def handle_server_sourcetv(_):        
-    return render_template("except.html", except_body="Server is a SourceTV relay."), 400
+def handle_server_sourcetv(_):
+    return render_template("except.html",
+                           except_body="Server is a SourceTV relay."), 400
 
 @bp.errorhandler(socket.timeout)
 def handle_timeout(_):
-    return render_template("except.html", except_body="Timed out when fetching game server data."), 504
+    return render_template("except.html",
+                           except_body="Timed out when fetching game server data."), 504
 
 @bp.errorhandler(socket.gaierror)
 def handle_invalid_address(_):
-    return render_template("except.html", except_body="Invalid server address."), 400
+    return render_template("except.html",
+                           except_body="Invalid server address."), 400
 
 @bp.errorhandler(ConnectionRefusedError)
 def handle_conn_refused(_):
-    return render_template("except.html", except_body="Cannot connect to game server."), 502
+    return render_template("except.html",
+                           except_body="Cannot connect to game server."), 502
 
 @bp.errorhandler(BrokenMessageError)
 @bp.errorhandler(BufferExhaustedError)
 def handle_broken_message(_):
-    return render_template("except.html", except_body="Cannot decode response from game server."), 502
+    return render_template("except.html",
+                           except_body="Cannot decode response from game server."), 502
 
 @bp.errorhandler(OSError)
 def handle_general_error(_):

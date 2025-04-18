@@ -1,9 +1,8 @@
-import a2s, retry
+import a2s
+import retry
 
-from socket import timeout
-
-from .custom_except import NotTF2
 from tf2log.extensions import cache
+from .custom_except import NotTF2
 
 class FormatA2S:
     @staticmethod
@@ -37,7 +36,7 @@ class FormatA2S:
 
         if server_info_raw.keywords:
             server_info["tags"] = tuple(filter(None, server_info_raw.keywords.split(",")))
-        
+
         optional_attrs = ("port", "steam_id", "stv_port", "stv_name", "game_id")
         for item in optional_attrs:
             if getattr(server_info_raw, item) is not None:
@@ -61,7 +60,10 @@ class FormatA2S:
         server_players_raw = a2s.players(server_address)
 
         for item in server_players_raw:
-            player = {"index": item.index, "name": item.name, "score": item.score, "time": item.duration}
+            player = {"index": item.index,
+                      "name": item.name,
+                      "score": item.score,
+                      "time": item.duration}
             server_players.append(player)
 
         return server_players

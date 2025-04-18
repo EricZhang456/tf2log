@@ -208,10 +208,11 @@ class CvarUtils:
         readable_dict = {}
         try:
             for key, value in pruned_dict.items():
-                # this is the only cvar i am looking for that accepts 0/1/2 so i might 
+                # this is the only cvar i am looking for that accepts 0/1/2 so i might
                 # as well just write it here
                 if key == "tf_weapon_criticals_melee":
-                    if ((int(pruned_dict.get("tf_weapon_criticals")) == 1 and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
+                    if ((int(pruned_dict.get("tf_weapon_criticals")) == 1
+                         and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
                         (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
                         readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): "On"})
                     else:
@@ -229,7 +230,7 @@ class CvarUtils:
             return readable_dict
         except ValueError:
             return None
-    
+
     @staticmethod
     def get_next_map(rules: dict) -> str | None:
         if rules.get("sm_nextmap") is not None:

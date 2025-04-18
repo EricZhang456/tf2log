@@ -19,7 +19,7 @@ searchBox.addEventListener("input", (field) => {
         const visible = server.getAttribute("data-server-name").toLowerCase().includes(value) 
                         || server.getAttribute("data-server-readable-map").toLowerCase().includes(value)
                         || server.getAttribute("data-server-mode").toLowerCase().includes(value)
-                        || server.getAttribute("data-server-region").toLocaleLowerCase().includes(value);
+                        || server.getAttribute("data-server-region").toLowerCase().includes(value);
         server.classList.toggle("hide", !visible);
     });
     setSearchBoxStyle(value);

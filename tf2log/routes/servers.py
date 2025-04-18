@@ -78,7 +78,7 @@ async def get_server_list():
             case GamePresets.VANILLA:
                 vanilla_str = "Vanilla"
             case GamePresets.SEMI_VANILLA:
-                vanilla_str = "Custom Vanilla"
+                vanilla_str = "Vanilla Custom"
             case GamePresets.CUSTOM:
                 vanilla_str = "Custom"
         if vanilla != vanilla_status and vanilla != GamePresets.ALL:

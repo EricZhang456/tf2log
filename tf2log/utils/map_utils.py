@@ -143,7 +143,7 @@ class MapUtils:
             return readable_map_name.replace("_", " ").title()
         else:
             return cls.MAP_SPECIAL_NAMES.get(map_name)
-        
+
     @staticmethod
     def resolve_workshop_map_name(map_name: str) -> str:
         if map_name.startswith(r'workshop/'):
@@ -154,7 +154,7 @@ class MapUtils:
                 return "Workshop Map"
         else:
             return map_name
-        
+
     @staticmethod
     def get_workshop_map_id(map_name: str) -> str | None:
         if map_name.startswith(r'workshop/'):
