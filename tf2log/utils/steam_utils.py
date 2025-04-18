@@ -1,6 +1,7 @@
-from flask import Flask
+import socket
+import aiohttp
 
-import socket, aiohttp
+from flask import Flask
 
 class SteamUtils:
     __STEAMWORKS_SEVRER_LIST_ENDPOINT = "https://api.steampowered.com/IGameServersService/GetServerList/v1/"

@@ -219,12 +219,15 @@ class CvarUtils:
                         readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): "Off"})
                 if key in cls.RULES_CVAR_BOOL:
                     readable_bool_value = "On" if int(value) == 1 else "Off"
-                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): readable_bool_value})
+                    readable_dict.update(
+                        {cls.STOCK_CVAR_READABLE_NAME.get(key): readable_bool_value})
                 elif key in cls.RULES_CVAR_INT:
                     readable_int_value = value if int(value) not in (0, -1) else "Off"
-                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): readable_int_value})
+                    readable_dict.update(
+                        {cls.STOCK_CVAR_READABLE_NAME.get(key): readable_int_value})
                 elif key in cls.RULES_CVAR_FLOAT:
-                    readable_dict.update({cls.STOCK_CVAR_READABLE_NAME.get(key): format(float(value), ".4g")})
+                    readable_dict.update(
+                        {cls.STOCK_CVAR_READABLE_NAME.get(key): format(float(value), ".4g")})
                 else:
                     continue
             return readable_dict
