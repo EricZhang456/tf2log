@@ -212,10 +212,12 @@
                         padding-left: 30px;
                     }
                     .th-sort-asc::after {
-                        content: " \25b4";
+                        content: "\25b4";
+                        padding-left: 2px;
                     }
                     .th-sort-desc::after {
-                        content: " \25be";
+                        content: "\25be";
+                        padding-left: 2px;
                     }
                 }
             }

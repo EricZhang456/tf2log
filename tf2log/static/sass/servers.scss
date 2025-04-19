@@ -255,8 +255,10 @@
     }
     .sort_asc::after {
         content: "\25b4";
+        padding-left: 2px;
     }
     .sort_desc::after {
         content: "\25be";
+        padding-left: 2px;
     }
 }
