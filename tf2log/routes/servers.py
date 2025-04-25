@@ -1,7 +1,8 @@
+from enum import Enum
+
 import asyncio
 import aiohttp
 
-from enum import Enum
 from flask import Blueprint, render_template, request, Response, make_response
 
 from tf2log.extensions import limiter, cache, steamutils
@@ -137,7 +138,7 @@ async def get_favorites_subview():
             case GamePresets.VANILLA:
                 vanilla_str = "Vanilla"
             case GamePresets.SEMI_VANILLA:
-                vanilla_str = "Custom Vanilla"
+                vanilla_str = "Vanilla Custom"
             case GamePresets.CUSTOM:
                 vanilla_str = "Custom"
         server_list.append({"name": item.get("name"),
