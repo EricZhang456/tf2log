@@ -5,14 +5,14 @@ const populateMapThumbnail = (map_name) => {
             "x-get-thumbnail": "1"
         }
     })
-    .then((response) => {
+    .then(response => {
         if (!response.ok) {
             return;
         } else {
             return response.text();
         }
     })
-    .then((response) => {
+    .then(response => {
         if (response) {
             const infoHeader = document.querySelector(".info_header_server");
             infoHeader.style.setProperty("background-image", `url(${response})`);

@@ -5,14 +5,14 @@ const showSourceTVButton = (serverIP, serverPort) => {
             "x-get-sourcetv": "1"
         }
     })
-    .then((response) => {
+    .then(response => {
         if (!response.ok) {
             return;
         } else {
             return response.json();
         }
     })
-    .then((response) => {
+    .then(response => {
         if (response) {
             const sourceTVButton = document.querySelector(".info_header_sourcetv");
             sourceTVButton.setAttribute("href", `steam://connect/${response.address}`);

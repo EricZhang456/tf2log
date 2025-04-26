@@ -23,12 +23,18 @@ const fetchServers = () => {
         },
         body: JSON.stringify({servers: favoritedServers}),
     })
-    .then((response) => response.text())
-    .then((response) => {
+    .then(response => response.text())
+    .then(response => {
         fetchingHint.style.display = "none";
         target.innerHTML = response;
         populateFilteredServerCount();
+        const sortButtons = ["server_list_sort_name", "server_list_sort_map",
+                            "server_list_sort_mode", "server_list_sort_region"];
+        sortButtons.forEach((item) => {
+            document.querySelector(`.${item}`).classList.remove("sort_asc", "sort_desc");
+        });
     });
+
 };
 
 document.addEventListener("DOMContentLoaded", () => {

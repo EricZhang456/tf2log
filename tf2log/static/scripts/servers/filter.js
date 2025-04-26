@@ -183,8 +183,8 @@ const filterApply = () => {
             "x-fetch-subview": "1"
         }
     })
-    .then((response) => response.text())
-    .then((response) => {
+    .then(response => response.text())
+    .then(response => {
         fetchingHint.style.display = "none";
         target.innerHTML = response;
         populateFilteredServerCount();
