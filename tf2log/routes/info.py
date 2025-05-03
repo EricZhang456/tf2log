@@ -40,8 +40,11 @@ def get_info(server_ip: str):
     sourcetv_port = server_info.get("stv_port")
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")
-    next_map_raw = MapUtils.resolve_workshop_map_name(CvarUtils.get_next_map(server_rules_raw))
-    next_map_workshop_id = MapUtils.get_workshop_map_id(CvarUtils.get_next_map(server_rules_raw))
+    next_map_raw = CvarUtils.get_next_map(server_rules_raw)
+    next_map_workshop_id = None
+    if next_map_raw is not None:
+        next_map_raw = MapUtils.resolve_workshop_map_name(next_map_raw)
+        next_map_workshop_id = MapUtils.get_workshop_map_id(CvarUtils.get_next_map(server_rules_raw))
     location = ""
 
     try:
@@ -62,8 +65,12 @@ def get_info(server_ip: str):
 
     game_mode = MapUtils.map_name_to_game_mode(current_map_raw)
     current_map = MapUtils.map_name_to_readable_name(current_map_raw)
-    next_map = MapUtils.map_name_to_readable_name(next_map_raw)
-    next_map_game_mode = MapUtils.map_name_to_game_mode(next_map_raw)
+    if next_map_raw is not None:
+        next_map = MapUtils.map_name_to_readable_name(next_map_raw)
+        next_map_game_mode = MapUtils.map_name_to_game_mode(next_map_raw)
+    else:
+        next_map = None
+        next_map_game_mode = None
 
     for item in player_list:
         item.update({"duration": int(item.get("time"))})
