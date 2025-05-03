@@ -168,7 +168,7 @@ async def get_server_count():
     server_count = 0
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
-                       for item in (ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)]
+                       for item in ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         server_count += len(item)
@@ -181,7 +181,7 @@ async def get_player_count():
     player_count = 0
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
-                       for item in (ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)]
+                       for item in ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         for server in item:

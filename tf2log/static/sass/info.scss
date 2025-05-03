@@ -232,8 +232,13 @@
                     }
                     .info_player_table_name {
                         text-align: left;
-                        padding-left: 28px;
+                        padding-left: 30px;
                         padding-right: 10px;
+                    }
+                }
+                tr:first-child {
+                    td {
+                        padding-top: 20px;
                     }
                 }
                 tr:last-child {
