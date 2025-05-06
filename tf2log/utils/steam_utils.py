@@ -4,7 +4,7 @@ import aiohttp
 from flask import Flask
 
 class SteamUtils:
-    __STEAMWORKS_SEVRER_LIST_ENDPOINT = "https://api.steampowered.com/IGameServersService/GetServerList/v1/"
+    __STEAMWORKS_SERVER_LIST_ENDPOINT = "https://api.steampowered.com/IGameServersService/GetServerList/v1/"
 
     def __init__(self) -> None:
         self.steamworks_api_key: str | None = None
@@ -21,7 +21,7 @@ class SteamUtils:
             "filter": f"\\gameaddr\\{server_ip}:{server_port}",
             "limit": "1",
         }
-        async with aiohttp_session.get(self.__STEAMWORKS_SEVRER_LIST_ENDPOINT,
+        async with aiohttp_session.get(self.__STEAMWORKS_SERVER_LIST_ENDPOINT,
                                        params=query_params) as r:
             if r.status != 200:
                 r.raise_for_status()

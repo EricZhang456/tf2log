@@ -2,14 +2,16 @@ import time
 import socket
 import requests
 
+import tf2log.utils.format_a2s as format_a2s
+
 from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from tf2log.extensions import cache, geoip, limiter
 
-from tf2log.utils.format_a2s import FormatA2S
-from tf2log.utils.cvar_utils import CvarUtils
-from tf2log.utils.map_utils import MapUtils
+from tf2log.utils.cvar_utils import get_next_map, rules_to_readable_dict
+from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
+from tf2log.utils.map_utils import resolve_workshop_map_name, get_workshop_map_id
 from tf2log.utils.custom_except import NotTF2, ServerSourceTV
 
 bp = Blueprint("info", __name__, url_prefix="/info")
@@ -25,26 +27,26 @@ def get_info(server_ip: str):
         return render_template("except.html", except_body="Invalid port number."), 400
 
     server_ip = socket.gethostbyname(server_ip)
-    server_info = FormatA2S.info(server_ip, server_port)
+    server_info = format_a2s.info(server_ip, server_port)
 
     if server_info.get("appid") != 440:
         raise NotTF2
     if server_port == server_info.get("stv_port"):
         raise ServerSourceTV
 
-    server_rules_raw = FormatA2S.rules(server_ip, server_port)
+    server_rules_raw = format_a2s.rules(server_ip, server_port)
     server_rules_raw["tf2log_vac"] = 1 if server_info.get("vac") else 0
-    player_list = FormatA2S.players(server_ip, server_port)
-    server_rules = CvarUtils.rules_to_readable_dict(server_rules_raw)
+    player_list = format_a2s.players(server_ip, server_port)
+    server_rules = rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")
     sourcetv_port = server_info.get("stv_port")
     server_tags = ", ".join(server_info.get("tags"))
     server_steam_group = server_rules_raw.get("sv_steamgroup")
-    next_map_raw = CvarUtils.get_next_map(server_rules_raw)
+    next_map_raw = get_next_map(server_rules_raw)
     next_map_workshop_id = None
     if next_map_raw is not None:
-        next_map_raw = MapUtils.resolve_workshop_map_name(next_map_raw)
-        next_map_workshop_id = MapUtils.get_workshop_map_id(CvarUtils.get_next_map(server_rules_raw))
+        next_map_raw = resolve_workshop_map_name(next_map_raw)
+        next_map_workshop_id = get_workshop_map_id(get_next_map(server_rules_raw))
     location = ""
 
     try:
@@ -63,11 +65,11 @@ def get_info(server_ip: str):
     except AddressNotFoundError:
         pass
 
-    game_mode = MapUtils.map_name_to_game_mode(current_map_raw)
-    current_map = MapUtils.map_name_to_readable_name(current_map_raw)
+    game_mode = map_name_to_game_mode(current_map_raw)
+    current_map = map_name_to_readable_name(current_map_raw)
     if next_map_raw is not None:
-        next_map = MapUtils.map_name_to_readable_name(next_map_raw)
-        next_map_game_mode = MapUtils.map_name_to_game_mode(next_map_raw)
+        next_map = map_name_to_readable_name(next_map_raw)
+        next_map_game_mode = map_name_to_game_mode(next_map_raw)
     else:
         next_map = None
         next_map_game_mode = None
@@ -122,13 +124,13 @@ def get_source_tv(server_ip: str):
     if request.headers.get("x-get-sourcetv") != "1":
         return Response(status=400)
     server_port = request.args.get("port", default=27015, type=int)
-    server_info = FormatA2S.info(server_ip, server_port)
+    server_info = format_a2s.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
     if sourcetv_port != server_port:
         return Response(status=400)
     if sourcetv_port is None:
         return Response(status=404)
-    sourcetv_info = FormatA2S.info(server_ip, sourcetv_port)
+    sourcetv_info = format_a2s.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
         return Response(status=404)
     else:

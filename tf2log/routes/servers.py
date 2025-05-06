@@ -8,8 +8,11 @@ from flask import Blueprint, render_template, request, Response, make_response
 from tf2log.extensions import limiter, cache, steamutils
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
-from tf2log.utils.server_list import ServerList, ServerRegions
-from tf2log.utils.map_utils import MapUtils
+from tf2log.utils.server_list import get_region_str, fetch_servers, ServerRegions
+from tf2log.utils.server_list import SERVERBROWSER_TF_GAMEMODES_NO_MVM
+from tf2log.utils.server_list import SERVERBROWSER_TF_GAMEMODES_VANILLA
+from tf2log.utils.server_list import NON_VANILLA_TAGS
+from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
@@ -44,12 +47,12 @@ async def get_server_list():
     replay = request.args.get("replay", default=False, type=param_bool)
     server_list_raw = []
     server_list = []
-    game_mode_list = (ServerList.SERVERBROWSER_TF_GAMEMODES_VANILLA
+    game_mode_list = (SERVERBROWSER_TF_GAMEMODES_VANILLA
                     if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA
-                    else ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM)
+                    else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(
-                        ServerList.fetch_servers(session, item, has_user_playing))
+                        fetch_servers(session, item, has_user_playing))
                        for item in game_mode_list]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
@@ -71,9 +74,9 @@ async def get_server_list():
             or (replay and "replays" not in server_tags)):
             continue
         vanilla_status = GamePresets.VANILLA
-        if any(i in server_tags for i in ServerList.NON_VANILLA_TAGS):
+        if any(i in server_tags for i in NON_VANILLA_TAGS):
             vanilla_status = GamePresets.SEMI_VANILLA
-        if MapUtils.map_name_to_game_mode(item.get("map")) is None:
+        if map_name_to_game_mode(item.get("map")) is None:
             vanilla_status = GamePresets.CUSTOM
         match vanilla_status:
             case GamePresets.VANILLA:
@@ -90,11 +93,11 @@ async def get_server_list():
                             "port": server_addr[1],
                             "password": item.get("visibility"),
                             "tags": ", ".join(server_tags),
-                            "region": ServerList.get_region_str(item.get("region")),
+                            "region": get_region_str(item.get("region")),
                             "vanilla": vanilla_str,
                             "raw_map": item.get("map"),
-                            "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
-                            "map": MapUtils.map_name_to_readable_name(item.get("map")),
+                            "game_mode": map_name_to_game_mode(item.get("map")),
+                            "map": map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
                             "maxPlayers": item.get("maxPlayers"),
                             "bots": item.get("bots")})
@@ -130,9 +133,9 @@ async def get_favorites_subview():
         server_addr = parse_hostname(item.get("addr"))
         server_tags = tuple(item.get("gametype").split(","))
         vanilla_status = GamePresets.VANILLA
-        if any(i in server_tags for i in ServerList.NON_VANILLA_TAGS):
+        if any(i in server_tags for i in NON_VANILLA_TAGS):
             vanilla_status = GamePresets.SEMI_VANILLA
-        if MapUtils.map_name_to_game_mode(item.get("map")) is None:
+        if map_name_to_game_mode(item.get("map")) is None:
             vanilla_status = GamePresets.CUSTOM
         match vanilla_status:
             case GamePresets.VANILLA:
@@ -147,11 +150,11 @@ async def get_favorites_subview():
                             "port": server_addr[1],
                             "password": False,
                             "tags": ", ".join(server_tags),
-                            "region": ServerList.get_region_str(item.get("region")),
+                            "region": get_region_str(item.get("region")),
                             "vanilla": vanilla_str,
                             "raw_map": item.get("map"),
-                            "game_mode": MapUtils.map_name_to_game_mode(item.get("map")),
-                            "map": MapUtils.map_name_to_readable_name(item.get("map")),
+                            "game_mode": map_name_to_game_mode(item.get("map")),
+                            "map": map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
                             "maxPlayers": item.get("max_players"),
                             "bots": item.get("bots")})
@@ -167,8 +170,8 @@ async def get_favorites_subview():
 async def get_server_count():
     server_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
-                       for item in ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM]
+        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))
+                       for item in SERVERBROWSER_TF_GAMEMODES_NO_MVM]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         server_count += len(item)
@@ -180,8 +183,8 @@ async def get_server_count():
 async def get_player_count():
     player_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(ServerList.fetch_servers(session, item, False))
-                       for item in ServerList.SERVERBROWSER_TF_GAMEMODES_NO_MVM]
+        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))
+                       for item in SERVERBROWSER_TF_GAMEMODES_NO_MVM]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         for server in item:

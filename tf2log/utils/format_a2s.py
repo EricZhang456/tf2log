@@ -4,66 +4,62 @@ import retry
 from tf2log.extensions import cache
 from .custom_except import NotTF2
 
-class FormatA2S:
-    @staticmethod
-    @cache.memoize(5)
-    @retry.retry(TimeoutError, tries=5, delay=1)
-    def info(server_ip: str, server_port=27015) -> dict:
-        server_address = (server_ip, server_port)
-        server_info_raw = a2s.info(server_address)
+@cache.memoize(5)
+@retry.retry(TimeoutError, tries=5, delay=1)
+def info(server_ip: str, server_port=27015) -> dict:
+    server_address = (server_ip, server_port)
+    server_info_raw = a2s.info(server_address)
 
-        if type(server_info_raw).__name__ == "GoldSrcInfo":
-            raise NotTF2
+    if type(server_info_raw).__name__ == "GoldSrcInfo":
+        raise NotTF2
 
-        server_info = {
-            "protocol": server_info_raw.protocol,
-            "version": server_info_raw.version,
-            "name": server_info_raw.server_name,
-            "map": server_info_raw.map_name,
-            "folder": server_info_raw.folder,
-            "game": server_info_raw.game,
-            "player_count": server_info_raw.player_count,
-            "max_players": server_info_raw.max_players,
-            "bot_count": server_info_raw.bot_count,
-            "server_type": server_info_raw.server_type,
-            "platform": server_info_raw.platform,
-            "password": server_info_raw.password_protected,
-            "vac": server_info_raw.vac_enabled,
-            "ping": server_info_raw.ping,
-            "appid": server_info_raw.app_id,
-            "edf": server_info_raw.edf,
-        }
+    server_info = {
+        "protocol": server_info_raw.protocol,
+        "version": server_info_raw.version,
+        "name": server_info_raw.server_name,
+        "map": server_info_raw.map_name,
+        "folder": server_info_raw.folder,
+        "game": server_info_raw.game,
+        "player_count": server_info_raw.player_count,
+        "max_players": server_info_raw.max_players,
+        "bot_count": server_info_raw.bot_count,
+        "server_type": server_info_raw.server_type,
+        "platform": server_info_raw.platform,
+        "password": server_info_raw.password_protected,
+        "vac": server_info_raw.vac_enabled,
+        "ping": server_info_raw.ping,
+        "appid": server_info_raw.app_id,
+        "edf": server_info_raw.edf,
+    }
 
-        if server_info_raw.keywords:
-            server_info["tags"] = tuple(filter(None, server_info_raw.keywords.split(",")))
+    if server_info_raw.keywords:
+        server_info["tags"] = tuple(filter(None, server_info_raw.keywords.split(",")))
 
-        optional_attrs = ("port", "steam_id", "stv_port", "stv_name", "game_id")
-        for item in optional_attrs:
-            if getattr(server_info_raw, item) is not None:
-                server_info.update({item: getattr(server_info_raw, item)})
+    optional_attrs = ("port", "steam_id", "stv_port", "stv_name", "game_id")
+    for item in optional_attrs:
+        if getattr(server_info_raw, item) is not None:
+            server_info.update({item: getattr(server_info_raw, item)})
 
-        return server_info
+    return server_info
 
-    @staticmethod
-    @cache.memoize(300)
-    @retry.retry(TimeoutError, tries=5, delay=1)
-    def rules(server_ip: str, server_port=271015) -> dict:
-        server_address = (server_ip, server_port)
-        return a2s.rules(server_address)
+@cache.memoize(300)
+@retry.retry(TimeoutError, tries=5, delay=1)
+def rules(server_ip: str, server_port=271015) -> dict:
+    server_address = (server_ip, server_port)
+    return a2s.rules(server_address)
 
-    @staticmethod
-    @cache.memoize(5)
-    @retry.retry(TimeoutError, tries=5, delay=1)
-    def players(server_ip: str, server_port=27015) -> list[dict]:
-        server_address = (server_ip, server_port)
-        server_players = []
-        server_players_raw = a2s.players(server_address)
+@cache.memoize(5)
+@retry.retry(TimeoutError, tries=5, delay=1)
+def players(server_ip: str, server_port=27015) -> list[dict]:
+    server_address = (server_ip, server_port)
+    server_players = []
+    server_players_raw = a2s.players(server_address)
 
-        for item in server_players_raw:
-            player = {"index": item.index,
-                      "name": item.name,
-                      "score": item.score,
-                      "time": item.duration}
-            server_players.append(player)
+    for item in server_players_raw:
+        player = {"index": item.index,
+                  "name": item.name,
+                  "score": item.score,
+                  "time": item.duration}
+        server_players.append(player)
 
-        return server_players
+    return server_players
