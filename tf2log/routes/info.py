@@ -2,16 +2,15 @@ import time
 import socket
 import requests
 
-import tf2log.utils.format_a2s as format_a2s
-
 from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 from geoip2.errors import AddressNotFoundError
 from tf2log.extensions import cache, geoip, limiter
 
+from tf2log.utils import format_a2s
 from tf2log.utils.cvar_utils import get_next_map, rules_to_readable_dict
-from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
-from tf2log.utils.map_utils import resolve_workshop_map_name, get_workshop_map_id
+from tf2log.utils.map_utils import (map_name_to_game_mode, map_name_to_readable_name,
+                                    resolve_workshop_map_name, get_workshop_map_id)
 from tf2log.utils.custom_except import NotTF2, ServerSourceTV
 
 bp = Blueprint("info", __name__, url_prefix="/info")

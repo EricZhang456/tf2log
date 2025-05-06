@@ -1,3 +1,5 @@
+# pylint: disable = import-outside-toplevel
+
 import os
 import json
 
@@ -12,7 +14,7 @@ def create_app():
     app.config.from_file("config.json", json.load)
 
     if app.config.get("ENV") not in ("dev", "prod"):
-        raise Exception("Invalid ENV")
+        raise ValueError("Invalid ENV")
 
     if app.debug or app.config["ENV"] == "dev":
         from sassutils.wsgi import SassMiddleware
@@ -41,7 +43,7 @@ def create_app():
     if app.config.get("GEOLITE2_DB_PATH") is None:
         for _, _, files in os.walk(app.instance_path):
             if "GeoLite2-City.mmdb" not in files:
-                raise Exception("Cannot find GeoLite2 City database")
+                raise RuntimeError("Cannot find GeoLite2 City database")
             else:
                 app.config.update(GEOLITE2_DB_PATH=os.path.join(app.instance_path, "GeoLite2-City.mmdb"))
 

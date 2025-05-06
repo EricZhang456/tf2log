@@ -8,10 +8,9 @@ from flask import Blueprint, render_template, request, Response, make_response
 from tf2log.extensions import limiter, cache, steamutils
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
-from tf2log.utils.server_list import get_region_str, fetch_servers, ServerRegions
-from tf2log.utils.server_list import SERVERBROWSER_TF_GAMEMODES_NO_MVM
-from tf2log.utils.server_list import SERVERBROWSER_TF_GAMEMODES_VANILLA
-from tf2log.utils.server_list import NON_VANILLA_TAGS
+from tf2log.utils.server_list import (get_region_str, fetch_servers, ServerRegions,
+                                      SERVERBROWSER_TF_GAMEMODES_NO_MVM,
+                                      SERVERBROWSER_TF_GAMEMODES_VANILLA, NON_VANILLA_TAGS)
 from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
