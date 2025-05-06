@@ -1,6 +1,11 @@
 {% extends "base.html" %}
-<title>Error</title>
+
 {% block head %}
+{% if except_title %}
+<title>{{ except_title }}</title>
+{% else %}
+<title>Error</title>
+{% endif %}
 {% endblock %}
 
 {% block body %}

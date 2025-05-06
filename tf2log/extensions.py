@@ -8,10 +8,12 @@ from geoip2 import database
 from .utils.steam_utils import SteamUtils
 
 def page_not_found(_):
-    return render_template("except.html", except_body="Page not found."), 404
+    return render_template("except.html", except_body="Page not found.",
+                           except_title="Page Not Found"), 404
 
 def internal_server_error(_):
-    return render_template("except.html", except_body="Internal server error."), 500
+    return render_template("except.html", except_body="Internal server error.",
+                           except_title="Internal Server Error"), 500
 
 cache = Cache()
 limiter = Limiter(
