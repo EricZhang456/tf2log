@@ -1,3 +1,5 @@
+"""Utilities related to map names."""
+
 import re
 
 GAMEMODE_DICT = {
@@ -111,6 +113,12 @@ MAP_SPECIAL_NAMES = {
 }
 
 def map_name_to_game_mode(map_name: str) -> str | None:
+    """Convert raw map name to a game mode string.
+    
+    :param str map_name: Raw map name.
+    :return: Game mode string, None if game mode is invalid.
+    :rtype: str or None
+    """
     if map_name in AD_MAPS:
         return "Attack/Defend"
     elif map_name in MANNPOWER_MAPS:
@@ -129,6 +137,12 @@ def map_name_to_game_mode(map_name: str) -> str | None:
                 return game_mode
 
 def map_name_to_readable_name(map_name: str) -> str:
+    """Convert raw map name to a fancy map name.
+
+    :param str map_name: Raw map name.
+    :return: Fancy map name.
+    :rtype: str
+    """
     if MAP_SPECIAL_NAMES.get(map_name) is None:
         game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
         readable_map_name = map_name
@@ -142,6 +156,12 @@ def map_name_to_readable_name(map_name: str) -> str:
         return MAP_SPECIAL_NAMES.get(map_name)
 
 def resolve_workshop_map_name(map_name: str) -> str:
+    """Get raw map name from Workshop map string.
+    
+    :parma str map_name: Workshop map string.
+    :return: Raw map name.
+    :rtype: str
+    """
     if map_name.startswith("workshop/"):
         resolved_map_name = re.search(r'workshop/(.*)\.ugc[0-9]+', map_name)
         if resolved_map_name is not None:
@@ -152,6 +172,12 @@ def resolve_workshop_map_name(map_name: str) -> str:
         return map_name
 
 def get_workshop_map_id(map_name: str) -> str | None:
+    """Get Workshop map ID from Workshop map string.
+    
+    :param str map_name: Workshop map string.
+    :return: Workshop map ID, None if Workshop map ID not found.
+    :rtype: str or None
+    """
     if map_name.startswith("workshop/"):
         workshop_verbose_map_name = re.search(r'workshop/.*\.ugc([0-9]+)', map_name)
         workshop_concise_map_name = re.search(r'workshop/([0-9]+)', map_name)

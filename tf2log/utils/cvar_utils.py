@@ -1,3 +1,5 @@
+"""Utilities related to cvars"""
+
 STOCK_CVAR_READABLE_NAME = {
     "tf2log_vac": "Valve Anti-Cheat",
     "mp_autoteambalance": "Auto Team Balance",
@@ -191,7 +193,14 @@ __RULES_CVAR_SORT_TARGET = (
     "tv_enable",
 )
 
-def __prune_rules_cvar_dict(rules:dict) -> dict | None:
+def __prune_rules_cvar_dict(rules: dict) -> dict | None:
+    """Remove all unknown cvars.
+    
+    :param dict rules: A dictionary containing all the server rules.
+    :return: A dictionary of server rules with unknown cvars removed, None if all
+            cvars are unknown.
+    :rtype: dict or None
+    """
     pruned_dict = {}
     for item in __RULES_CVAR_SORT_TARGET:
         if rules.get(item) is not None:
@@ -199,6 +208,12 @@ def __prune_rules_cvar_dict(rules:dict) -> dict | None:
     return pruned_dict if pruned_dict else None
 
 def rules_to_readable_dict(rules: dict) -> dict | None:
+    """Format server rules into a dictionary of server readable settings.
+    
+    :param dict rules: A dictionary containing all the server rules.
+    :return: A dictionary of readable server settings, None if server rules are unknown.
+    :rtype: dict or None.
+    """
     pruned_dict = __prune_rules_cvar_dict(rules)
     if pruned_dict is None:
         return None
@@ -232,9 +247,14 @@ def rules_to_readable_dict(rules: dict) -> dict | None:
         return None
 
 def get_next_map(rules: dict) -> str | None:
+    """Get the next map of a server.
+    
+    :param dict rules: A dictionary containing all the server rules.
+    :return: The next map, None if it can't be found.
+    :rtype: str or None
+    """
     if rules.get("sm_nextmap") is not None:
         return rules.get("sm_nextmap")
-    elif rules.get("nextlevel") is not None:
+    if rules.get("nextlevel") is not None:
         return rules.get("nextlevel")
-    else:
-        return None
+    return None

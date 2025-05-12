@@ -1,5 +1,10 @@
+"""Boolean parameter in a URL parameter."""
+
 def param_bool(value: str):
-    if value.lower() == "true" or (value.isnumeric() and int(value) >= 1):
-        return True
-    else:
-        return False
+    """Parses a boolean parameter in a URL parameter.
+    
+    :param str value: Value of the URL parameter.
+    :return: True if the URL parameter evaluates to true, False otherwise.
+    :rtype: bool
+    """
+    return bool(value.lower() == "true" or (value.isnumeric() and int(value) >= 1))

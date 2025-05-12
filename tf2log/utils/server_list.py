@@ -1,8 +1,11 @@
+"""Utilities related to fetching server list."""
+
 from enum import Enum
 
 import aiohttp
 
 class ServerRegions(Enum):
+    """Enum for the server regions."""
     US_EAST = 0
     US_WEST = 1
     SOUTH_AMERICA = 2
@@ -37,6 +40,12 @@ REGION_STR = {
 }
 
 def get_region_str(region: int) -> str:
+    """Get the name of a region.
+    
+    :param int region: Region value specified in sv_region.
+    :return: Name of the region.
+    :rtype: str
+    """
     resolved_region = REGION_STR.get(region)
     if resolved_region is None:
         return REGION_STR.get("World")
@@ -44,7 +53,15 @@ def get_region_str(region: int) -> str:
         return resolved_region
 
 async def fetch_servers(aiohttp_session: aiohttp.ClientSession,
-                        game_mode: str, has_user_playing: bool = False) -> list:
+                        game_mode: str, has_user_playing: bool = False) -> list[dict]:
+    """Fetch a list of servers.
+    
+    :param ClientSession aiohttp_session: An aiohttp client session.
+    :param str game_mode: Game mode string.
+    :param bool has_user_playing: Has user playing.
+    :return: A list of servers.
+    :rtype: list[dict]
+    """
     if game_mode not in SERVERBROWSER_TF_GAMEMODES:
         raise ValueError
     params = {"hasUsersPlaying": "1" if has_user_playing else "0", "category": game_mode}

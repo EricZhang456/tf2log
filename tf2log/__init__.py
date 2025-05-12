@@ -1,3 +1,5 @@
+"""Application entry point."""
+
 # pylint: disable = import-outside-toplevel
 
 import os
@@ -9,6 +11,7 @@ from .extensions import cache, geoip, limiter, steamutils, page_not_found, inter
 from .routes import info, servers, index
 
 def create_app():
+    """Creates the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
 
     app.config.from_file("config.json", json.load)
@@ -44,8 +47,8 @@ def create_app():
         for _, _, files in os.walk(app.instance_path):
             if "GeoLite2-City.mmdb" not in files:
                 raise RuntimeError("Cannot find GeoLite2 City database")
-            else:
-                app.config.update(GEOLITE2_DB_PATH=os.path.join(app.instance_path, "GeoLite2-City.mmdb"))
+            app.config.update(GEOLITE2_DB_PATH=os.path.join(app.instance_path,
+                                                            "GeoLite2-City.mmdb"))
 
     app.register_error_handler(404, page_not_found)
     app.register_error_handler(500, internal_server_error)

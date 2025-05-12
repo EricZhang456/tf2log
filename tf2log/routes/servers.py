@@ -1,4 +1,4 @@
-from enum import Enum
+"""Server list view"""
 
 import asyncio
 import aiohttp
@@ -6,6 +6,7 @@ import aiohttp
 from flask import Blueprint, render_template, request, Response, make_response
 
 from tf2log.extensions import limiter, cache, steamutils
+from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
 from tf2log.utils.server_list import (get_region_str, fetch_servers, ServerRegions,
@@ -15,20 +16,11 @@ from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_n
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
-class GamePresets(Enum):
-    VANILLA = 1
-    SEMI_VANILLA = 2
-    CUSTOM = 3
-    ALL = 4
-
-    @classmethod
-    def _missing_(cls, _):
-        return cls.VANILLA
-
 @bp.route("/")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
 async def get_server_list():
+    """Main server list view."""
     has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
     not_full = request.args.get("not_full", default=False, type=param_bool)
     no_password = request.args.get("password", default=False, type=param_bool)
@@ -110,11 +102,13 @@ async def get_server_list():
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5)
 def get_favorites():
+    """Favorite servers view."""
     return render_template("servers.html", show_server_list = False)
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])
 @limiter.limit("90 per minute")
 async def get_favorites_subview():
+    """Subview for the favorites view for fetching all infomation about favorited servers."""
     request_data = request.get_json()
     servers = request_data.get("servers")
     server_list = []
@@ -167,6 +161,7 @@ async def get_favorites_subview():
 @limiter.limit("90 per minute")
 @cache.cached(timeout=600)
 async def get_server_count():
+    """Get the amount of active servers."""
     server_count = 0
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))
@@ -180,6 +175,7 @@ async def get_server_count():
 @limiter.limit("90 per minute")
 @cache.cached(timeout=300)
 async def get_player_count():
+    """Get the amount of active players."""
     player_count = 0
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))

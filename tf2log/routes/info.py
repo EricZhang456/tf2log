@@ -1,3 +1,5 @@
+"""Info view."""
+
 import time
 import socket
 import requests
@@ -19,6 +21,10 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
 def get_info(server_ip: str):
+    """Main server info view.
+    
+    :param str server_ip: Server IP.
+    """
     if server_ip.startswith("169.254"):
         return render_template("except.html", except_body="SDR Fake IP not supported."), 400
     server_port = request.args.get("port", default=27015, type=int)
@@ -105,11 +111,16 @@ def get_info(server_ip: str):
 @limiter.limit("90 per minute")
 @cache.cached(timeout=3600)
 def get_map_thumbnail(map_name: str):
+    """Map thumbnail view, fetches a map thumbnail URL from Teamwork.tf.
+    
+    :param str map_name: Name of the map.
+    """
     if request.headers.get("x-get-thumbnail") != "1":
         return Response(status=400)
     teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
-    response = requests.get(f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}",
-                            timeout=300)
+    response = requests.get(
+        f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}",
+        timeout=300)
     thumbnail_url = response.json().get("thumbnail")
     if thumbnail_url is not None:
         return Response(thumbnail_url, mimetype='text/plain')
@@ -120,6 +131,10 @@ def get_map_thumbnail(map_name: str):
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
 def get_source_tv(server_ip: str):
+    """Check if SourceTV on server is valid.
+    
+    :param server_ip: IP of the server with a SourceTV port.
+    """
     if request.headers.get("x-get-sourcetv") != "1":
         return Response(status=400)
     server_port = request.args.get("port", default=27015, type=int)
@@ -141,35 +156,42 @@ def get_source_tv(server_ip: str):
 
 @bp.errorhandler(NotTF2)
 def handle_nottf2(_):
+    """Not TF2 server error handler."""
     return render_template("except.html",
                            except_body="Server is not running TF2."), 404
 
 @bp.errorhandler(ServerSourceTV)
 def handle_server_sourcetv(_):
+    """SourceTV relay server error handler."""
     return render_template("except.html",
                            except_body="Server is a SourceTV relay."), 400
 
 @bp.errorhandler(socket.timeout)
 def handle_timeout(_):
+    """Timeout error handler."""
     return render_template("except.html",
                            except_body="Timed out when fetching game server data."), 504
 
 @bp.errorhandler(socket.gaierror)
 def handle_invalid_address(_):
+    """Invalid server address handler."""
     return render_template("except.html",
                            except_body="Invalid server address."), 400
 
 @bp.errorhandler(ConnectionRefusedError)
 def handle_conn_refused(_):
+    """Connection refused handler."""
     return render_template("except.html",
                            except_body="Cannot connect to game server."), 502
 
 @bp.errorhandler(BrokenMessageError)
 @bp.errorhandler(BufferExhaustedError)
 def handle_broken_message(_):
+    """Bad A2S message error handler."""
     return render_template("except.html",
                            except_body="Cannot decode response from game server."), 502
 
 @bp.errorhandler(OSError)
 def handle_general_error(_):
+    """General server error handler."""
     abort(500)
