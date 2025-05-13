@@ -127,6 +127,8 @@
                 }
             }
             .server_filter_button {
+                all: unset;
+                cursor: pointer;
                 margin-left: auto;
                 background-color: $main-button-color;
                 font-size: initial;

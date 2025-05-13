@@ -48,79 +48,79 @@
                     <fieldset class="server_filter_typical">
                         <legend>General</legend>
                         <div class="server_filter_full">
-                            <input type="checkbox" id="server_filter_full" name="server_filter_full" value="not_full">
+                            <input type="checkbox" id="server_filter_full" name="not_full" value="1">
                             <label for="server_filter_full">Server is not full</label>
                         </div>
                         <div class="server_filter_has_users_playing">
-                            <input type="checkbox" id="server_filter_has_users_playing" name="server_filter_has_users_playing" value="has_user_playing">
+                            <input type="checkbox" id="server_filter_has_users_playing" name="has_user_playing" value="1">
                             <label for="server_filter_has_users_playing">Has users playing</label>
                         </div>
                         <div class="server_filter_no_password">
-                            <input type="checkbox" id="server_filter_no_password" name="server_filter_no_password" value="password">
+                            <input type="checkbox" id="server_filter_no_password" name="password" value="1">
                             <label for="server_filter_no_password">Is not password protected</label>
                         </div>
                     </fieldset>
                     <fieldset class="server_filter_vanilla">
                         <legend>Presets</legend>
                         <div class="server_filter_preset_vanilla">
-                            <input type="radio" id="server_filter_vanilla" name="server_filter_vanilla" value="1">
+                            <input type="radio" id="server_filter_vanilla" name="vanilla" value="1">
                             <label for="server_filter_vanilla">Vanilla</label>
                         </div>
                         <div class="server_filter_preset_vanilla_custom">
-                            <input type="radio" id="server_filter_vanilla_custom" name="server_filter_vanilla" value="2">
+                            <input type="radio" id="server_filter_vanilla_custom" name="vanilla" value="2">
                             <label for="server_filter_vanilla_custom">Vanilla Custom</label>
                         </div>
                         <div class="server_filter_preset_custom">
-                            <input type="radio" id="server_filter_custom" name="server_filter_vanilla" value="3">
+                            <input type="radio" id="server_filter_custom" name="vanilla" value="3">
                             <label for="server_filter_custom">Custom</label>
                         </div>
                         <div class="server_filter_preset_all">
-                            <input type="radio" id="server_filter_all" name="server_filter_vanilla" value="4">
+                            <input type="radio" id="server_filter_all" name="vanilla" value="4">
                             <label for="server_filter_all">All</label>
                         </div>
                     </fieldset>
                     <fieldset class="server_filter_custom">
                         <legend>Other</legend>
                         <div class="server_filter_alltalk">
-                            <input type="checkbox" id="server_filter_alltalk" name="server_filter_alltalk" value="alltalk">
+                            <input type="checkbox" id="server_filter_alltalk" name="alltalk" value="1">
                             <label for="server_filter_alltalk">Global voice chat</label>
                         </div>
                         <div class="server_filter_nocrits">
-                            <input type="checkbox" id="server_filter_nocrits" name="server_filter_nocrits" value="nocrits">
+                            <input type="checkbox" id="server_filter_nocrits" name="nocrits" value="1">
                             <label for="server_filter_nocrits">No random crits</label>
                         </div>
                         <div class="server_filter_dmgspread">
-                            <input type="checkbox" id="server_filter_dmgspread" name="server_filter_dmgspread" value="dmgspread">
+                            <input type="checkbox" id="server_filter_dmgspread" name="dmgspread" value="1">
                             <label for="server_filter_dmgspread">Random damage spread</label>
                         </div>
                         <div class="server_filter_increased_max_players">
-                            <input type="checkbox" id="server_filter_increased_maxplayers" name="server_filter_increased_maxplayers" value="increased_maxplayers">
+                            <input type="checkbox" id="server_filter_increased_maxplayers" name="increased_maxplayers" value="1">
                             <label for="server_filter_increased_maxplayers">Increased max players</label>
                         </div>
                         <div class="server_filter_norespawntime">
-                            <input type="checkbox" id="server_filter_norespawntime" name="server_filter_norespawntime" value="norespawntime">
+                            <input type="checkbox" id="server_filter_norespawntime" name="norespawntime" value="1">
                             <label for="server_filter_norespawntime">No respawn time</label>
                         </div>
                         <div class="server_filter_respawntimes">
-                            <input type="checkbox" id="server_filter_respawntimes" name="server_filter_respawntimes" value="respawntimes">
+                            <input type="checkbox" id="server_filter_respawntimes" name="respawntimes" value="1">
                             <label for="server_filter_respawntimes">Modified respawn time</label>
                         </div>
                         <div class="server_filter_friendlyfire">
-                            <input type="checkbox" id="server_filter_friendlyfire" name="server_filter_friendlyfire" value="friendlyfire">
+                            <input type="checkbox" id="server_filter_friendlyfire" name="friendlyfire" value="1">
                             <label for="server_filter_friendlyfire">Friendly fire</label>
                         </div>
                         <div class="server_filter_gravity">
-                            <input type="checkbox" id="server_filter_gravity" name="server_filter_gravity" value="gravity">
+                            <input type="checkbox" id="server_filter_gravity" name="gravity" value="1">
                             <label for="server_filter_gravity">Modified gravity</label>
                         </div>
                         <div class="server_filter_replay">
-                            <input type="checkbox" id="server_filter_replay" name="server_filter_replay" value="replay">
+                            <input type="checkbox" id="server_filter_replay" name="replay" value="1">
                             <label for="server_filter_replay">Replay</label>
                         </div>
                     </fieldset>
                     <fieldset class="server_filter_region">
                         <legend>Region</legend>
-                        <select class="server_filter_region_select" id="server_filter_region_select">
+                        <select class="server_filter_region_select" id="server_filter_region_select" name="region">
                             <option value="-1">All</option>
                             <option value="0">US East</option>
                             <option value="1">US West</option>
@@ -134,7 +134,7 @@
                         </select>
                     </fieldset>
                 </div>
-                <a href="javascript:void(0);" id="server_filter_button" class="server_filter_button preload" onclick="filterApply();">Apply Filters</a>
+                <button type="submit" id="server_filter_button" class="server_filter_button preload">Apply Filters</button>
             </form>
         </div>
         {% endif %}

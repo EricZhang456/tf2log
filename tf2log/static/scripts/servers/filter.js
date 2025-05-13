@@ -148,14 +148,15 @@ const constructFilterUrlParams = () => {
                                 filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay]
     let targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
     targetFilterElements.forEach((item) => {
-        targetUrl.searchParams.set(item.value, +item.checked);
+        targetUrl.searchParams.set(item.name, +item.checked);
     });
     targetUrl.searchParams.set("vanilla", getPreset());
     targetUrl.searchParams.set("region", filterRegion.value);
     return targetUrl.toString();
 };
 
-const filterApply = () => {
+filterButton.addEventListener("click", (event) => {
+    event.preventDefault();
     const filteredURL = constructFilterUrlParams();
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");
@@ -189,7 +190,7 @@ const filterApply = () => {
         target.innerHTML = response;
         populateFilteredServerCount();
     });
-};
+});
 
 const populateFilterHint = () => {
     let filterHintText = new Array();
