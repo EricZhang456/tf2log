@@ -7,4 +7,4 @@ def param_bool(value: str):
     :return: True if the URL parameter evaluates to true, False otherwise.
     :rtype: bool
     """
-    return bool(value.lower() == "true" or (value.isnumeric() and int(value) >= 1))
+    return bool(value.isnumeric() and int(value) >= 1)
