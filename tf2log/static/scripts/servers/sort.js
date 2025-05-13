@@ -5,7 +5,7 @@ const sortMapButton = document.querySelector(".server_list_sort_map");
 const sortGameModeButton = document.querySelector(".server_list_sort_mode");
 const sortRegionButton = document.querySelector(".server_list_sort_region");
 
-const sortServerItems = (asc = true, sortColumn) => {
+function sortServerItems(asc = true, sortColumn) {
     const sortDir = asc ? 1 : -1;
     const serverItems = Array.from(document.querySelectorAll(".server_list_item:not(.hide)"));
     const sortedServerItems = serverItems.sort((a, b) => {
@@ -39,7 +39,7 @@ const sortServerItems = (asc = true, sortColumn) => {
     }
     serverListContainer.append(...sortedServerItems);
     const target = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
-    target.forEach((item) => {
+    target.forEach(item => {
        item.classList.remove("sort_asc", "sort_desc"); 
     });
     switch (sortColumn) {
@@ -64,7 +64,7 @@ const sortServerItems = (asc = true, sortColumn) => {
             sortRegionButton.classList.toggle("sort_desc", !asc);
             break;
     }
-};
+}
 
 sortPlayerCountButton.addEventListener("click", () => {
     sortServerItems(!sortPlayerCountButton.classList.contains("sort_asc"), 1);

@@ -3,29 +3,29 @@ const removeFavoriteAltText = document.currentScript.getAttribute("data-remove-f
 
 let favoritedServers;
 
-const getFavoritedServers = () => {
+function getFavoritedServers() {
     const favoritedServersStorage = window.localStorage.getItem("favorited_servers");
     if (favoritedServersStorage === null || JSON.parse(favoritedServersStorage).length === 0) {
         favoritedServers = new Array();
     } else {
         favoritedServers = JSON.parse(favoritedServersStorage);
     }
-};
+}
 
-const checkFavoriteDuplicate = (serverObj) => {
+function checkFavoriteDuplicate(serverObj) {
     getFavoritedServers();
     let result = false;
     if (favoritedServers.length) {
-        favoritedServers.forEach((item) => {
+        favoritedServers.forEach(item => {
             if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
                 result = true;
             }
         });
     }
     return result;
-};
+}
 
-const setStar = (serverObj, serverFavoriteElement) => {
+function setStar(serverObj, serverFavoriteElement) {
     const serverFavoriteImg = serverFavoriteElement.firstElementChild;
     if (checkFavoriteDuplicate(serverObj)) {
         serverFavoriteImg.src = "/static/svg/star-fill.svg";
@@ -36,7 +36,7 @@ const setStar = (serverObj, serverFavoriteElement) => {
     }
 }
 
-const toggleServerFavorites = (serverFavoriteElement, serverIP, serverPort) => {
+function toggleServerFavorites(serverFavoriteElement, serverIP, serverPort) {
     const serverObj = {server_ip: serverIP, server_port: serverPort};
     getFavoritedServers();
     if (!checkFavoriteDuplicate(serverObj)) {
@@ -48,17 +48,17 @@ const toggleServerFavorites = (serverFavoriteElement, serverIP, serverPort) => {
         window.localStorage.setItem("favorited_servers", JSON.stringify(filteredFavorites));
     }
     setStar(serverObj, serverFavoriteElement);
-};
+}
 
-const attachFavoriteEventListener = () => {
-    document.querySelectorAll(".server_list_favorite_button").forEach((item) => {
+function attachFavoriteEventListener() {
+    document.querySelectorAll(".server_list_favorite_button").forEach(item => {
         const serverObj = {server_ip: item.getAttribute("data-server-ip"), server_port: item.getAttribute("data-server-port")};
         setStar(serverObj, item);
         item.addEventListener("click", () => {
             toggleServerFavorites(item, item.getAttribute("data-server-ip"), item.getAttribute("data-server-port"));
         });
     });
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     attachFavoriteEventListener();

@@ -12,16 +12,16 @@ const removeFavoriteHint = favoriteScriptTag.getAttribute("data-remove-favorite-
 let duplicateServer = false;
 let favoritedServers;
 
-const getFavoritedServers = () => {
+function getFavoritedServers() {
     const favoritedServersStorage = window.localStorage.getItem("favorited_servers");
     if (favoritedServersStorage === null || JSON.parse(favoritedServersStorage).length === 0) {
         favoritedServers = new Array();
     } else {
         favoritedServers = JSON.parse(favoritedServersStorage);
     }
-};
+}
 
-const checkFavoriteDuplicate = () => {
+function checkFavoriteDuplicate() {
     getFavoritedServers();
     if (favoritedServers.length) {
         for (const item of favoritedServers) {
@@ -38,9 +38,9 @@ const checkFavoriteDuplicate = () => {
         duplicateServer = false;
         favoriteButton.innerHTML = favoriteHint;
     }
-};
+}
 
-const addServerToFavorite = () => {
+function addServerToFavorite() {
     getFavoritedServers();
     if (!duplicateServer) {
         favoritedServers.push(serverObj);
@@ -51,7 +51,7 @@ const addServerToFavorite = () => {
         window.localStorage.setItem("favorited_servers", JSON.stringify(filteredFavorites));
     }
     checkFavoriteDuplicate();
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     checkFavoriteDuplicate();

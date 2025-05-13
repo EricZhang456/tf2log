@@ -26,12 +26,12 @@ const filterForm = document.querySelector(".server_filter_form");
 const filterHint = document.getElementById("server_filter_hint");
 const filterButton = document.getElementById("server_filter_button");
 
-const populateFilteredServerCount = () => {
+function populateFilteredServerCount() {
     const filteredServerCount = document.querySelectorAll(".server_list_item").length;
     document.getElementById("server_list_filtered_server_count").innerHTML = `(${filteredServerCount})`;
-};
+}
 
-const setFilterFormInput = () => {
+function setFilterFormInput() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const queryServerFull = urlParams.get("not_full");
@@ -95,9 +95,9 @@ const setFilterFormInput = () => {
     if (queryRegion === null) {
         filterRegion.selectedIndex = 0;
     }
-};
+}
 
-const toggleFilters = () => {
+function toggleFilters() {
     if (filterForm.style.display === "none") {
         filterForm.style.display = "flex";
     } else {
@@ -105,57 +105,57 @@ const toggleFilters = () => {
         setFilterFormInput();
         populateFilterHint();
     }
-};
+}
 
-const reenableCustomFilters = () => {
+function reenableCustomFilters() {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
                             filterFriendlyFire, filterGravity, filterGravity];
-    targetElements.forEach((item) => {
+    targetElements.forEach(item => {
         item.disabled = false;
         item.labels.item(0).style.color = enabledTextColor;
     });
-};
+}
 
-const disableCustomFilters = () => {
+function disableCustomFilters() {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
                             filterFriendlyFire, filterGravity, filterGravity];
-    targetElements.forEach((item) => {
+    targetElements.forEach(item => {
         item.checked = false;
         item.disabled = true;
         item.labels.item(0).style.color = disabledTextColor;
     });
-};
+}
 
 filterPresetVanilla.addEventListener("click", () => disableCustomFilters());
 filterPresetSemiVanilla.addEventListener("click" , () => reenableCustomFilters());
 filterPresetCustom.addEventListener("click" , () => reenableCustomFilters());
 filterPresetAll.addEventListener("click" , () => reenableCustomFilters());
 
-const getPreset = () => {
+function getPreset() {
     const filterPresets = [filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom, filterPresetAll];
     let presetValue;
-    filterPresets.forEach((item) => {
+    filterPresets.forEach(item => {
         if (item.checked) {
             presetValue = item.value;
         }
     });
     return presetValue;
-};
+}
 
-const constructFilterUrlParams = () => {
+function constructFilterUrlParams() {
     const targetFilterElements = [filterServerFull, filterHasUserPlaying, filterNoPassword, filterAlltalk,
                                 filterNocrits, filterDmgSpread, filterIncreasedMaxPlayers, filterNoRespawnTime,
                                 filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay]
     let targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
-    targetFilterElements.forEach((item) => {
+    targetFilterElements.forEach(item => {
         targetUrl.searchParams.set(item.name, +item.checked);
     });
     targetUrl.searchParams.set("vanilla", getPreset());
     targetUrl.searchParams.set("region", filterRegion.value);
     return targetUrl.toString();
-};
+}
 
-filterButton.addEventListener("click", (event) => {
+filterButton.addEventListener("click", event => {
     event.preventDefault();
     const filteredURL = constructFilterUrlParams();
     const target = document.querySelector(".target");
@@ -170,7 +170,7 @@ filterButton.addEventListener("click", (event) => {
     searchBox.style.color = "#aba8a5";
     searchBox.style.fontStyle = "italic";
     const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
-    sortElements.forEach((item) => {
+    sortElements.forEach(item => {
        item.classList.remove("sort_asc", "sort_desc"); 
     });
     
@@ -192,14 +192,14 @@ filterButton.addEventListener("click", (event) => {
     });
 });
 
-const populateFilterHint = () => {
+function populateFilterHint() {
     let filterHintText = new Array();
     const targetElements = [filterServerFull, filterHasUserPlaying, filterNoPassword,
                             filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
                             filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
                             filterIncreasedMaxPlayers, filterNoRespawnTime, filterRespawnTimes,
                             filterFriendlyFire, filterGravity, filterReplay]
-    targetElements.forEach((item) => {
+    targetElements.forEach(item => {
         if (item.checked) {
             filterHintText.push(item.labels.item(0).innerHTML);
         }
@@ -208,7 +208,7 @@ const populateFilterHint = () => {
         filterHintText.push(filterRegion.options[filterRegion.selectedIndex].text);
     }
     filterHint.innerHTML = filterHintText.join(", ");
-};
+}
 
 filterForm.addEventListener("change", () => {
     populateFilterHint();

@@ -3,12 +3,12 @@ const target = document.querySelector(".target");
 const favoritedServersStorage = window.localStorage.getItem("favorited_servers")
 const missingFavoritesHint = document.currentScript.getAttribute("data-missing-favorites-text");
 
-const populateFilteredServerCount = () => {
+function populateFilteredServerCount() {
     const filteredServerCount = document.querySelectorAll(".server_list_item").length;
     document.getElementById("server_list_filtered_server_count").innerHTML = `(${filteredServerCount})`;
-};
+}
 
-const fetchServers = () => {
+function fetchServers() {
     fetchingHint.style.display = "block";
     if (favoritedServersStorage === null || !JSON.parse(favoritedServersStorage).length) {
         fetchingHint.style.fontStyle = "normal";
@@ -30,12 +30,12 @@ const fetchServers = () => {
         populateFilteredServerCount();
         const sortButtons = ["server_list_sort_name", "server_list_sort_map",
                             "server_list_sort_mode", "server_list_sort_region"];
-        sortButtons.forEach((item) => {
+        sortButtons.forEach(item => {
             document.querySelector(`.${item}`).classList.remove("sort_asc", "sort_desc");
         });
     });
 
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     fetchServers();

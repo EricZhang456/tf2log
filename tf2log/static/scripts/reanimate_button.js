@@ -1,4 +1,3 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const preload = document.querySelectorAll(".preload");
-    preload.forEach((preloadElement) => preloadElement.classList.remove("preload"));
+    document.querySelectorAll(".preload").forEach(preloadElement => preloadElement.classList.remove("preload"));
 });

@@ -3,7 +3,7 @@ const activeColor = "#fff";
 
 const searchBox = document.getElementById("server_search_box");
 
-const setSearchBoxStyle = (value) => {
+function setSearchBoxStyle(value) {
     if (value.length > 0) {
         searchBox.style.color = activeColor;
         searchBox.style.fontStyle = "normal";
@@ -11,11 +11,11 @@ const setSearchBoxStyle = (value) => {
         searchBox.style.color = hintColor;
         searchBox.style.fontStyle = "italic";
     }
-};
+}
 
-searchBox.addEventListener("input", (field) => {
+searchBox.addEventListener("input", field => {
     const value = field.target.value.trim().toLowerCase();
-    document.querySelectorAll(".server_list_item").forEach((server) => {
+    document.querySelectorAll(".server_list_item").forEach(server => {
         const visible = server.getAttribute("data-server-name").toLowerCase().includes(value) 
                         || server.getAttribute("data-server-readable-map").toLowerCase().includes(value)
                         || server.getAttribute("data-server-mode").toLowerCase().includes(value)

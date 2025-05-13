@@ -1,4 +1,4 @@
-const showSourceTVButton = (serverIP, serverPort) => {
+function showSourceTVButton(serverIP, serverPort) {
     fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`, {
         method: "GET",
         headers: {
@@ -22,7 +22,7 @@ const showSourceTVButton = (serverIP, serverPort) => {
             }
         }
     })
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const sourceTVScript = document.getElementById("info_server_sourcetv_script")

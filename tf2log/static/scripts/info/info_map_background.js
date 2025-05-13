@@ -1,4 +1,4 @@
-const populateMapThumbnail = (map_name) => {
+function populateMapThumbnail(map_name) {
     fetch(`/info/thumbnail/${map_name}`, {
         method: "GET",
         headers: {
@@ -20,7 +20,7 @@ const populateMapThumbnail = (map_name) => {
             infoHeader.style.setProperty("background-size", "cover");
         }
     });
-};
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     populateMapThumbnail(document.getElementById("info_map_background_script").getAttribute("data-map-name"));
