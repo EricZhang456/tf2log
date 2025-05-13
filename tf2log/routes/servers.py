@@ -25,8 +25,10 @@ async def get_server_list():
     not_full = request.args.get("not_full", default=False, type=param_bool)
     no_password = request.args.get("password", default=False, type=param_bool)
     region_param = request.args.get("region", default=-1, type=int)
+
     region = None if region_param == -1 else ServerRegions(region_param)
     vanilla = GamePresets(request.args.get("vanilla", default=1, type=int))
+
     alltalk = request.args.get("alltalk", default=False, type=param_bool)
     nocrits = request.args.get("nocrits", default=False, type=param_bool)
     gravity = request.args.get("gravity", default=False, type=param_bool)
@@ -36,11 +38,13 @@ async def get_server_list():
     dmgspread = request.args.get("dmgspread", default=False, type=param_bool)
     norespawntime = request.args.get("norespawntime", default=False, type=param_bool)
     replay = request.args.get("replay", default=False, type=param_bool)
+
     server_list_raw = []
     server_list = []
     game_mode_list = (SERVERBROWSER_TF_GAMEMODES_VANILLA
                     if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA
                     else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
+
     async with aiohttp.ClientSession() as session:
         fetch_tasks = [asyncio.create_task(
                         fetch_servers(session, item, has_user_playing))
@@ -48,6 +52,7 @@ async def get_server_list():
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         server_list_raw.extend(item)
+
     for item in server_list_raw:
         server_tags = tuple(item.get("keywords").split(","))
         server_addr = parse_hostname(item.get("ip"))
@@ -64,6 +69,7 @@ async def get_server_list():
             or (friendlyfire and "friendlyfire" not in server_tags)
             or (replay and "replays" not in server_tags)):
             continue
+
         vanilla_status = GamePresets.VANILLA
         if any(i in server_tags for i in NON_VANILLA_TAGS):
             vanilla_status = GamePresets.SEMI_VANILLA
@@ -78,6 +84,7 @@ async def get_server_list():
                 vanilla_str = "Custom"
         if vanilla != vanilla_status and vanilla != GamePresets.ALL:
             continue
+
         server_list.append({"name": item.get("name"),
                             "ip": item.get("ip"),
                             "addr": server_addr[0],
@@ -92,6 +99,7 @@ async def get_server_list():
                             "players": item.get("players"),
                             "maxPlayers": item.get("maxPlayers"),
                             "bots": item.get("bots")})
+
     subview_header = request.headers.get("x-fetch-subview")
     if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
         return render_template("servers_item.html", server_list = server_list)
