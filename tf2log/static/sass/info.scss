@@ -74,6 +74,7 @@
                     align-items: center;
                     gap: 20px;
                     .info_header_favorite {
+                        all: unset;
                         /* reenable in js */
                         display: none;
                         cursor: pointer;

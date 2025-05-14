@@ -231,6 +231,10 @@
                         display: flex;
                         align-items: center;
                         gap: 15px;
+                        .server_list_favorite_button {
+                            all: unset;
+                            cursor: pointer;
+                        }
                         .server_list_connect, .server_list_favorite {
                             filter: invert(1);
                         }
