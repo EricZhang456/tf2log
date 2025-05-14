@@ -22,6 +22,7 @@ const filterReplay = document.getElementById("server_filter_replay");
 
 const filterRegion = document.getElementById("server_filter_region_select");
 
+const filterToggle = document.getElementById("server_filter_toggle");
 const filterForm = document.querySelector(".server_filter_form");
 const filterHint = document.getElementById("server_filter_hint");
 const filterButton = document.getElementById("server_filter_button");
@@ -97,7 +98,7 @@ function setFilterFormInput() {
     }
 }
 
-function toggleFilters() {
+filterToggle.addEventListener("click", () => {
     if (filterForm.style.display === "none") {
         filterForm.style.display = "flex";
     } else {
@@ -105,7 +106,7 @@ function toggleFilters() {
         setFilterFormInput();
         populateFilterHint();
     }
-}
+});
 
 function reenableCustomFilters() {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 

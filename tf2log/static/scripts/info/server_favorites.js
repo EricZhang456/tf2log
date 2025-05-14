@@ -40,7 +40,7 @@ function checkFavoriteDuplicate() {
     }
 }
 
-function addServerToFavorite() {
+favoriteButton.addEventListener("click", () => {
     getFavoritedServers();
     if (!duplicateServer) {
         favoritedServers.push(serverObj);
@@ -51,6 +51,6 @@ function addServerToFavorite() {
         window.localStorage.setItem("favorited_servers", JSON.stringify(filteredFavorites));
     }
     checkFavoriteDuplicate();
-}
+});
 
 document.addEventListener("DOMContentLoaded", () => checkFavoriteDuplicate());
