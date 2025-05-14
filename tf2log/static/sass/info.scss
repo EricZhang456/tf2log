@@ -18,7 +18,7 @@
                 .info_header_server_info {
                     @include vertical-flex();
                     .info_header_server_name {
-                        font-size: 30px;
+                        font-size: 25px;
                         font-weight: 600;
                         margin: 30px;
                         margin-right: 10px;
@@ -26,7 +26,7 @@
                         text-shadow: 3px 3px 20px gray, rgba(255,255,255,0.5) 0px 0px 30px;
                     }
                     .info_header_players {
-                        font-size: 25px;
+                        font-size: 20px;
                         margin-inline: 30px;
                         margin-top: 10px;
                         margin-bottom: 30px;
@@ -40,6 +40,7 @@
                     text-align: right;
                     margin-inline: 30px;
                     .info_header_current_map {
+                        width: max-content;
                         font-size: 25px;
                         margin-bottom: 8px;
                     }
@@ -62,11 +63,11 @@
                 padding-left: 40px;
                 .info_action_tags_text {
                     margin-top: 10px;
-                    font-size: 15px;
+                    font-size: 12px;
                 }
                 .info_action_location {
                     margin-top: 5px;
-                    font-size: 12px;
+                    font-size: 10px;
                 }
                 .info_action_buttons {
                     display: flex;
@@ -98,7 +99,7 @@
                         background-color: $main-button-color;
                         padding-block: 5px;
                         padding-inline: 12px;
-                        font-size: 25px;
+                        font-size: 20px;
                         color: $main-text-color;
                         text-decoration: none;
                         user-select: none;
@@ -126,10 +127,11 @@
                 text-align: right;
                 margin-inline: 30px;
                 .info_header_next_map_text {
+                    width: max-content;
                     font-size: 28px;
                     margin-bottom: 5px;
                     margin-top: 0;
-                    text-shadow: 3px 3px 3px gray;
+                    text-shadow: 3px 3px 10px gray;
                 }
                 .info_header_next_map {
                     font-size: 25px;
