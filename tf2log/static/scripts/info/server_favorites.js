@@ -53,6 +53,4 @@ function addServerToFavorite() {
     checkFavoriteDuplicate();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    checkFavoriteDuplicate();
-});
+document.addEventListener("DOMContentLoaded", () => checkFavoriteDuplicate());

@@ -39,9 +39,7 @@ function sortServerItems(asc = true, sortColumn) {
     }
     serverListContainer.append(...sortedServerItems);
     const target = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
-    target.forEach(item => {
-       item.classList.remove("sort_asc", "sort_desc"); 
-    });
+    target.forEach(item => item.classList.remove("sort_asc", "sort_desc"));
     switch (sortColumn) {
         case 1:
             sortPlayerCountButton.classList.toggle("sort_asc", asc);
@@ -66,22 +64,12 @@ function sortServerItems(asc = true, sortColumn) {
     }
 }
 
-sortPlayerCountButton.addEventListener("click", () => {
-    sortServerItems(!sortPlayerCountButton.classList.contains("sort_asc"), 1);
-});
+sortPlayerCountButton.addEventListener("click", () => sortServerItems(!sortPlayerCountButton.classList.contains("sort_asc"), 1));
 
-sortNameButton.addEventListener("click", () => {
-    sortServerItems(!sortNameButton.classList.contains("sort_asc"), 2);
-});
+sortNameButton.addEventListener("click", () => sortServerItems(!sortNameButton.classList.contains("sort_asc"), 2));
 
-sortMapButton.addEventListener("click", () => {
-    sortServerItems(!sortMapButton.classList.contains("sort_asc"), 3);
-});
+sortMapButton.addEventListener("click", () => sortServerItems(!sortMapButton.classList.contains("sort_asc"), 3));
 
-sortGameModeButton.addEventListener("click", () => {
-    sortServerItems(!sortGameModeButton.classList.contains("sort_asc"), 4);
-});
+sortGameModeButton.addEventListener("click", () => sortServerItems(!sortGameModeButton.classList.contains("sort_asc"), 4));
 
-sortRegionButton.addEventListener("click", () => {
-    sortServerItems(!sortRegionButton.classList.contains("sort_asc"), 5);
-});
+sortRegionButton.addEventListener("click", () => sortServerItems(!sortRegionButton.classList.contains("sort_asc"), 5));

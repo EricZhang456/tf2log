@@ -60,12 +60,8 @@ function attachFavoriteEventListener() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    attachFavoriteEventListener();
-});
+document.addEventListener("DOMContentLoaded", () => attachFavoriteEventListener());
 
-const observer = new MutationObserver((_) => {
-    attachFavoriteEventListener();
-});
+const observer = new MutationObserver(() => attachFavoriteEventListener());
 
 observer.observe(document.querySelector(".target"), {childList: true})

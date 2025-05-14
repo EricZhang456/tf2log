@@ -147,9 +147,7 @@ function constructFilterUrlParams() {
                                 filterNocrits, filterDmgSpread, filterIncreasedMaxPlayers, filterNoRespawnTime,
                                 filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay]
     let targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
-    targetFilterElements.forEach(item => {
-        targetUrl.searchParams.set(item.name, +item.checked);
-    });
+    targetFilterElements.forEach(item => targetUrl.searchParams.set(item.name, +item.checked));
     targetUrl.searchParams.set("vanilla", getPreset());
     targetUrl.searchParams.set("region", filterRegion.value);
     return targetUrl.toString();
@@ -170,9 +168,7 @@ filterButton.addEventListener("click", event => {
     searchBox.style.color = "#aba8a5";
     searchBox.style.fontStyle = "italic";
     const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
-    sortElements.forEach(item => {
-       item.classList.remove("sort_asc", "sort_desc"); 
-    });
+    sortElements.forEach(item => item.classList.remove("sort_asc", "sort_desc"));
     
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";

@@ -30,9 +30,7 @@ function fetchServers() {
         populateFilteredServerCount();
         const sortButtons = ["server_list_sort_name", "server_list_sort_map",
                             "server_list_sort_mode", "server_list_sort_region"];
-        sortButtons.forEach(item => {
-            document.querySelector(`.${item}`).classList.remove("sort_asc", "sort_desc");
-        });
+        sortButtons.forEach(item => document.querySelector(`.${item}`).classList.remove("sort_asc", "sort_desc"));
     });
 
 }
