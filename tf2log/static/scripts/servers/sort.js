@@ -73,3 +73,12 @@ sortMapButton.addEventListener("click", () => sortServerItems(!sortMapButton.cla
 sortGameModeButton.addEventListener("click", () => sortServerItems(!sortGameModeButton.classList.contains("sort_asc"), 4));
 
 sortRegionButton.addEventListener("click", () => sortServerItems(!sortRegionButton.classList.contains("sort_asc"), 5));
+
+const sortButtons = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
+sortButtons.forEach(item => {
+    item.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            item.click();
+        }
+    });
+});

@@ -108,6 +108,9 @@
                         transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
                         @include universal-drop-shadow(10px);
                     }
+                    .info_header_favorite:focus {
+                        outline: revert;
+                    }
                     .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover, .info_header_sourcetv:hover,
                     .info_header_connect:focus, .info_header_favorite:focus, .info_header_steam_group:focus, .info_header_sourcetv:focus {
                         background-color: $main-button-color-hover;

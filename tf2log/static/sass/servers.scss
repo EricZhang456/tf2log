@@ -235,6 +235,9 @@
                             all: unset;
                             cursor: pointer;
                         }
+                        button:focus.server_list_favorite_button {
+                            outline: revert !important;
+                        }
                         .server_list_connect, .server_list_favorite {
                             filter: invert(1);
                         }
