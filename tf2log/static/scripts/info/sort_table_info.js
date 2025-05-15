@@ -46,9 +46,14 @@ document.querySelectorAll(".sort_table_info th").forEach(headerCell => {
         const currentIsAscending = headerCell.classList.contains("th-sort-asc");
         sortTable(tableElement, headerIndex, !currentIsAscending);
     });
-    headerCell.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
+    headerCell.addEventListener("keyup", event => {
+        if (event.key === "Enter" || event.key === " ") {
             headerCell.click();
+        }
+    });
+    headerCell.addEventListener("keydown", event => {
+        if (event.key === " ") {
+            event.preventDefault();
         }
     });
 });

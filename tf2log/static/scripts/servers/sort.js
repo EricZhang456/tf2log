@@ -65,20 +65,22 @@ function sortServerItems(asc = true, sortColumn) {
 }
 
 sortPlayerCountButton.addEventListener("click", () => sortServerItems(!sortPlayerCountButton.classList.contains("sort_asc"), 1));
-
 sortNameButton.addEventListener("click", () => sortServerItems(!sortNameButton.classList.contains("sort_asc"), 2));
-
 sortMapButton.addEventListener("click", () => sortServerItems(!sortMapButton.classList.contains("sort_asc"), 3));
-
 sortGameModeButton.addEventListener("click", () => sortServerItems(!sortGameModeButton.classList.contains("sort_asc"), 4));
-
 sortRegionButton.addEventListener("click", () => sortServerItems(!sortRegionButton.classList.contains("sort_asc"), 5));
 
 const sortButtons = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
 sortButtons.forEach(item => {
-    item.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
+    item.addEventListener("keyup", event => {
+        event.preventDefault();
+        if (event.key === "Enter" || event.key === " ") {
             item.click();
+        }
+    });
+    item.addEventListener("keydown", event => {
+        if (event.key === " ") {
+            event.preventDefault();
         }
     });
 });
