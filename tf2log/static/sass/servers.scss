@@ -176,11 +176,8 @@
                     .server_list_sort_name, .server_list_sort_map, .server_list_sort_mode, .server_list_sort_region {
                         cursor: pointer;
                     }
-                    .comma {
-                        margin-right: 2px;
-                    }
-                    .comma::after {
-                        margin-left: 2px;
+                    .comma::before {
+                        margin-inline: 2px;
                         content: ",";
                     }
                 }
@@ -268,11 +265,11 @@
         font-style: italic;
     }
     .sort_asc::after {
-        content: "\25b4";
+        content: "\25b4" !important;
         padding-left: 2px;
     }
     .sort_desc::after {
-        content: "\25be";
+        content: "\25be" !important;
         padding-left: 2px;
     }
 }
