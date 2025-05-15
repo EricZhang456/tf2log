@@ -176,6 +176,13 @@
                     .server_list_sort_name, .server_list_sort_map, .server_list_sort_mode, .server_list_sort_region {
                         cursor: pointer;
                     }
+                    .comma {
+                        margin-right: 2px;
+                    }
+                    .comma::after {
+                        margin-left: 2px;
+                        content: ",";
+                    }
                 }
                 .server_list_player_count_hint {
                     cursor: pointer;

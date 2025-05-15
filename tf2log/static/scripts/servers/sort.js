@@ -84,3 +84,7 @@ sortButtons.forEach(item => {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".comma").forEach(element => element.nextSibling.parentNode.removeChild(element.nextSibling));
+});
