@@ -103,8 +103,7 @@ async def get_server_list():
     subview_header = request.headers.get("x-fetch-subview")
     if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
         return render_template("servers_item.html", server_list = server_list)
-    else:
-        return render_template("servers.html", server_list = server_list, show_server_list = True)
+    return render_template("servers.html", server_list = server_list, show_server_list = True)
 
 @bp.route("/favorites")
 @limiter.limit("90 per minute")
