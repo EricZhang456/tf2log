@@ -13,9 +13,9 @@ function populateMapThumbnail(map_name) {
     })
     .then(response => {
         const infoHeader = document.querySelector(".info_header_server");
-        infoHeader.style.setProperty("background-image", `url(${response})`);
-        infoHeader.style.setProperty("background-position", "center");
-        infoHeader.style.setProperty("background-size", "cover");
+        infoHeader.style.backgroundImage = `url(${response})`;
+        infoHeader.style.backgroundPosition = "center";
+        infoHeader.style.backgroundSize = "cover";
     })
     .catch(() => {
         return;
