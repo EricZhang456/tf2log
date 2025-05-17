@@ -74,3 +74,9 @@ body {
 .hide {
     display: none !important;
 }
+
+@media screen and (max-width: 1200px) {
+    .info, .server, .except {
+        width: 100% !important;
+    }
+}
