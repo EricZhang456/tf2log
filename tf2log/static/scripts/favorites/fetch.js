@@ -35,6 +35,4 @@ function fetchServers() {
 
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    fetchServers();
-});
+document.addEventListener("DOMContentLoaded", () => fetchServers());

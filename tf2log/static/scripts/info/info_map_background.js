@@ -6,22 +6,20 @@ function populateMapThumbnail(map_name) {
         }
     })
     .then(response => {
-        if (!response.ok) {
-            return;
-        } else {
+        if (response.ok) {
             return response.text();
         }
+        return Promise.reject(response);
     })
     .then(response => {
-        if (response) {
-            const infoHeader = document.querySelector(".info_header_server");
-            infoHeader.style.setProperty("background-image", `url(${response})`);
-            infoHeader.style.setProperty("background-position", "center");
-            infoHeader.style.setProperty("background-size", "cover");
-        }
+        const infoHeader = document.querySelector(".info_header_server");
+        infoHeader.style.setProperty("background-image", `url(${response})`);
+        infoHeader.style.setProperty("background-position", "center");
+        infoHeader.style.setProperty("background-size", "cover");
+    })
+    .catch(() => {
+        return;
     });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    populateMapThumbnail(document.getElementById("info_map_background_script").getAttribute("data-map-name"));
-});
+document.addEventListener("DOMContentLoaded", () => populateMapThumbnail(document.getElementById("info_map_background_script").getAttribute("data-map-name")));
