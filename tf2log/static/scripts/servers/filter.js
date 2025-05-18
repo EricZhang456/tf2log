@@ -201,7 +201,7 @@ function populateFilterHint() {
             filterHintText.push(item.labels.item(0).innerHTML);
         }
     });
-    if (filterRegion.selectedIndex != 0) {
+    if (filterRegion.selectedIndex !== 0) {
         filterHintText.push(filterRegion.options[filterRegion.selectedIndex].text);
     }
     filterHint.innerHTML = filterHintText.join(", ");
