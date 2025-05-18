@@ -102,8 +102,13 @@ async def get_server_list():
 
     subview_header = request.headers.get("x-fetch-subview")
     if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
-        return render_template("servers_item.html", server_list = server_list)
-    return render_template("servers.html", server_list = server_list, show_server_list = True)
+        response = make_response(render_template("servers_item.html", server_list=server_list))
+    else:
+        response = make_response(render_template("servers.html",
+                                                 server_list=server_list,
+                                                 show_server_list=True))
+    response.headers.set("Vary", "x-fetch-subview")
+    return response
 
 @bp.route("/favorites")
 @limiter.limit("90 per minute")
@@ -158,10 +163,8 @@ async def get_favorites_subview():
                             "players": item.get("players"),
                             "maxPlayers": item.get("max_players"),
                             "bots": item.get("bots")})
-    response = make_response(render_template("servers_item.html", server_list = server_list))
-    response.headers.set("Cache-Control", "no-cache, no-store, must-revalidate")
-    response.headers.set("Pragma", "no-cache")
-    response.headers.set("Expires", "0")
+    response = make_response(render_template("servers_item.html", server_list=server_list))
+    response.headers.set("Cache-Control", "no-cache, no-store")
     return response
 
 @bp.route("/server_count")
