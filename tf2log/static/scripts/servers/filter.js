@@ -190,7 +190,7 @@ filterButton.addEventListener("click", event => {
 });
 
 function populateFilterHint() {
-    let filterHintText = new Array();
+    let filterHintText = [];
     const targetElements = [filterServerFull, filterHasUserPlaying, filterNoPassword,
                             filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
                             filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
