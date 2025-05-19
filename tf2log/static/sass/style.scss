@@ -32,11 +32,13 @@ $default-font-size: 16px;
 @font-face {
     font-family: "Cantarell";
     src: local("Cantarell"), url("/static/fonts/Cantarell-VF.otf") format("opentype");
+    font-display: swap;
 }
 
 @font-face {
     font-family: "Open Sans";
     src: local("Open Sans"), url("/static/fonts/OpenSans-Regular-webfont.woff2") format("woff2");
+    font-display: swap;
 }
 
 * {
