@@ -15,7 +15,7 @@ let favoritedServers;
 function getFavoritedServers() {
     const favoritedServersStorage = window.localStorage.getItem("favorited_servers");
     if (favoritedServersStorage === null || JSON.parse(favoritedServersStorage).length === 0) {
-        favoritedServers = new Array();
+        favoritedServers = []; 
     } else {
         favoritedServers = JSON.parse(favoritedServersStorage);
     }

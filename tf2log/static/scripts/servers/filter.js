@@ -39,8 +39,8 @@ function setFilterFormInput() {
     const queryHasUserPlaying = urlParams.get("has_user_playing");
     const queryNoPassword = urlParams.get("password");
     const queryPreset = urlParams.get("vanilla");
-    const queryAlltalk = urlParams.get("alltalk")
-    const queryNocrits = urlParams.get("nocrits")
+    const queryAlltalk = urlParams.get("alltalk");
+    const queryNocrits = urlParams.get("nocrits");
     const queryDmgSpread = urlParams.get("dmgspread");
     const queryIncreasedMaxPlayers = urlParams.get("increased_maxplayers");
     const queryNoRespawnTime = urlParams.get("norespawntime");
@@ -146,7 +146,7 @@ function getPreset() {
 function constructFilterUrlParams() {
     const targetFilterElements = [filterServerFull, filterHasUserPlaying, filterNoPassword, filterAlltalk,
                                 filterNocrits, filterDmgSpread, filterIncreasedMaxPlayers, filterNoRespawnTime,
-                                filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay]
+                                filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay];
     let targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
     targetFilterElements.forEach(item => targetUrl.searchParams.set(item.name, +item.checked));
     targetUrl.searchParams.set("vanilla", getPreset());
@@ -195,7 +195,7 @@ function populateFilterHint() {
                             filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
                             filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
                             filterIncreasedMaxPlayers, filterNoRespawnTime, filterRespawnTimes,
-                            filterFriendlyFire, filterGravity, filterReplay]
+                            filterFriendlyFire, filterGravity, filterReplay];
     targetElements.forEach(item => {
         if (item.checked) {
             filterHintText.push(item.labels.item(0).innerHTML);
@@ -207,9 +207,7 @@ function populateFilterHint() {
     filterHint.innerHTML = filterHintText.join(", ");
 }
 
-filterForm.addEventListener("change", () => {
-    populateFilterHint();
-});
+filterForm.addEventListener("change", () => populateFilterHint());
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".server_filter").style.display = "flex";
