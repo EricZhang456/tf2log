@@ -33,8 +33,7 @@ function populateFilteredServerCount() {
 }
 
 function setFilterFormInput() {
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
+    const urlParams = new URLSearchParams(window.location.search);
     const queryServerFull = urlParams.get("not_full");
     const queryHasUserPlaying = urlParams.get("has_user_playing");
     const queryNoPassword = urlParams.get("password");
@@ -143,38 +142,28 @@ function getPreset() {
     return presetValue;
 }
 
-function constructFilterUrlParams() {
-    const targetFilterElements = [filterServerFull, filterHasUserPlaying, filterNoPassword, filterAlltalk,
-                                filterNocrits, filterDmgSpread, filterIncreasedMaxPlayers, filterNoRespawnTime,
-                                filterRespawnTimes, filterFriendlyFire, filterGravity, filterReplay];
-    let targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
-    targetFilterElements.forEach(item => targetUrl.searchParams.set(item.name, +item.checked));
-    targetUrl.searchParams.set("vanilla", getPreset());
-    targetUrl.searchParams.set("region", filterRegion.value);
-    return targetUrl.toString();
-}
-
-filterForm.addEventListener("submit", event => {
-    event.preventDefault();
-
-    const formData = new FormData(filterForm);
-    console.log(Object.fromEntries(formData));
-
-    const filteredURL = constructFilterUrlParams();
-    const target = document.querySelector(".target");
-    const fetchingHint = document.querySelector(".server_list_fetching");
-    const searchBox = document.getElementById("server_search_box");
+function removeSortingArrows() {
     const sortPlayerCountButton = document.querySelector(".server_list_player_count_hint");
     const sortNameButton = document.querySelector(".server_list_sort_name");
     const sortMapButton = document.querySelector(".server_list_sort_map");
     const sortGameModeButton = document.querySelector(".server_list_sort_mode");
     const sortRegionButton = document.querySelector(".server_list_sort_region");
+    const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
+    sortElements.forEach(item => item.classList.remove("sort_asc", "sort_desc"));
+}
+
+filterForm.addEventListener("submit", event => {
+    event.preventDefault();
+    const targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
+    const queryString = new URLSearchParams(new FormData(filterForm));
+    const filteredURL = targetUrl.toString() + "?" + queryString.toString();
+    const target = document.querySelector(".target");
+    const fetchingHint = document.querySelector(".server_list_fetching");
+    const searchBox = document.getElementById("server_search_box");
+    removeSortingArrows();
     searchBox.value = "";
     searchBox.style.color = "#aba8a5";
     searchBox.style.fontStyle = "italic";
-    const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
-    sortElements.forEach(item => item.classList.remove("sort_asc", "sort_desc"));
-
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";
