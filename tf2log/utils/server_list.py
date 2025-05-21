@@ -63,7 +63,7 @@ async def fetch_servers(aiohttp_session: aiohttp.ClientSession,
     :rtype: list[dict]
     """
     if game_mode not in SERVERBROWSER_TF_GAMEMODES:
-        raise ValueError
+        raise ValueError("Invalid game mode")
     params = {"hasUsersPlaying": "1" if has_user_playing else "0", "category": game_mode}
     async with aiohttp_session.get(__SERVERBROWSER_TF_ENDPOINT, params=params) as r:
         if r.status != 200:
