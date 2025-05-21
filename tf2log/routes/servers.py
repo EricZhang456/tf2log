@@ -69,6 +69,7 @@ async def get_server_list():
         server_list_raw.extend(item)
 
     for item in server_list_raw:
+        item: dict
         server_tags = tuple(item.get("keywords").split(","))
         server_addr = parse_hostname(item.get("ip"))
         if region and region != ServerRegions(item.get("region")):

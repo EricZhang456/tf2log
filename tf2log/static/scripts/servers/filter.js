@@ -156,6 +156,9 @@ filterForm.addEventListener("submit", event => {
     event.preventDefault();
     const targetUrl = new URL(location.protocol + '//' + location.host + location.pathname);
     const queryString = new URLSearchParams(new FormData(filterForm));
+    if (!queryString.has("has_user_playing")) {
+        queryString.set("has_user_playing", +filterHasUserPlaying.checked);
+    }
     const filteredURL = targetUrl.toString() + "?" + queryString.toString();
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");

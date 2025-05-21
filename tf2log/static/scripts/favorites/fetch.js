@@ -32,7 +32,6 @@ function fetchServers() {
                             "server_list_sort_mode", "server_list_sort_region"];
         sortButtons.forEach(item => document.querySelector(`.${item}`).classList.remove("sort_asc", "sort_desc"));
     });
-
 }
 
 document.addEventListener("DOMContentLoaded", () => fetchServers());
