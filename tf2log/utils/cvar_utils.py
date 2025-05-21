@@ -135,7 +135,7 @@ RULES_CVAR_FLOAT = (
     "mp_respawnwavetime",
 )
 
-__RULES_CVAR_SORT_TARGET = (
+_RULES_CVAR_SORT_TARGET = (
     # Fake Cvar for VAC status
     "tf2log_vac",
     # Limits
@@ -193,7 +193,7 @@ __RULES_CVAR_SORT_TARGET = (
     "tv_enable",
 )
 
-def __prune_rules_cvar_dict(rules: dict) -> dict | None:
+def _prune_rules_cvar_dict(rules: dict) -> dict | None:
     """Remove all unknown cvars.
     
     :param dict rules: A dictionary containing all the server rules.
@@ -202,7 +202,7 @@ def __prune_rules_cvar_dict(rules: dict) -> dict | None:
     :rtype: dict or None
     """
     pruned_dict = {}
-    for item in __RULES_CVAR_SORT_TARGET:
+    for item in _RULES_CVAR_SORT_TARGET:
         if rules.get(item) is not None:
             pruned_dict.update({item: rules.get(item)})
     return pruned_dict if pruned_dict else None
@@ -214,7 +214,7 @@ def rules_to_readable_dict(rules: dict) -> dict | None:
     :return: A dictionary of readable server settings, None if server rules are unknown.
     :rtype: dict or None.
     """
-    pruned_dict = __prune_rules_cvar_dict(rules)
+    pruned_dict = _prune_rules_cvar_dict(rules)
     if pruned_dict is None:
         return None
     readable_dict = {}
