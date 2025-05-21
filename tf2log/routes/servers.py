@@ -106,19 +106,21 @@ def get_favorites():
 @limiter.limit("90 per minute")
 async def get_favorites_subview():
     """Subview for the favorites view for fetching all infomation about favorited servers."""
-    request_data = request.get_json()
-    servers = request_data.get("servers")
+    servers = request.get_json().get("servers")
+    if not servers:
+        return ""
     server_list = []
+    fetch_tasks = []
     async with aiohttp.ClientSession() as session:
         for item in servers:
             item: dict
-            server_ip = item.get("server_ip")
-            server_port = item.get("server_port")
-            fetch_tasks = [asyncio.create_task(steamutils.get_server_info(
-                            session, server_ip, server_port))]
-            fetch_result = await asyncio.gather(*fetch_tasks)
+            fetch_tasks.append(
+                asyncio.create_task(steamutils.get_server_info(session,
+                                                               item.get("server_ip"),
+                                                               item.get("server_port"))))
+        fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
-        if item is None:
+        if not item:
             continue
         server_addr = parse_hostname(item.get("addr"))
         server_tags = tuple(item.get("gametype").split(","))
