@@ -16,7 +16,7 @@ def create_app():
 
     app.config.from_file("config.json", json.load)
 
-    if app.config.get("ENV") not in ("dev", "prod"):
+    if app.config.get("ENV") not in {"dev", "prod"}:
         raise ValueError("Invalid ENV")
 
     if app.debug or app.config["ENV"] == "dev":

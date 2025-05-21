@@ -16,6 +16,31 @@ from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_n
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
+QUERY_PARAMS = {"alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
+                "friendlyfire", "dmgspread", "norespawntime", "replays"}
+
+def get_vanilla_status_str(server_tags: tuple, item: dict):
+    """Gets the game preset status and string.
+    
+    :param tuple server_tags: Tags of the server.
+    :param dict item: Server item.
+    :return: A tuple of the game preset status and string.
+    :rtype: tuple
+    """
+    vanilla_status = GamePresets.VANILLA
+    if any(i in server_tags for i in NON_VANILLA_TAGS):
+        vanilla_status = GamePresets.SEMI_VANILLA
+    if map_name_to_game_mode(item.get("map")) is None:
+        vanilla_status = GamePresets.CUSTOM
+    match vanilla_status:
+        case GamePresets.VANILLA:
+            vanilla_str = "Vanilla"
+        case GamePresets.SEMI_VANILLA:
+            vanilla_str = "Vanilla Custom"
+        case GamePresets.CUSTOM:
+            vanilla_str = "Custom"
+    return vanilla_status, vanilla_str
+
 @bp.route("/")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
@@ -29,20 +54,10 @@ async def get_server_list():
     region = None if region_param == -1 else ServerRegions(region_param)
     vanilla = GamePresets(request.args.get("vanilla", default=1, type=int))
 
-    alltalk = request.args.get("alltalk", default=False, type=param_bool)
-    nocrits = request.args.get("nocrits", default=False, type=param_bool)
-    gravity = request.args.get("gravity", default=False, type=param_bool)
-    increased_maxplayers = request.args.get("increased_maxplayers", default=False, type=param_bool)
-    respawntimes = request.args.get("respawntimes", default=False, type=param_bool)
-    friendlyfire = request.args.get("friendlyfire", default=False, type=param_bool)
-    dmgspread = request.args.get("dmgspread", default=False, type=param_bool)
-    norespawntime = request.args.get("norespawntime", default=False, type=param_bool)
-    replay = request.args.get("replay", default=False, type=param_bool)
-
     server_list_raw = []
     server_list = []
     game_mode_list = (SERVERBROWSER_TF_GAMEMODES_VANILLA
-                    if vanilla == GamePresets.VANILLA or vanilla == GamePresets.SEMI_VANILLA
+                    if vanilla in {GamePresets.VANILLA, GamePresets.SEMI_VANILLA}
                     else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
 
     async with aiohttp.ClientSession() as session:
@@ -56,33 +71,23 @@ async def get_server_list():
     for item in server_list_raw:
         server_tags = tuple(item.get("keywords").split(","))
         server_addr = parse_hostname(item.get("ip"))
-        if ((region and region != ServerRegions(item.get("region")))
-            or (not_full and (item.get("players") == item.get("maxPlayers")))
-            or (no_password and item.get("visibility") != 0)
-            or (alltalk and "alltalk" not in server_tags)
-            or (nocrits and "nocrits" not in server_tags)
-            or (gravity and "gravity" not in server_tags)
-            or (increased_maxplayers and "increased_maxplayers" not in server_tags)
-            or (norespawntime and "norespawntime" not in server_tags)
-            or (respawntimes and "respawntimes" not in server_tags)
-            or (dmgspread and "dmgspread" not in server_tags)
-            or (friendlyfire and "friendlyfire" not in server_tags)
-            or (replay and "replays" not in server_tags)):
+        if region and region != ServerRegions(item.get("region")):
+            continue
+        if not_full and item.get("players") == item.get("maxPlayers"):
+            continue
+        if no_password and item.get("visibility") != 0:
+            continue
+        server_qualified = True
+        for param in QUERY_PARAMS:
+            if (request.args.get(param, default=False, type=param_bool)
+                and param not in server_tags):
+                server_qualified = False
+                break
+        if not server_qualified:
             continue
 
-        vanilla_status = GamePresets.VANILLA
-        if any(i in server_tags for i in NON_VANILLA_TAGS):
-            vanilla_status = GamePresets.SEMI_VANILLA
-        if map_name_to_game_mode(item.get("map")) is None:
-            vanilla_status = GamePresets.CUSTOM
-        match vanilla_status:
-            case GamePresets.VANILLA:
-                vanilla_str = "Vanilla"
-            case GamePresets.SEMI_VANILLA:
-                vanilla_str = "Vanilla Custom"
-            case GamePresets.CUSTOM:
-                vanilla_str = "Custom"
-        if vanilla != vanilla_status and vanilla != GamePresets.ALL:
+        vanilla_status = get_vanilla_status_str(server_tags, item)
+        if vanilla not in {vanilla_status[0], GamePresets.ALL}:
             continue
 
         server_list.append({"name": item.get("name"),
@@ -92,7 +97,7 @@ async def get_server_list():
                             "password": item.get("visibility"),
                             "tags": ", ".join(server_tags),
                             "region": get_region_str(item.get("region")),
-                            "vanilla": vanilla_str,
+                            "vanilla": vanilla_status[1],
                             "raw_map": item.get("map"),
                             "game_mode": map_name_to_game_mode(item.get("map")),
                             "map": map_name_to_readable_name(item.get("map")),
@@ -108,6 +113,7 @@ async def get_server_list():
                                                  server_list=server_list,
                                                  show_server_list=True))
     response.headers.set("Vary", "x-fetch-subview")
+    response.headers.set("Cache-Control", "no-cache, no-store")
     return response
 
 @bp.route("/favorites")
@@ -137,18 +143,7 @@ async def get_favorites_subview():
             continue
         server_addr = parse_hostname(item.get("addr"))
         server_tags = tuple(item.get("gametype").split(","))
-        vanilla_status = GamePresets.VANILLA
-        if any(i in server_tags for i in NON_VANILLA_TAGS):
-            vanilla_status = GamePresets.SEMI_VANILLA
-        if map_name_to_game_mode(item.get("map")) is None:
-            vanilla_status = GamePresets.CUSTOM
-        match vanilla_status:
-            case GamePresets.VANILLA:
-                vanilla_str = "Vanilla"
-            case GamePresets.SEMI_VANILLA:
-                vanilla_str = "Vanilla Custom"
-            case GamePresets.CUSTOM:
-                vanilla_str = "Custom"
+        vanilla_status = get_vanilla_status_str(server_tags, item)
         server_list.append({"name": item.get("name"),
                             "ip": item.get("addr"),
                             "addr": server_addr[0],
@@ -156,7 +151,7 @@ async def get_favorites_subview():
                             "password": False,
                             "tags": ", ".join(server_tags),
                             "region": get_region_str(item.get("region")),
-                            "vanilla": vanilla_str,
+                            "vanilla": vanilla_status[1],
                             "raw_map": item.get("map"),
                             "game_mode": map_name_to_game_mode(item.get("map")),
                             "map": map_name_to_readable_name(item.get("map")),

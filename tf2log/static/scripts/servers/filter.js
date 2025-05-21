@@ -156,6 +156,10 @@ function constructFilterUrlParams() {
 
 filterForm.addEventListener("submit", event => {
     event.preventDefault();
+
+    const formData = new FormData(filterForm);
+    console.log(Object.fromEntries(formData));
+
     const filteredURL = constructFilterUrlParams();
     const target = document.querySelector(".target");
     const fetchingHint = document.querySelector(".server_list_fetching");
