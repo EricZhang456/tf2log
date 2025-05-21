@@ -134,6 +134,7 @@ async def get_favorites_subview():
     fetch_tasks = []
     async with aiohttp.ClientSession() as session:
         for item in servers:
+            item: dict
             server_ip = item.get("server_ip")
             server_port = item.get("server_port")
             fetch_tasks.append(asyncio.create_task(
