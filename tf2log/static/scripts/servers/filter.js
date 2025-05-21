@@ -154,7 +154,7 @@ function constructFilterUrlParams() {
     return targetUrl.toString();
 }
 
-filterButton.addEventListener("click", event => {
+filterForm.addEventListener("submit", event => {
     event.preventDefault();
     const filteredURL = constructFilterUrlParams();
     const target = document.querySelector(".target");
@@ -170,11 +170,11 @@ filterButton.addEventListener("click", event => {
     searchBox.style.fontStyle = "italic";
     const sortElements = [sortPlayerCountButton, sortNameButton, sortMapButton, sortGameModeButton, sortRegionButton];
     sortElements.forEach(item => item.classList.remove("sort_asc", "sort_desc"));
-    
+
     fetchingHint.style.display = "block";
     document.getElementById("server_list_filtered_server_count").innerHTML = "";
     target.innerHTML = "";
-    window.history.pushState({}, '', filteredURL);
+    window.history.replaceState({}, '', filteredURL);
     fetch(filteredURL, {
         method: "GET",
         headers: {
