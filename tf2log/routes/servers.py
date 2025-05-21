@@ -17,8 +17,8 @@ from tf2log.utils.server_list import get_vanilla_status_str
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
-QUERY_PARAMS = {"alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
-                "friendlyfire", "dmgspread", "norespawntime", "replays"}
+QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
+                "friendlyfire", "dmgspread", "norespawntime", "replays")
 
 @bp.route("/")
 @limiter.limit("90 per minute")
@@ -28,20 +28,19 @@ async def get_server_list():
     has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
     not_full = request.args.get("not_full", default=False, type=param_bool)
     no_password = request.args.get("password", default=False, type=param_bool)
-    region_param = request.args.get("region", default=-1, type=int)
 
-    region = None if region_param == -1 else ServerRegions(region_param)
+    region_param = request.args.get("region", default=-1, type=int)
+    region = ServerRegions(region_param) if region_param != -1 else None
     vanilla = GamePresets(request.args.get("vanilla", default=1, type=int))
 
     server_list_raw = []
     server_list = []
     game_mode_list = (SERVERBROWSER_TF_GAMEMODES_VANILLA
-                    if vanilla in {GamePresets.VANILLA, GamePresets.SEMI_VANILLA}
-                    else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
+                      if vanilla in {GamePresets.VANILLA, GamePresets.SEMI_VANILLA}
+                      else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
 
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(
-                        fetch_servers(session, item, has_user_playing))
+        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, has_user_playing))
                        for item in game_mode_list]
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
@@ -110,14 +109,13 @@ async def get_favorites_subview():
     request_data = request.get_json()
     servers = request_data.get("servers")
     server_list = []
-    fetch_tasks = []
     async with aiohttp.ClientSession() as session:
         for item in servers:
             item: dict
             server_ip = item.get("server_ip")
             server_port = item.get("server_port")
-            fetch_tasks.append(asyncio.create_task(
-                                steamutils.get_server_info(session, server_ip, server_port)))
+            fetch_tasks = [asyncio.create_task(steamutils.get_server_info(
+                            session, server_ip, server_port))]
             fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         if item is None:
