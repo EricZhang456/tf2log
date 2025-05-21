@@ -122,7 +122,7 @@ async def get_server_list():
 @cache.cached(timeout=5)
 def get_favorites():
     """Favorite servers view."""
-    return render_template("servers.html", show_server_list = False)
+    return render_template("servers.html", show_server_list=False)
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])
 @limiter.limit("90 per minute")
