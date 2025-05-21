@@ -11,35 +11,14 @@ from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
 from tf2log.utils.server_list import (get_region_str, fetch_servers, ServerRegions,
                                       SERVERBROWSER_TF_GAMEMODES_NO_MVM,
-                                      SERVERBROWSER_TF_GAMEMODES_VANILLA, NON_VANILLA_TAGS)
+                                      SERVERBROWSER_TF_GAMEMODES_VANILLA)
 from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
+from tf2log.utils.server_list import get_vanilla_status_str
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
 QUERY_PARAMS = {"alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
                 "friendlyfire", "dmgspread", "norespawntime", "replays"}
-
-def get_vanilla_status_str(server_tags: tuple, item: dict):
-    """Gets the game preset status and string.
-    
-    :param tuple server_tags: Tags of the server.
-    :param dict item: Server item.
-    :return: A tuple of the game preset status and string.
-    :rtype: tuple
-    """
-    vanilla_status = GamePresets.VANILLA
-    if any(i in server_tags for i in NON_VANILLA_TAGS):
-        vanilla_status = GamePresets.SEMI_VANILLA
-    if map_name_to_game_mode(item.get("map")) is None:
-        vanilla_status = GamePresets.CUSTOM
-    match vanilla_status:
-        case GamePresets.VANILLA:
-            vanilla_str = "Vanilla"
-        case GamePresets.SEMI_VANILLA:
-            vanilla_str = "Vanilla Custom"
-        case GamePresets.CUSTOM:
-            vanilla_str = "Custom"
-    return vanilla_status, vanilla_str
 
 @bp.route("/")
 @limiter.limit("90 per minute")

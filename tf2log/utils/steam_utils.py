@@ -49,5 +49,4 @@ class SteamUtils:
                 result = result_raw.get("response")
                 if result:
                     return ((result.get("servers"))[0])
-                else:
-                    return None
+                return None

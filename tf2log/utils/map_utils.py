@@ -121,20 +121,17 @@ def map_name_to_game_mode(map_name: str) -> str | None:
     """
     if map_name in AD_MAPS:
         return "Attack/Defend"
-    elif map_name in MANNPOWER_MAPS:
+    if map_name in MANNPOWER_MAPS:
         return "Mannpower"
-    elif map_name in DOMINATION_MAPS:
+    if map_name in DOMINATION_MAPS:
         return "Domination"
-    else:
-        game_mode_str = re.search(r'([a-zA-Z]+)_', map_name)
-        if game_mode_str is None:
-            return None
-        else:
-            game_mode = GAMEMODE_DICT.get(game_mode_str.group(1))
-            if game_mode is None:
-                return None
-            else:
-                return game_mode
+    game_mode_str = re.search(r'([a-zA-Z]+)_', map_name)
+    if game_mode_str is None:
+        return None
+    game_mode = GAMEMODE_DICT.get(game_mode_str.group(1))
+    if game_mode is None:
+        return None
+    return game_mode
 
 def map_name_to_readable_name(map_name: str) -> str:
     """Convert raw map name to a fancy map name.
@@ -152,8 +149,7 @@ def map_name_to_readable_name(map_name: str) -> str:
             if GAMEMODE_DICT.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
                 readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
         return readable_map_name.replace("_", " ").title()
-    else:
-        return MAP_SPECIAL_NAMES.get(map_name)
+    return MAP_SPECIAL_NAMES.get(map_name)
 
 def resolve_workshop_map_name(map_name: str) -> str:
     """Get raw map name from Workshop map string.
@@ -166,10 +162,8 @@ def resolve_workshop_map_name(map_name: str) -> str:
         resolved_map_name = re.search(r'workshop/(.*)\.ugc[0-9]+', map_name)
         if resolved_map_name is not None:
             return resolved_map_name.group(1)
-        else:
-            return "Workshop Map"
-    else:
-        return map_name
+        return "Workshop Map"
+    return map_name
 
 def get_workshop_map_id(map_name: str) -> str | None:
     """Get Workshop map ID from Workshop map string.
@@ -183,9 +177,7 @@ def get_workshop_map_id(map_name: str) -> str | None:
         workshop_concise_map_name = re.search(r'workshop/([0-9]+)', map_name)
         if workshop_verbose_map_name is not None:
             return workshop_verbose_map_name.group(1)
-        elif workshop_concise_map_name is not None:
+        if workshop_concise_map_name is not None:
             return workshop_concise_map_name.group(1)
-        else:
-            return None
-    else:
         return None
+    return None

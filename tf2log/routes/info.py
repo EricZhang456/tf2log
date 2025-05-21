@@ -1,14 +1,13 @@
 """Info view."""
 
-import time
 import socket
 import requests
 
 from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
-from geoip2.errors import AddressNotFoundError
-from tf2log.extensions import cache, geoip, limiter
 
+from tf2log.extensions import cache, limiter
+from tf2log.utils.server_info_utils import process_time, format_location
 from tf2log.utils import format_a2s
 from tf2log.utils.cvar_utils import get_next_map, rules_to_readable_dict
 from tf2log.utils.map_utils import (map_name_to_game_mode, map_name_to_readable_name,
@@ -41,7 +40,6 @@ def get_info(server_ip: str):
 
     server_rules_raw = format_a2s.rules(server_ip, server_port)
     server_rules_raw["tf2log_vac"] = 1 if server_info.get("vac") else 0
-    player_list = format_a2s.players(server_ip, server_port)
     server_rules = rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")
     sourcetv_port = server_info.get("stv_port")
@@ -52,39 +50,13 @@ def get_info(server_ip: str):
     if next_map_raw is not None:
         next_map_raw = resolve_workshop_map_name(next_map_raw)
         next_map_workshop_id = get_workshop_map_id(get_next_map(server_rules_raw))
-    location = ""
-
-    try:
-        ip_geo = geoip.geoip_reader.city(server_ip)
-        state_name = ip_geo.subdivisions.most_specific.name
-        city_name = ip_geo.city.name
-        country_name = ip_geo.country.name
-        if city_name is not None and state_name is not None:
-            location = f"{city_name}, {state_name} - {country_name}"
-        elif city_name is None and state_name is None:
-            location = country_name
-        elif city_name is None:
-            location = f"{state_name} - {country_name}"
-        elif state_name is None:
-            location = f"{city_name} - {country_name}"
-    except AddressNotFoundError:
-        pass
-
     game_mode = map_name_to_game_mode(current_map_raw)
     current_map = map_name_to_readable_name(current_map_raw)
+    next_map = None
+    next_map_game_mode = None
     if next_map_raw is not None:
         next_map = map_name_to_readable_name(next_map_raw)
         next_map_game_mode = map_name_to_game_mode(next_map_raw)
-    else:
-        next_map = None
-        next_map_game_mode = None
-
-    for item in player_list:
-        item.update({"duration": int(item.get("time"))})
-        if time.strftime("%H", time.gmtime(item["time"])) == '00':
-            item["time"] = time.strftime("%M:%S", time.gmtime(item["time"]))
-        else:
-            item["time"] = time.strftime("%H:%M:%S", time.gmtime(item["time"]))
 
     return render_template("info.html",
                            server_name=server_info.get("name").replace("\x01", ""),
@@ -95,9 +67,9 @@ def get_info(server_ip: str):
                            password=server_info.get("password"),
                            server_ip=server_ip,
                            server_port=server_port,
-                           location=location,
+                           location=format_location(server_ip),
                            sourcetv_port=sourcetv_port,
-                           player_list=player_list,
+                           player_list=process_time(format_a2s.players(server_ip, server_port)),
                            server_rules=server_rules,
                            server_tags=server_tags,
                            server_steam_group=server_steam_group,
@@ -124,8 +96,7 @@ def get_map_thumbnail(map_name: str):
     thumbnail_url = response.json().get("thumbnail")
     if thumbnail_url is not None:
         return Response(thumbnail_url, mimetype='text/plain')
-    else:
-        return Response(status=404)
+    return Response(status=404)
 
 @bp.route("/sourcetv/<server_ip>")
 @limiter.limit("90 per minute")
@@ -147,12 +118,11 @@ def get_source_tv(server_ip: str):
     sourcetv_info = format_a2s.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
         return Response(status=404)
-    else:
-        sourcetv_response = {
-            "address": f"{server_ip}:{sourcetv_port}",
-            "password": sourcetv_info.get("password"),
-        }
-        return jsonify(sourcetv_response)
+    sourcetv_response = {
+        "address": f"{server_ip}:{sourcetv_port}",
+        "password": sourcetv_info.get("password"),
+    }
+    return jsonify(sourcetv_response)
 
 @bp.errorhandler(NotTF2)
 def handle_nottf2(_):

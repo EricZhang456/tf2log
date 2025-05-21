@@ -4,6 +4,9 @@ from enum import Enum
 
 import aiohttp
 
+from tf2log.utils.game_presets import GamePresets
+from tf2log.utils.map_utils import map_name_to_game_mode
+
 class ServerRegions(Enum):
     """Enum for the server regions."""
     US_EAST = 0
@@ -68,3 +71,26 @@ async def fetch_servers(aiohttp_session: aiohttp.ClientSession,
         if r.status != 200:
             r.raise_for_status()
         return await r.json()
+
+
+def get_vanilla_status_str(server_tags: tuple, item: dict) -> tuple:
+    """Gets the game preset status and string.
+
+    :param tuple server_tags: Tags of the server.
+    :param dict item: Server item.
+    :return: A tuple of the game preset status and string.
+    :rtype: tuple
+    """
+    vanilla_status = GamePresets.VANILLA
+    if any(i in server_tags for i in NON_VANILLA_TAGS):
+        vanilla_status = GamePresets.SEMI_VANILLA
+    if map_name_to_game_mode(item.get("map")) is None:
+        vanilla_status = GamePresets.CUSTOM
+    match vanilla_status:
+        case GamePresets.VANILLA:
+            vanilla_str = "Vanilla"
+        case GamePresets.SEMI_VANILLA:
+            vanilla_str = "Vanilla Custom"
+        case GamePresets.CUSTOM:
+            vanilla_str = "Custom"
+    return vanilla_status, vanilla_str
