@@ -3,7 +3,7 @@
 import socket
 import requests
 
-from flask import Blueprint, current_app, render_template, request, Response, jsonify, abort
+from flask import Blueprint, current_app, render_template, request, Response, jsonify
 from a2s import BrokenMessageError, BufferExhaustedError
 
 from tf2log.extensions import cache, limiter
@@ -156,12 +156,8 @@ def handle_conn_refused(_):
 
 @bp.errorhandler(BrokenMessageError)
 @bp.errorhandler(BufferExhaustedError)
+@bp.errorhandler(OSError)
 def handle_broken_message(_):
     """Bad A2S message error handler."""
     return render_template("except.html",
                            except_body="Cannot decode response from game server."), 502
-
-@bp.errorhandler(OSError)
-def handle_general_error(_):
-    """General server error handler."""
-    abort(500)
