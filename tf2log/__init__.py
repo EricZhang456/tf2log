@@ -7,8 +7,10 @@ import json
 
 from flask import Flask
 
-from .extensions import cache, geoip, limiter, steamutils, page_not_found, internal_server_error
+from .extensions import (cache, geoip, limiter, steamutils,
+                         page_not_found, internal_server_error)
 from .routes import info, servers, index
+
 
 def create_app():
     """Creates the Flask application."""
@@ -35,7 +37,8 @@ def create_app():
             os.makedirs(os.path.join(app.static_folder, "css"))
         with open(os.path.join(app.static_folder, "css/style.scss.css"), "w",
                   encoding="utf-8") as f:
-            f.write(sass.compile(filename=os.path.join(app.static_folder, "sass/style.scss"),
+            f.write(sass.compile(filename=os.path.join(app.static_folder,
+                                                       "sass/style.scss"),
                                  output_style="compressed"))
 
     try:

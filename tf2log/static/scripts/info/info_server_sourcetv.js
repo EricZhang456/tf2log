@@ -1,10 +1,5 @@
 function showSourceTVButton(serverIP, serverPort) {
-    fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`, {
-        method: "GET",
-        headers: {
-            "x-get-sourcetv": "1"
-        }
-    })
+    fetch(`/info/sourcetv/${serverIP}?port=${serverPort}`)
     .then(response => {
         if (response.ok) {
             return response.json();

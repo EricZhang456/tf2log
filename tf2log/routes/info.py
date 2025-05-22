@@ -3,48 +3,53 @@
 import socket
 import requests
 
-from flask import Blueprint, current_app, render_template, request, Response, jsonify
+from flask import Blueprint, Response, current_app, request, render_template, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 
 from tf2log.extensions import cache, limiter
-from tf2log.utils.server_info_utils import process_time, format_location
+from tf2log.utils.server_info_utils import (process_time, format_location, is_ip_fake_ip,
+                                            is_port_valid)
 from tf2log.utils import format_a2s
 from tf2log.utils.cvar_utils import get_next_map, rules_to_readable_dict
 from tf2log.utils.map_utils import (map_name_to_game_mode, map_name_to_readable_name,
                                     resolve_workshop_map_name, get_workshop_map_id)
-from tf2log.utils.custom_except import NotTF2, ServerSourceTV
+from tf2log.utils.custom_except import NotTF2, ServerSourceTV, BadServerResponse
 
 bp = Blueprint("info", __name__, url_prefix="/info")
+
 
 @bp.route("/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
 def get_info(server_ip: str):
     """Main server info view.
-    
+
     :param str server_ip: Server IP.
     """
-    if server_ip.startswith("169.254"):
+    if is_ip_fake_ip(server_ip):
         return render_template("except.html", except_body="SDR Fake IP not supported."), 400
     server_port = request.args.get("port", default=27015, type=int)
-    if server_port < 2000 or server_port > 65535:
+    if not is_port_valid(server_port):
         return render_template("except.html", except_body="Invalid port number."), 400
 
     server_ip = socket.gethostbyname(server_ip)
-    server_info = format_a2s.info(server_ip, server_port)
+
+    try:
+        server_info = format_a2s.info(server_ip, server_port)
+        server_rules_raw = format_a2s.rules(server_ip, server_port)
+        player_list = format_a2s.players(server_ip, server_port)
+    except OSError as e:
+        raise BadServerResponse from e
 
     if server_info.get("appid") != 440:
         raise NotTF2
     if server_port == server_info.get("stv_port"):
         raise ServerSourceTV
 
-    server_rules_raw = format_a2s.rules(server_ip, server_port)
     server_rules_raw["tf2log_vac"] = 1 if server_info.get("vac") else 0
     server_rules = rules_to_readable_dict(server_rules_raw)
     current_map_raw = server_info.get("map")
-    sourcetv_port = server_info.get("stv_port")
     server_tags = ", ".join(server_info.get("tags"))
-    server_steam_group = server_rules_raw.get("sv_steamgroup")
     next_map_raw = get_next_map(server_rules_raw)
     next_map_workshop_id = None
     if next_map_raw is not None:
@@ -68,28 +73,29 @@ def get_info(server_ip: str):
                            server_ip=server_ip,
                            server_port=server_port,
                            location=format_location(server_ip),
-                           sourcetv_port=sourcetv_port,
-                           player_list=process_time(format_a2s.players(server_ip, server_port)),
+                           sourcetv_port=server_info.get("stv_port"),
+                           player_list=process_time(player_list),
                            server_rules=server_rules,
                            server_tags=server_tags,
-                           server_steam_group=server_steam_group,
+                           server_steam_group=server_rules_raw.get("sv_steamgroup"),
                            current_map=current_map,
                            game_mode=game_mode,
                            next_map=next_map,
                            next_map_game_mode=next_map_game_mode,
                            next_map_workshop_id=next_map_workshop_id)
 
+
 @bp.route("/thumbnail/<map_name>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=3600)
 def get_map_thumbnail(map_name: str):
     """Map thumbnail view, fetches a map thumbnail URL from Teamwork.tf.
-    
+
     :param str map_name: Name of the map.
     """
-    if request.headers.get("x-get-thumbnail") != "1":
-        return Response(status=400)
-    teamwork_secret_key = current_app.config["TEAMWORK_TF_SECRET_KEY"]
+    teamwork_secret_key = current_app.config.get("TEAMWORK_TF_SECRET_KEY")
+    if teamwork_secret_key is None:
+        return Response(status=500)
     response = requests.get(
         f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}",
         timeout=300)
@@ -98,16 +104,15 @@ def get_map_thumbnail(map_name: str):
         return Response(thumbnail_url, mimetype='text/plain')
     return Response(status=404)
 
+
 @bp.route("/sourcetv/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
 def get_source_tv(server_ip: str):
     """Check if SourceTV on server is valid.
-    
+
     :param server_ip: IP of the server with a SourceTV port.
     """
-    if request.headers.get("x-get-sourcetv") != "1":
-        return Response(status=400)
     server_port = request.args.get("port", default=27015, type=int)
     server_info = format_a2s.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
@@ -124,11 +129,13 @@ def get_source_tv(server_ip: str):
     }
     return jsonify(sourcetv_response)
 
+
 @bp.errorhandler(NotTF2)
 def handle_nottf2(_):
     """Not TF2 server error handler."""
     return render_template("except.html",
                            except_body="Server is not running TF2."), 404
+
 
 @bp.errorhandler(ServerSourceTV)
 def handle_server_sourcetv(_):
@@ -136,11 +143,13 @@ def handle_server_sourcetv(_):
     return render_template("except.html",
                            except_body="Server is a SourceTV relay."), 400
 
+
 @bp.errorhandler(socket.timeout)
 def handle_timeout(_):
     """Timeout error handler."""
     return render_template("except.html",
                            except_body="Timed out when fetching game server data."), 504
+
 
 @bp.errorhandler(socket.gaierror)
 def handle_invalid_address(_):
@@ -148,16 +157,24 @@ def handle_invalid_address(_):
     return render_template("except.html",
                            except_body="Invalid server address."), 400
 
+
 @bp.errorhandler(ConnectionRefusedError)
 def handle_conn_refused(_):
     """Connection refused handler."""
     return render_template("except.html",
                            except_body="Cannot connect to game server."), 502
 
+
 @bp.errorhandler(BrokenMessageError)
 @bp.errorhandler(BufferExhaustedError)
-@bp.errorhandler(OSError)
+@bp.errorhandler(BadServerResponse)
 def handle_broken_message(_):
     """Bad A2S message error handler."""
     return render_template("except.html",
                            except_body="Cannot decode response from game server."), 502
+
+
+@bp.errorhandler(OSError)
+def handle_general_error(_):
+    """General error hander."""
+    abort(500)

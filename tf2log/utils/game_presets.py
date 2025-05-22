@@ -2,6 +2,7 @@
 
 from enum import Enum
 
+
 class GamePresets(Enum):
     """Game presets enum."""
     VANILLA = 1

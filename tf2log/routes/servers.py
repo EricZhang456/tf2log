@@ -20,6 +20,7 @@ bp = Blueprint("servers", __name__, url_prefix="/servers")
 QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
                 "friendlyfire", "dmgspread", "norespawntime", "replays")
 
+
 @bp.route("/")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
@@ -59,7 +60,7 @@ async def get_server_list():
         server_qualified = True
         for param in QUERY_PARAMS:
             if (request.args.get(param, default=False, type=param_bool)
-                and param not in server_tags):
+                    and param not in server_tags):
                 server_qualified = False
                 break
         if not server_qualified:
@@ -95,12 +96,14 @@ async def get_server_list():
     response.headers.set("Cache-Control", "no-cache, no-store")
     return response
 
+
 @bp.route("/favorites")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5)
 def get_favorites():
     """Favorite servers view."""
     return render_template("servers.html", show_server_list=False)
+
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])
 @limiter.limit("90 per minute")
@@ -143,6 +146,7 @@ async def get_favorites_subview():
     response.headers.set("Cache-Control", "no-cache, no-store")
     return response
 
+
 @bp.route("/server_count")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=600)
@@ -156,6 +160,7 @@ async def get_server_count():
     for item in fetch_result:
         server_count += len(item)
     return Response(str(server_count), mimetype="text/plain")
+
 
 @bp.route("/player_count")
 @limiter.limit("90 per minute")

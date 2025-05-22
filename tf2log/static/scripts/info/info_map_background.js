@@ -1,10 +1,5 @@
 function populateMapThumbnail(map_name) {
-    fetch(`/info/thumbnail/${map_name}`, {
-        method: "GET",
-        headers: {
-            "x-get-thumbnail": "1"
-        }
-    })
+    fetch(`/info/thumbnail/${map_name}`)
     .then(response => {
         if (response.ok) {
             return response.text();

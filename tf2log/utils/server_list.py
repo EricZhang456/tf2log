@@ -7,6 +7,7 @@ import aiohttp
 from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.map_utils import map_name_to_game_mode
 
+
 class ServerRegions(Enum):
     """Enum for the server regions."""
     US_EAST = 0
@@ -22,6 +23,7 @@ class ServerRegions(Enum):
     @classmethod
     def _missing_(cls, _):
         return cls.WORLD
+
 
 SERVERBROWSER_TF_GAMEMODES = ("vanilla", "24/7", "dm", "gamemode", "jump/surf", "mvm", "social")
 SERVERBROWSER_TF_GAMEMODES_NO_MVM = ("vanilla", "24/7", "dm", "gamemode", "jump/surf", "social")
@@ -42,9 +44,10 @@ REGION_STR = {
     255: "World",
 }
 
+
 def get_region_str(region: int) -> str:
     """Get the name of a region.
-    
+
     :param int region: Region value specified in sv_region.
     :return: Name of the region.
     :rtype: str
@@ -54,10 +57,11 @@ def get_region_str(region: int) -> str:
         return REGION_STR.get("World")
     return resolved_region
 
+
 async def fetch_servers(aiohttp_session: aiohttp.ClientSession,
                         game_mode: str, has_user_playing: bool = False) -> list[dict]:
     """Fetch a list of servers.
-    
+
     :param ClientSession aiohttp_session: An aiohttp client session.
     :param str game_mode: Game mode string.
     :param bool has_user_playing: Has user playing.

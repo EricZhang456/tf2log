@@ -5,6 +5,7 @@ from geoip2.errors import AddressNotFoundError
 
 from tf2log.extensions import geoip
 
+
 def process_time(player_list: list) -> list:
     """Process time string in a player list.
 
@@ -44,3 +45,27 @@ def format_location(server_ip: str) -> str:
     except AddressNotFoundError:
         pass
     return location
+
+
+def is_ip_fake_ip(server_ip: str) -> bool:
+    """Check if an IP is a fake IP from SDR.
+
+    :param str server_ip: IP address.
+    :return: True if IP is a fake IP, False otherwise.
+    :rtype: bool
+    """
+    if server_ip.startswith("169.254"):
+        return True
+    return False
+
+
+def is_port_valid(port: int) -> bool:
+    """Check if a port is a valid port for a TF2 server.
+
+    :param int port: Port number.
+    :return: True if port is valid, False otherwide.
+    :rtype: bool
+    """
+    if port < 2000 or port > 65535:
+        return False
+    return True

@@ -8,6 +8,7 @@ from flask import Flask
 STEAMWORKS_SERVER_LIST_ENDPOINT = \
     "https://api.steampowered.com/IGameServersService/GetServerList/v1/"
 
+
 class SteamUtils:
     """Steam utilities class."""
 
@@ -16,17 +17,17 @@ class SteamUtils:
 
     def init_app(self, app: Flask) -> None:
         """Initialize the Steam utilities object.
-        
+
         :param Flask app: A Flask object with the STEAMWORKS_SECRET_KEY config
                           pointing to a Steam API key.
         """
         self.steamworks_api_key = app.config.get("STEAMWORKS_SECRET_KEY")
 
     async def get_server_info(self,
-                              aiohttp_session:aiohttp.ClientSession,
-                              server_addr: str, server_port: int=27015) -> dict | None:
+                              aiohttp_session: aiohttp.ClientSession,
+                              server_addr: str, server_port: int = 27015) -> dict | None:
         """Get the information of a server.
-        
+
         :param ClientSession aiohttp_session: An aiohttp client session.
         :param str server_addr: Server IP.
         :param int server_port: Server port, defaults to 27015.

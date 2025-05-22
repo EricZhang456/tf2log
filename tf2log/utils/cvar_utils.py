@@ -69,16 +69,16 @@ STOCK_CVAR_READABLE_NAME = {
     "tf_spells_enabled": "Players Drop Halloween Spells",
     "tf_weapon_criticals": "Random Crits",
     "tf_weapon_criticals_melee": "Melee Random Crits",
-    "tv_enable": "SourceTV",
+    "tv_enable": "SourceTV"
 }
 
 SM_CVAR_READABLE_NAME = {
     "metamod_version": "Metamod:Source Version",
     "sourcemod_version": "SourceMod Version",
-    "sm_nextmap": "Next Map",
+    "sm_nextmap": "Next Map"
 }
 
-RULES_CVAR_BOOL = (
+RULES_CVAR_BOOL = {
     "tf2log_vac",
     "mp_autoteambalance",
     "mp_disable_respawn_times",
@@ -110,10 +110,10 @@ RULES_CVAR_BOOL = (
     "tf_spec_xray",
     "tf_use_fixed_weaponspreads",
     "tf_weapon_criticals",
-    "tv_enable",
-)
+    "tv_enable"
+}
 
-RULES_CVAR_INT = (
+RULES_CVAR_INT = {
     "mp_fraglimit",
     "mp_maxrounds",
     "mp_scrambleteams_auto_windifference",
@@ -128,12 +128,12 @@ RULES_CVAR_INT = (
     "tf_arena_max_streak",
     "tf_arena_override_cap_enable_time",
     "tf_classlimit",
-    "tf_ctf_bonus_time",
-)
+    "tf_ctf_bonus_time"
+}
 
-RULES_CVAR_FLOAT = (
-    "mp_respawnwavetime",
-)
+RULES_CVAR_FLOAT = {
+    "mp_respawnwavetime"
+}
 
 _RULES_CVAR_SORT_TARGET = (
     # Fake Cvar for VAC status
@@ -190,12 +190,13 @@ _RULES_CVAR_SORT_TARGET = (
     "tf_powerup_mode",
     "tf_medieval_autorp",
     "tf_spec_xray",
-    "tv_enable",
+    "tv_enable"
 )
+
 
 def _prune_rules_cvar_dict(rules: dict) -> dict | None:
     """Remove all unknown cvars.
-    
+
     :param dict rules: A dictionary containing all the server rules.
     :return: A dictionary of server rules with unknown cvars removed, None if all
             cvars are unknown.
@@ -207,9 +208,10 @@ def _prune_rules_cvar_dict(rules: dict) -> dict | None:
             pruned_dict.update({item: rules.get(item)})
     return pruned_dict if pruned_dict else None
 
+
 def rules_to_readable_dict(rules: dict) -> dict | None:
     """Format server rules into a dictionary of server readable settings.
-    
+
     :param dict rules: A dictionary containing all the server rules.
     :return: A dictionary of readable server settings, None if server rules are unknown.
     :rtype: dict or None.
@@ -224,8 +226,8 @@ def rules_to_readable_dict(rules: dict) -> dict | None:
             # as well just write it here
             if key == "tf_weapon_criticals_melee":
                 if ((int(pruned_dict.get("tf_weapon_criticals")) == 1
-                     and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0) or
-                    (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
+                        and int(pruned_dict.get("tf_weapon_criticals_melee")) > 0)
+                        or (int(pruned_dict.get("tf_weapon_criticals_melee")) == 2)):
                     readable_dict.update({STOCK_CVAR_READABLE_NAME.get(key): "On"})
                 else:
                     readable_dict.update({STOCK_CVAR_READABLE_NAME.get(key): "Off"})
@@ -246,9 +248,10 @@ def rules_to_readable_dict(rules: dict) -> dict | None:
     except ValueError:
         return None
 
+
 def get_next_map(rules: dict) -> str | None:
     """Get the next map of a server.
-    
+
     :param dict rules: A dictionary containing all the server rules.
     :return: The next map, None if it can't be found.
     :rtype: str or None

@@ -6,11 +6,12 @@ import retry
 from tf2log.extensions import cache
 from .custom_except import NotTF2
 
+
 @cache.memoize(5)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def info(server_ip: str, server_port: int=27015) -> dict:
+def info(server_ip: str, server_port: int = 27015) -> dict:
     """Get server info formatted in a dictionary.
-    
+
     :param str server_ip: Server IP.
     :param int server_port: Server port, defaults to 27015.
     :return: A dictionary of the server info.
@@ -51,11 +52,12 @@ def info(server_ip: str, server_port: int=27015) -> dict:
 
     return server_info
 
+
 @cache.memoize(300)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def rules(server_ip: str, server_port: int=27015) -> dict:
+def rules(server_ip: str, server_port: int = 27015) -> dict:
     """Get server rules (cvars flagged with notify) formatted in a dictionary
-    
+
     :param str server_ip: Server IP.
     :param int server_port: Server port, defaults to 27015.
     :return: A dictionary of the server rules.
@@ -64,11 +66,12 @@ def rules(server_ip: str, server_port: int=27015) -> dict:
     server_address = (server_ip, server_port)
     return a2s.rules(server_address)
 
+
 @cache.memoize(5)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def players(server_ip: str, server_port: int=27015) -> list[dict]:
+def players(server_ip: str, server_port: int = 27015) -> list[dict]:
     """Get server plays formatted in a list of dictionary
-    
+
     :param str server_ip: Server IP.
     :param int server_port: Server port, defaults to 27015.
     :return: A list dictionary of the players on the server.

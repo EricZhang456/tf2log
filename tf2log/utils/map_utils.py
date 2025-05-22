@@ -18,10 +18,10 @@ GAMEMODE_DICT = {
     "pd": "Player Destruction",
     "vsh": "Versus Saxton Hale",
     "zi": "Zombie Infection",
-    "tow": "Tug of War",
+    "tow": "Tug of War"
 }
 
-AD_MAPS = (
+AD_MAPS = {
     "cp_altitude",
     "cp_brew",
     "cp_carrier",
@@ -48,19 +48,19 @@ AD_MAPS = (
     "cp_spookeyridge",
     "cp_steel",
     "cp_sulfur",
-    "cp_overgrown",
-)
+    "cp_overgrown"
+}
 
-DOMINATION_MAPS = (
+DOMINATION_MAPS = {
     "cp_standin_final",
-)
+}
 
-MANNPOWER_MAPS = (
+MANNPOWER_MAPS = {
     "ctf_foundry",
     "ctf_gorge",
     "ctf_hellfire",
-    "ctf_thundermountain",
-)
+    "ctf_thundermountain"
+}
 
 MAP_SPECIAL_NAMES = {
     "ctf_doublecross": "Double Cross",
@@ -109,12 +109,13 @@ MAP_SPECIAL_NAMES = {
     "pd_pit_of_death_event": "Pit of Death",
     "pd_snowville_event": "SnowVille",
     "vsh_nucleus": "Nucleus VSH",
-    "vsh_tinyrock": "Tiny Rock",
+    "vsh_tinyrock": "Tiny Rock"
 }
+
 
 def map_name_to_game_mode(map_name: str) -> str | None:
     """Convert raw map name to a game mode string.
-    
+
     :param str map_name: Raw map name.
     :return: Game mode string, None if game mode is invalid.
     :rtype: str or None
@@ -132,6 +133,7 @@ def map_name_to_game_mode(map_name: str) -> str | None:
     if game_mode is None:
         return None
     return game_mode
+
 
 def map_name_to_readable_name(map_name: str) -> str:
     """Convert raw map name to a fancy map name.
@@ -151,9 +153,10 @@ def map_name_to_readable_name(map_name: str) -> str:
         return readable_map_name.replace("_", " ").title()
     return MAP_SPECIAL_NAMES.get(map_name)
 
+
 def resolve_workshop_map_name(map_name: str) -> str:
     """Get raw map name from Workshop map string.
-    
+
     :parma str map_name: Workshop map string.
     :return: Raw map name.
     :rtype: str
@@ -165,9 +168,10 @@ def resolve_workshop_map_name(map_name: str) -> str:
         return "Workshop Map"
     return map_name
 
+
 def get_workshop_map_id(map_name: str) -> str | None:
     """Get Workshop map ID from Workshop map string.
-    
+
     :param str map_name: Workshop map string.
     :return: Workshop map ID, None if Workshop map ID not found.
     :rtype: str or None
