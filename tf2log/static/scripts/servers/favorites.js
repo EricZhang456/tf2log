@@ -34,14 +34,13 @@ function setStar(serverObj, serverFavoriteElement) {
 function toggleServerFavorites(serverFavoriteElement, serverIP, serverPort) {
     const serverObj = {server_ip: serverIP, server_port: serverPort};
     getFavoritedServers();
+    let finalFavorites = favoritedServers;
     if (!checkFavoriteDuplicate(serverObj)) {
-        favoritedServers.push(serverObj);
-        window.localStorage.setItem("favorited_servers", JSON.stringify(favoritedServers));
+        finalFavorites.push(serverObj);
     } else {
-        let filteredFavorites = favoritedServers;
-        filteredFavorites = favoritedServers.filter(item => !(item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port));
-        window.localStorage.setItem("favorited_servers", JSON.stringify(filteredFavorites));
+        finalFavorites = favoritedServers.filter(item => !(item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port));
     }
+    window.localStorage.setItem("favorited_servers", JSON.stringify(finalFavorites));
     setStar(serverObj, serverFavoriteElement);
 }
 

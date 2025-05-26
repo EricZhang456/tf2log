@@ -131,17 +131,6 @@ filterPresetSemiVanilla.addEventListener("click" , () => reenableCustomFilters()
 filterPresetCustom.addEventListener("click" , () => reenableCustomFilters());
 filterPresetAll.addEventListener("click" , () => reenableCustomFilters());
 
-function getPreset() {
-    const filterPresets = [filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom, filterPresetAll];
-    let presetValue;
-    filterPresets.forEach(item => {
-        if (item.checked) {
-            presetValue = item.value;
-        }
-    });
-    return presetValue;
-}
-
 function removeSortingArrows() {
     const sortPlayerCountButton = document.querySelector(".server_list_player_count_hint");
     const sortNameButton = document.querySelector(".server_list_sort_name");
@@ -186,7 +175,7 @@ filterForm.addEventListener("submit", event => {
 });
 
 function populateFilterHint() {
-    let filterHintText = [];
+    const filterHintText = [];
     const targetElements = [filterServerFull, filterHasUserPlaying, filterNoPassword,
                             filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
                             filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
