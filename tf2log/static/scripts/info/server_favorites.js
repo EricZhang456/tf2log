@@ -15,23 +15,19 @@ function getFavoritedServers() {
 }
 
 function checkFavoriteDuplicate() {
+    favoriteButton.innerHTML = favoriteHint;
     getFavoritedServers();
-    let duplicateServer = false;
-    if (favoritedServers.length) {
-        for (const item of favoritedServers) {
-            if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
-                duplicateServer = true;
-                favoriteButton.innerHTML = removeFavoriteHint;
-            } else {
-                duplicateServer = false;
-                favoriteButton.innerHTML = favoriteHint;
-            }
-        }
-    } else {
-        duplicateServer = false;
-        favoriteButton.innerHTML = favoriteHint;
+    if (!favoritedServers.length) {
+        return false;
     }
-    return duplicateServer;
+    for (const item of favoritedServers) {
+        const duplicateServer = item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port;
+        if (duplicateServer) {
+            favoriteButton.innerHTML = removeFavoriteHint;
+            return duplicateServer;
+        }
+    }
+    return false;
 }
 
 favoriteButton.addEventListener("click", () => {
