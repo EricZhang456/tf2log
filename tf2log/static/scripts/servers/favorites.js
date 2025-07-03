@@ -10,13 +10,14 @@ function getFavoritedServers() {
 function checkFavoriteDuplicate(serverObj) {
     getFavoritedServers();
     let result = false;
-    if (favoritedServers.length) {
-        favoritedServers.forEach(item => {
-            if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
-                result = true;
-            }
-        });
+    if (!favoritedServers.length) {
+        return result;
     }
+    favoritedServers.forEach(item => {
+        if (item.server_ip === serverObj.server_ip && item.server_port === serverObj.server_port) {
+            result = true;
+        }
+    });
     return result;
 }
 
