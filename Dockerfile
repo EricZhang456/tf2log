@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN <<EOF
 apk update
-apk add gcc musl-dev g++
+apk add gcc musl-dev g++ libstdc++
 EOF
 
 COPY ./requirements.txt /app/requirements.txt
