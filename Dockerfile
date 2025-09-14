@@ -8,7 +8,7 @@ ENV PYTHONUNBUFFERED 1
 
 RUN <<EOF
 apk update
-apk add gcc musl-dev
+apk add gcc musl-dev g++
 EOF
 
 COPY ./requirements.txt /app/requirements.txt
@@ -18,7 +18,7 @@ RUN pip install gunicorn
 COPY . /app
 
 RUN mkdir /app/instance
-RUN apk del gcc musl-dev
+RUN apk del gcc musl-dev g++
 
 ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:8000", "tf2log:create_app()"]
 CMD ["-w 4"]
