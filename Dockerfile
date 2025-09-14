@@ -17,7 +17,7 @@ RUN pip install gunicorn redis
 
 COPY . /app
 
-RUN mkdir /app/instance
+RUN mkdir -p /app/instance
 RUN apk del gcc musl-dev g++
 
 ENTRYPOINT ["gunicorn", "-b", "0.0.0.0:8000", "tf2log:create_app()"]
