@@ -12,8 +12,10 @@ apk add gcc musl-dev g++ libstdc++
 EOF
 
 COPY ./requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir gunicorn redis
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install gunicorn redis
 
 COPY . /app
 
