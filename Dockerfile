@@ -6,7 +6,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN <<EOF
+RUN --mount=type=cache,target=/var/cache/apk <<EOF
 apk update
 apk add gcc musl-dev g++ libstdc++
 EOF
