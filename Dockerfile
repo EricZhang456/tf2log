@@ -21,7 +21,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 COPY . /app
 
-RUN chown -R tf2log:tf2log /app/tf2log/static/css
+RUN chown -R tf2log/app/tf2log/static/css
 RUN mkdir -p /app/instance
 RUN apk del gcc musl-dev g++
 
