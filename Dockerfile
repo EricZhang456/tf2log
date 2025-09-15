@@ -6,7 +6,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-RUN useradd -r tf2log
+RUN adduser -S tf2log
 
 RUN --mount=type=cache,target=/var/cache/apk <<EOF
 apk update
