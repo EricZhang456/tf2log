@@ -183,3 +183,5 @@ migrations/
 *.scss.map
 
 *.css
+
+.DS_Store
