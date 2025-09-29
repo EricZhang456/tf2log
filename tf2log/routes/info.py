@@ -6,7 +6,7 @@ import asyncio
 import aiodns
 import aiohttp
 
-from flask import Blueprint, Response, current_app, request, render_template, jsonify, abort
+from quart import Blueprint, Response, current_app, request, render_template, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
 
 from tf2log.extensions import cache, limiter
@@ -30,10 +30,10 @@ async def get_info(server_ip: str):
     :param str server_ip: Server IP.
     """
     if is_ip_fake_ip(server_ip):
-        return render_template("except.html", except_body="SDR Fake IP not supported."), 400
+        return await render_template("except.html", except_body="SDR Fake IP not supported."), 400
     server_port = request.args.get("port", default=27015, type=int)
     if not is_port_valid(server_port):
-        return render_template("except.html", except_body="Invalid port number."), 400
+        return await render_template("except.html", except_body="Invalid port number."), 400
 
     async with aiodns.DNSResolver() as resolver:
         server_ip_res = await resolver.gethostbyname(server_ip, socket.AddressFamily.AF_INET) # pylint: disable = no-member
@@ -72,26 +72,26 @@ async def get_info(server_ip: str):
         next_map = map_name_to_readable_name(next_map_raw)
         next_map_game_mode = map_name_to_game_mode(next_map_raw)
 
-    return render_template("info.html",
-                           server_name=server_info.get("name").replace("\x01", ""),
-                           player_count=server_info.get("player_count"),
-                           max_players=server_info.get("max_players"),
-                           raw_map_name=server_info.get("map"),
-                           bot_count=server_info.get("bot_count"),
-                           password=server_info.get("password"),
-                           server_ip=server_ip,
-                           server_port=server_port,
-                           location=format_location(server_ip),
-                           sourcetv_port=server_info.get("stv_port"),
-                           player_list=process_time(player_list),
-                           server_rules=server_rules,
-                           server_tags=server_tags,
-                           server_steam_group=server_rules_raw.get("sv_steamgroup"),
-                           current_map=current_map,
-                           game_mode=game_mode,
-                           next_map=next_map,
-                           next_map_game_mode=next_map_game_mode,
-                           next_map_workshop_id=next_map_workshop_id)
+    return await render_template("info.html",
+                                server_name=server_info.get("name").replace("\x01", ""),
+                                player_count=server_info.get("player_count"),
+                                max_players=server_info.get("max_players"),
+                                raw_map_name=server_info.get("map"),
+                                bot_count=server_info.get("bot_count"),
+                                password=server_info.get("password"),
+                                server_ip=server_ip,
+                                server_port=server_port,
+                                location=format_location(server_ip),
+                                sourcetv_port=server_info.get("stv_port"),
+                                player_list=process_time(player_list),
+                                server_rules=server_rules,
+                                server_tags=server_tags,
+                                server_steam_group=server_rules_raw.get("sv_steamgroup"),
+                                current_map=current_map,
+                                game_mode=game_mode,
+                                next_map=next_map,
+                                next_map_game_mode=next_map_game_mode,
+                                next_map_workshop_id=next_map_workshop_id)
 
 
 @bp.route("/thumbnail/<map_name>")
@@ -142,51 +142,51 @@ async def get_source_tv(server_ip: str):
 
 
 @bp.errorhandler(NotTF2)
-def handle_nottf2(_):
+async def handle_nottf2(_):
     """Not TF2 server error handler."""
-    return render_template("except.html",
-                           except_body="Server is not running TF2."), 404
+    return await render_template("except.html",
+                                 except_body="Server is not running TF2."), 404
 
 
 @bp.errorhandler(ServerSourceTV)
-def handle_server_sourcetv(_):
+async def handle_server_sourcetv(_):
     """SourceTV relay server error handler."""
-    return render_template("except.html",
-                           except_body="Server is a SourceTV relay."), 400
+    return await render_template("except.html",
+                                 except_body="Server is a SourceTV relay."), 400
 
 
 @bp.errorhandler(TimeoutError)
-def handle_timeout(_):
+async def handle_timeout(_):
     """Timeout error handler."""
-    return render_template("except.html",
-                           except_body="Timed out when fetching game server data."), 504
+    return await render_template("except.html",
+                                 except_body="Timed out when fetching game server data."), 504
 
 
 @bp.errorhandler(socket.gaierror)
 @bp.errorhandler(aiodns.error.DNSError)
-def handle_invalid_address(_):
+async def handle_invalid_address(_):
     """Invalid server address handler."""
-    return render_template("except.html",
-                           except_body="Invalid server address."), 400
+    return await render_template("except.html",
+                                 except_body="Invalid server address."), 400
 
 
 @bp.errorhandler(ConnectionRefusedError)
-def handle_conn_refused(_):
+async def handle_conn_refused(_):
     """Connection refused handler."""
-    return render_template("except.html",
-                           except_body="Cannot connect to game server."), 502
+    return await render_template("except.html",
+                                 except_body="Cannot connect to game server."), 502
 
 
 @bp.errorhandler(BrokenMessageError)
 @bp.errorhandler(BufferExhaustedError)
 @bp.errorhandler(BadServerResponse)
-def handle_broken_message(_):
+async def handle_broken_message(_):
     """Bad A2S message error handler."""
-    return render_template("except.html",
-                           except_body="Cannot decode response from game server."), 502
+    return await render_template("except.html",
+                                 except_body="Cannot decode response from game server."), 502
 
 
 @bp.errorhandler(OSError)
-def handle_general_error(_):
+async def handle_general_error(_):
     """General error hander."""
     abort(500)

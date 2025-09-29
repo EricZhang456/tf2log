@@ -1,0 +1,12 @@
+.except {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 1200px;
+    background-color: var(--main-content-bg-color);
+    font-family: var(--info-font-stylized-stack);
+}
+
+.except_text {
+    margin: 40px;
+}

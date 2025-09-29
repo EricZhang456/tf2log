@@ -4,7 +4,7 @@ from socket import AddressFamily # pylint: disable = no-name-in-module
 import aiohttp
 import aiodns
 
-from flask import Flask
+from quart import Quart
 
 STEAMWORKS_SERVER_LIST_ENDPOINT = \
     "https://api.steampowered.com/IGameServersService/GetServerList/v1/"
@@ -16,10 +16,10 @@ class SteamUtils:
     def __init__(self) -> None:
         self.steamworks_api_key = None
 
-    def init_app(self, app: Flask) -> None:
+    def init_app(self, app: Quart) -> None:
         """Initialize the Steam utilities object.
 
-        :param Flask app: A Flask object with the STEAMWORKS_SECRET_KEY config
+        :param Quart app: A Flask object with the STEAMWORKS_SECRET_KEY config
                           pointing to a Steam API key.
         """
         self.steamworks_api_key = app.config.get("STEAMWORKS_SECRET_KEY")

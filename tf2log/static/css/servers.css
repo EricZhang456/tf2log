@@ -1,0 +1,327 @@
+.server {
+    font-family: var(--info-font-stylized-stack);
+    width: 80%;
+    max-width: 1200px;
+    background-color: var(--main-content-bg-color);
+}
+
+.server_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 140px;
+}
+
+.server_header_title {
+    font-size: 30px;
+    font-weight: 600;
+    margin-left: 50px;
+}
+
+.server_header_stats {
+    margin-right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: end;
+    text-align: right;
+}
+    
+.server_header_server_count {
+    font-size: 20px;
+}
+    
+.server_header_player_count {
+    font-size: 25px;
+}
+
+.server_favorites_back, a:hover.server_favorites_back, a:visited.server_favorites_back {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    margin-left: 30px;
+    font-size: 12px;
+    min-height: 22px;
+    color: var(--main-text-color);
+    text-decoration: none;
+}
+
+a:hover.server_favorites_back, a:active.server_favorites_back {
+    text-decoration: underline;
+}
+
+.server_search {
+    display: none;
+    align-items: center;
+    background-color: var(--main-content-info-bg-color);
+    height: 25px;
+    width: 100%;
+}
+
+.server_search_icon {
+    margin-left: 30px;
+    filter: invert(1);
+}
+
+.server_search_text {
+    all: unset;
+    width: 100%;
+    color: var(--server-hint-color);
+    font-size: 12px;
+    font-family: var(--info-font-regular-stack);
+    font-style: italic;
+    margin-left: 20px;
+    margin-right: 10px;
+}
+
+.server_filter {
+    display: none;
+    font-family: var(--info-font-regular-stack);
+    margin-top: 5px;
+    flex-direction: column;
+}
+.server_filter fieldset {
+    border: none;
+}
+
+.server_filter fieldset legend {
+    margin-bottom: 5px;
+    color: var(--server-hint-color);
+}
+
+.server_filter_hint {
+    display: flex;
+    align-items: center;
+    min-height: 22px;
+    width: 100%;
+    font-size: 12px;
+}
+
+.server_filter_icon {
+    margin-left: 30px;
+    cursor: pointer;
+    filter: invert(1);
+}
+
+.server_filter_text {
+    margin-left: 20px;
+}
+
+.server_filter_hint_text {
+    color: var(--server-hint-color);
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.server_filter_favorites, a:hover.server_filter_favorites, a:visited.server_filter_favorites {
+    color: var(--main-text-color);
+    margin-left: auto;
+    margin-right: 30px;
+    text-decoration: none;
+}
+
+a:hover.server_filter_favorites, a:active.server_filter_favorites {
+    text-decoration: underline;
+}
+
+.server_filter_form {
+    display: none;
+    flex-wrap: wrap;
+    font-size: 15px;
+    margin: 10px;
+    box-sizing: border-box;
+    background-color: var(--main-content-info-bg-color);
+    padding: 20px;
+}
+
+.server_filter_form label {
+    margin-left: 10px;
+}
+
+.server_filter_data {
+    width: 100%;
+    display: flex;
+}
+
+.server_filter_typical, .server_filter_vanilla, .server_filter_custom, .server_filter_region {
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    gap: 1px;
+}
+
+.server_filter_region {
+    width: 150px;
+}
+
+.server_filter_button {
+    all: unset;
+    cursor: pointer;
+    margin-left: auto;
+    background-color: var(--main-button-color);
+    font-size: initial;
+    padding-block: 5px;
+    padding-inline: 15px;
+    color: var(--main-text-color);
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.server_filter_button:hover, .server_filter_button:focus {
+    outline: revert;
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
+    background-color: var(--main-button-color)-hover;
+}
+.server_filter_button:active {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
+    background-color: var(--main-button-color)-active;
+}
+.server_filter_button:not(:hover) {
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
+    background-color: var(--main-button-color);
+}
+
+.server_list {
+    display: flex;
+    flex-direction: column;
+}
+
+.server_list_header {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    margin-left: 30px;
+    margin-block: 10px;
+    height: 22px;
+}
+.server_list_header_align_right {
+    display: flex;
+    margin-left: auto;
+    margin-right: 125px;
+}
+
+.server_list_sort_hint {
+    margin-right: 5px;
+}
+
+.server_list_sort {
+    margin-inline: 5px;
+    margin-right: 40px;
+    color: var(--server-hint-color);
+    user-select: none;
+}
+
+.server_list_sort_name, .server_list_sort_map, .server_list_sort_mode, .server_list_sort_region {
+    cursor: pointer;
+}
+
+.server_list_sort .comma::before {
+    margin-inline: 2px;
+    content: ",";
+}
+
+.server_list_player_count_hint {
+    cursor: pointer;
+    user-select: none;
+}
+
+.server_list_item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    height: 60px;
+    background-color: var(--server-item-bg-color);
+}
+
+.server_list_details {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-left: 25px;
+    margin-right: 10px;
+    min-width: 0;
+}
+
+.server_list_name_password {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.server_list_password {
+    filter: invert(1);
+}
+
+.server_list_name, .server_list_info {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.server_list_name, a:hover.server_list_name, a:visited.server_list_name {
+    font-size: 20px;
+    color: var(--main-text-color);
+    text-decoration: none;
+}
+
+a:hover.server_list_name, a:active.server_list_name {
+    text-decoration: underline;
+}
+
+.server_list_info {
+    font-size: 12px;
+}
+
+.server_list_misc {
+    margin-left: auto;
+    display: flex;
+    padding-right: 30px;
+}
+
+.server_list_item_icons {
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.server_list_favorite_button {
+    all: unset;
+    cursor: pointer;
+}
+
+button:focus.server_list_favorite_button, :focus.server_list_connect, :focus.server_list_favorite {
+    outline: revert !important;
+}
+
+.server_list_connect, .server_list_favorite {
+    filter: invert(1);
+}
+
+.server_list_item_player_count {
+    width: 100px;
+    text-align: center;
+}
+ 
+.server_list_item:nth-last-child(1 of :not(.hide)) {
+    margin-bottom: 30px;
+}
+
+.server_list_fetching {
+    display: none;
+    text-align: center;
+    margin-block: 30px;
+    color: var(--server-hint-color);
+    font-style: italic;
+}
+
+.sort_asc::after {
+    content: "\25b4" !important;
+    padding-left: 2px;
+}
+
+.sort_desc::after {
+    content: "\25be" !important;
+    padding-left: 2px;
+}

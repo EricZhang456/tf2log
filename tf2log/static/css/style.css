@@ -1,0 +1,73 @@
+@import url("except.css");
+@import url("footer.css");
+@import url("info.css");
+@import url("servers.css");
+
+:root {
+    --font-stack: sans-serif;
+
+    --info-font-stylized-stack: "Cantarell", sans-serif;
+    --info-font-regular-stack: "Open Sans", sans-serif;
+
+    --main-bg-color: #221f1c;
+    --main-text-color: #fff;
+    --main-button-color: rgba(87, 81, 71, 0.9);
+    --main-button-color-hover: rgba(87, 81, 71, 1);
+    --main-button-color-active: rgba(87, 81, 71, 0.8);
+    --main-content-bg-color: #393532;
+    --main-content-info-bg-color: #48423b;
+
+    --info-action-bg-color: #a39884;
+    --info-player-list-border: #5a534a;
+
+    --server-hint-color: #aba8a5;
+    --server-item-bg-color: rgba(163, 152, 132, 0.75);
+
+    /* default firefox font size */
+    --default-font-size: 16px;
+}
+
+@font-face {
+    font-family: "Cantarell";
+    src: local("Cantarell"), url("/static/fonts/Cantarell-VF.otf") format("opentype");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Open Sans";
+    src: local("Open Sans"), url("/static/fonts/OpenSans-Regular-webfont.woff2") format("woff2");
+    font-display: swap;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-stack);
+    background-color: var(--main-bg-color);
+    font-size: var(--default-font-size);
+}
+
+.primary {
+    display: flex;
+    flex-direction: column;
+    color: var(--main-text-color);
+    height: 100%;
+    align-items: center;
+}
+
+.preload {
+    transition: none !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+@media screen and (max-width: 1200px) {
+    .info, .server, .except {
+        width: 100% !important;
+    }
+}

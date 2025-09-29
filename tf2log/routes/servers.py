@@ -3,7 +3,7 @@
 import asyncio
 import aiohttp
 
-from flask import Blueprint, render_template, request, Response, make_response
+from quart import Blueprint, render_template, request, Response, make_response
 
 from tf2log.extensions import limiter, cache, steamutils
 from tf2log.utils.game_presets import GamePresets
@@ -87,11 +87,11 @@ async def get_server_list():
 
     subview_header = request.headers.get("x-fetch-subview")
     if subview_header is not None and (subview_header.isnumeric() and int(subview_header) == 1):
-        response = make_response(render_template("servers_item.html", server_list=server_list))
+        response = await make_response(await render_template("servers_item.html", server_list=server_list))
     else:
-        response = make_response(render_template("servers.html",
-                                                 server_list=server_list,
-                                                 show_server_list=True))
+        response = await make_response(await render_template("servers.html",
+                                                       server_list=server_list,
+                                                       show_server_list=True))
     response.headers.set("Vary", "x-fetch-subview")
     response.headers.set("Cache-Control", "no-cache, no-store")
     return response
@@ -100,9 +100,9 @@ async def get_server_list():
 @bp.route("/favorites")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5)
-def get_favorites():
+async def get_favorites():
     """Favorite servers view."""
-    return render_template("servers.html", show_server_list=False)
+    return await render_template("servers.html", show_server_list=False)
 
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])

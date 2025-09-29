@@ -7,7 +7,7 @@ from .custom_except import NotTF2
 
 
 @retry.retry(TimeoutError, tries=5, delay=1)
-async def info(server_ip: str, server_port: int = 27015) -> dict:
+async def info(server_ip: str, server_port: int = 27015) -> dict[str, any]:
     """Get server info formatted in a dictionary.
 
     :param str server_ip: Server IP.
@@ -52,7 +52,7 @@ async def info(server_ip: str, server_port: int = 27015) -> dict:
 
 
 @retry.retry(TimeoutError, tries=5, delay=1)
-async def rules(server_ip: str, server_port: int = 27015) -> dict:
+async def rules(server_ip: str, server_port: int = 27015) -> dict[str, str]:
     """Get server rules (cvars flagged with notify) formatted in a dictionary
 
     :param str server_ip: Server IP.
@@ -65,7 +65,7 @@ async def rules(server_ip: str, server_port: int = 27015) -> dict:
 
 
 @retry.retry(TimeoutError, tries=5, delay=1)
-async def players(server_ip: str, server_port: int = 27015) -> list[dict]:
+async def players(server_ip: str, server_port: int = 27015) -> list[dict[str], any]:
     """Get server plays formatted in a list of dictionary
 
     :param str server_ip: Server IP.
