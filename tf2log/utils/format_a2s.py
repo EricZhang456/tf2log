@@ -18,7 +18,7 @@ async def info(server_ip: str, server_port: int = 27015) -> dict:
     server_address = (server_ip, server_port)
     server_info_raw = await a2s.ainfo(server_address)
 
-    if type(server_info_raw).__name__ == "GoldSrcInfo":
+    if isinstance(server_info_raw, a2s.GoldSrcInfo):
         raise NotTF2
 
     server_info = {
