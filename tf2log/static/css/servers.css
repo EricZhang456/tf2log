@@ -170,11 +170,11 @@ a:hover.server_filter_favorites, a:active.server_filter_favorites {
 .server_filter_button:hover, .server_filter_button:focus {
     outline: revert;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2);
-    background-color: var(--main-button-color)-hover;
+    background-color: var(--main-button-color-hover);
 }
 .server_filter_button:active {
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.05);
-    background-color: var(--main-button-color)-active;
+    background-color: var(--main-button-color-active);
 }
 .server_filter_button:not(:hover) {
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);

@@ -138,12 +138,12 @@
 
 .info_header_connect:hover, .info_header_favorite:hover, .info_header_steam_group:hover, .info_header_sourcetv:hover,
 .info_header_connect:focus, .info_header_favorite:focus, .info_header_steam_group:focus, .info_header_sourcetv:focus {
-    background-color: var(--main-button-color)-hover;
+    background-color: var(--main-button-color-hover);
     box-shadow: 3px 3px 5px rgba(128, 128, 128, 0.9);
 }
 
 .info_header_connect:active, .info_header_favorite:active, .info_header_steam_group:active, .info_header_sourcetv:active {
-    background-color: var(--main-button-color)-active;
+    background-color: var(--main-button-color-active);
     box-shadow: 3px 3px 20px rgba(128, 128, 128, 0.9);
 }
 
