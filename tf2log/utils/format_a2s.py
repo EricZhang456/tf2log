@@ -3,7 +3,6 @@
 import a2s
 import retry
 
-from tf2log.extensions import cache
 from .custom_except import NotTF2
 
 
