@@ -18,20 +18,12 @@ pip install -r requirements.txt
     - Set `TEAMWORK_TF_SECRET_KEY` to your [Teamwork.tf API key](https://teamwork.tf/settings)
     - Set `STEAMWORKS_SECRET_KEY` to your [Steam Web API key](https://steamcommunity.com/dev/apikey)
     - Set `CACHE_TYPE` to a [`flask-caching` backend](https://flask-caching.readthedocs.io/en/latest/#built-in-cache-backends), you probably want to use something like a Redis database in production
-    - Set `RATELIMIT_STORAGE_URI` to a [`Flask-Limiter` backend](https://flask-limiter.readthedocs.io/en/stable/configuration.html#RATELIMIT_STORAGE_URI), you probably want to use something like a Redis database in production
     - You also want to download the GeoLite2 City database in `.mmdb` format from [MaxMind](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data/) and place it in the instance directory
 
 3. Run the application
 
-    - In a development environment, run the application with the Flask CLI
-
     ```sh
-    flask --app tf2log run --debug
-    ```
-
-    - In a production environment, you probably want to use a [WSGI web server](https://flask.palletsprojects.com/en/stable/deploying/). If you're using `gunicorn`, run
-    ```sh
-    gunicorn -w 4 'tf2log:create_app()'
+    hypercorn "tf2log:create_app()"
     ```
 
 ## Licensing
