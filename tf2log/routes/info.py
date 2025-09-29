@@ -39,7 +39,7 @@ async def get_info(server_ip: str):
 
     async with aiodns.DNSResolver() as resolver:
         server_ip_res = await resolver.gethostbyname(server_ip, socket.AddressFamily.AF_INET) # pylint: disable = no-member
-    server_ip = server_ip_res.name
+    server_ip = server_ip_res.addresses[0]
 
     try:
         server_info, server_rules_raw, player_list = await asyncio.gather(
