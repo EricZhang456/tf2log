@@ -112,7 +112,8 @@ async def get_favorites():
 @rate_limit(90, timedelta(minutes=1))
 async def get_favorites_subview():
     """Subview for the favorites view for fetching all infomation about favorited servers."""
-    servers = request.get_json().get("servers")
+    req_data = await request.get_json()
+    servers = req_data.get("servers")
     if not servers:
         return ""
     server_list = []
