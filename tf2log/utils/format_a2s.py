@@ -7,9 +7,8 @@ from tf2log.extensions import cache
 from .custom_except import NotTF2
 
 
-@cache.memoize(5)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def info(server_ip: str, server_port: int = 27015) -> dict:
+async def info(server_ip: str, server_port: int = 27015) -> dict:
     """Get server info formatted in a dictionary.
 
     :param str server_ip: Server IP.
@@ -18,7 +17,7 @@ def info(server_ip: str, server_port: int = 27015) -> dict:
     :rtype: dict
     """
     server_address = (server_ip, server_port)
-    server_info_raw = a2s.info(server_address)
+    server_info_raw = await a2s.ainfo(server_address)
 
     if type(server_info_raw).__name__ == "GoldSrcInfo":
         raise NotTF2
@@ -53,9 +52,8 @@ def info(server_ip: str, server_port: int = 27015) -> dict:
     return server_info
 
 
-@cache.memoize(300)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def rules(server_ip: str, server_port: int = 27015) -> dict:
+async def rules(server_ip: str, server_port: int = 27015) -> dict:
     """Get server rules (cvars flagged with notify) formatted in a dictionary
 
     :param str server_ip: Server IP.
@@ -64,12 +62,11 @@ def rules(server_ip: str, server_port: int = 27015) -> dict:
     :rtype: dict
     """
     server_address = (server_ip, server_port)
-    return a2s.rules(server_address)
+    return await a2s.arules(server_address)
 
 
-@cache.memoize(5)
 @retry.retry(TimeoutError, tries=5, delay=1)
-def players(server_ip: str, server_port: int = 27015) -> list[dict]:
+async def players(server_ip: str, server_port: int = 27015) -> list[dict]:
     """Get server plays formatted in a list of dictionary
 
     :param str server_ip: Server IP.
@@ -79,7 +76,7 @@ def players(server_ip: str, server_port: int = 27015) -> list[dict]:
     """
     server_address = (server_ip, server_port)
     server_players = []
-    server_players_raw = a2s.players(server_address)
+    server_players_raw = await a2s.aplayers(server_address)
 
     for item in server_players_raw:
         player = {"index": item.index,

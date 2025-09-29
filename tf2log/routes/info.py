@@ -1,7 +1,8 @@
 """Info view."""
 
 import socket
-import requests
+import asyncio
+import aiohttp
 
 from flask import Blueprint, Response, current_app, request, render_template, jsonify, abort
 from a2s import BrokenMessageError, BufferExhaustedError
@@ -21,7 +22,7 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 @bp.route("/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=5, query_string=True)
-def get_info(server_ip: str):
+async def get_info(server_ip: str):
     """Main server info view.
 
     :param str server_ip: Server IP.
@@ -35,9 +36,11 @@ def get_info(server_ip: str):
     server_ip = socket.gethostbyname(server_ip)
 
     try:
-        server_info = format_a2s.info(server_ip, server_port)
-        server_rules_raw = format_a2s.rules(server_ip, server_port)
-        player_list = format_a2s.players(server_ip, server_port)
+        server_info, server_rules_raw, player_list = await asyncio.gather(
+            format_a2s.info(server_ip, server_port),
+            format_a2s.rules(server_ip, server_port),
+            format_a2s.players(server_ip, server_port)
+        )
     except OSError as e:
         raise BadServerResponse from e
 
@@ -88,7 +91,7 @@ def get_info(server_ip: str):
 @bp.route("/thumbnail/<map_name>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=3600)
-def get_map_thumbnail(map_name: str):
+async def get_map_thumbnail(map_name: str):
     """Map thumbnail view, fetches a map thumbnail URL from Teamwork.tf.
 
     :param str map_name: Name of the map.
@@ -96,31 +99,34 @@ def get_map_thumbnail(map_name: str):
     teamwork_secret_key = current_app.config.get("TEAMWORK_TF_SECRET_KEY")
     if teamwork_secret_key is None:
         return Response(status=500)
-    response = requests.get(
-        f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}?key={teamwork_secret_key}",
-        timeout=300)
-    thumbnail_url = response.json().get("thumbnail")
+    target_tw_url = f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}" + \
+                    f"?key={teamwork_secret_key}"
+    print(target_tw_url)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(target_tw_url, timeout=aiohttp.ClientTimeout(30)) as response:
+            response_json = await response.json()
+            thumbnail_url = response_json.get("thumbnail")
     if thumbnail_url is not None:
-        return Response(thumbnail_url, mimetype='text/plain')
+        return Response(thumbnail_url, mimetype="text/plain")
     return Response(status=404)
 
 
 @bp.route("/sourcetv/<server_ip>")
 @limiter.limit("90 per minute")
 @cache.cached(timeout=500, query_string=True)
-def get_source_tv(server_ip: str):
+async def get_source_tv(server_ip: str):
     """Check if SourceTV on server is valid.
 
     :param server_ip: IP of the server with a SourceTV port.
     """
     server_port = request.args.get("port", default=27015, type=int)
-    server_info = format_a2s.info(server_ip, server_port)
+    server_info = await format_a2s.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
     if sourcetv_port != server_port:
         return Response(status=400)
     if sourcetv_port is None:
         return Response(status=404)
-    sourcetv_info = format_a2s.info(server_ip, sourcetv_port)
+    sourcetv_info = await format_a2s.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
         return Response(status=404)
     sourcetv_response = {
