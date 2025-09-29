@@ -2,9 +2,11 @@
 
 # pylint: disable = too-few-public-methods
 
+from datetime import timedelta
+
 from quart import render_template, Quart
 from flask_caching import Cache
-from flask_limiter import Limiter
+from quart_rate_limiter import RateLimiter, RateLimit
 from flask_limiter.util import get_remote_address
 
 from geoip2 import database
@@ -25,10 +27,7 @@ async def internal_server_error(_):
 
 
 cache = Cache()
-limiter = Limiter(
-    key_func=get_remote_address,
-    default_limits=["120 per minute"],
-)
+limiter = RateLimiter(default_limits=[RateLimit(120, timedelta(minutes=1))])
 
 
 class GeoIP:

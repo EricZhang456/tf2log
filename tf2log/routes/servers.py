@@ -1,9 +1,12 @@
 """Server list view"""
 
 import asyncio
+from datetime import timedelta
+
 import aiohttp
 
 from quart import Blueprint, render_template, request, Response, make_response
+from quart_rate_limiter import rate_limit
 
 from tf2log.extensions import limiter, cache, steamutils
 from tf2log.utils.game_presets import GamePresets
@@ -22,7 +25,7 @@ QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respaw
 
 
 @bp.route("/")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=5, query_string=True)
 async def get_server_list():
     """Main server list view."""
@@ -98,7 +101,7 @@ async def get_server_list():
 
 
 @bp.route("/favorites")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=5)
 async def get_favorites():
     """Favorite servers view."""
@@ -106,7 +109,7 @@ async def get_favorites():
 
 
 @bp.route("/fetch_favorites_subview", methods=["POST"])
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 async def get_favorites_subview():
     """Subview for the favorites view for fetching all infomation about favorited servers."""
     servers = request.get_json().get("servers")
@@ -148,7 +151,7 @@ async def get_favorites_subview():
 
 
 @bp.route("/server_count")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=600)
 async def get_server_count():
     """Get the amount of active servers."""
@@ -163,7 +166,7 @@ async def get_server_count():
 
 
 @bp.route("/player_count")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=300)
 async def get_player_count():
     """Get the amount of active players."""

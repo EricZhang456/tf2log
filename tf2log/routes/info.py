@@ -2,14 +2,16 @@
 
 import socket
 import asyncio
+from datetime import timedelta
 
 import aiodns
 import aiohttp
 
 from quart import Blueprint, Response, current_app, request, render_template, jsonify, abort
+from quart_rate_limiter import rate_limit
 from a2s import BrokenMessageError, BufferExhaustedError
 
-from tf2log.extensions import cache, limiter
+from tf2log.extensions import cache
 from tf2log.utils.server_info_utils import (process_time, format_location, is_ip_fake_ip,
                                             is_port_valid)
 from tf2log.utils import format_a2s
@@ -22,7 +24,7 @@ bp = Blueprint("info", __name__, url_prefix="/info")
 
 
 @bp.route("/<server_ip>")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=5, query_string=True)
 async def get_info(server_ip: str):
     """Main server info view.
@@ -95,7 +97,7 @@ async def get_info(server_ip: str):
 
 
 @bp.route("/thumbnail/<map_name>")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=3600)
 async def get_map_thumbnail(map_name: str):
     """Map thumbnail view, fetches a map thumbnail URL from Teamwork.tf.
@@ -117,7 +119,7 @@ async def get_map_thumbnail(map_name: str):
 
 
 @bp.route("/sourcetv/<server_ip>")
-@limiter.limit("90 per minute")
+@rate_limit(90, timedelta(minutes=1))
 @cache.cached(timeout=500, query_string=True)
 async def get_source_tv(server_ip: str):
     """Check if SourceTV on server is valid.
