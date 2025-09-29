@@ -5,10 +5,10 @@ from datetime import timedelta
 
 import aiohttp
 
-from quart import Blueprint, render_template, request, Response, make_response
+from quart import Blueprint, render_template, request, make_response
 from quart_rate_limiter import rate_limit
 
-from tf2log.extensions import limiter, cache, steamutils
+from tf2log.extensions import cache, steamutils
 from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
@@ -145,7 +145,7 @@ async def get_favorites_subview():
                             "players": item.get("players"),
                             "maxPlayers": item.get("max_players"),
                             "bots": item.get("bots")})
-    response = make_response(render_template("servers_item.html", server_list=server_list))
+    response = await make_response(await render_template("servers_item.html", server_list=server_list))
     response.headers.set("Cache-Control", "no-cache, no-store")
     return response
 
@@ -162,7 +162,9 @@ async def get_server_count():
         fetch_result = await asyncio.gather(*fetch_tasks)
     for item in fetch_result:
         server_count += len(item)
-    return Response(str(server_count), mimetype="text/plain")
+    response = await make_response(str(server_count))
+    response.mimetype = "text/plain"
+    return response
 
 
 @bp.route("/player_count")
@@ -178,4 +180,6 @@ async def get_player_count():
     for item in fetch_result:
         for server in item:
             player_count += server.get("players") - server.get("bots")
-    return Response(str(player_count), mimetype="text/plain")
+    response = await make_response(str(player_count))
+    response.mimetype = "text/plain"
+    return response

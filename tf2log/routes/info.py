@@ -7,7 +7,7 @@ from datetime import timedelta
 import aiodns
 import aiohttp
 
-from quart import Blueprint, Response, current_app, request, render_template, jsonify, abort
+from quart import Blueprint, current_app, request, render_template, jsonify, abort, make_response
 from quart_rate_limiter import rate_limit
 from a2s import BrokenMessageError, BufferExhaustedError
 
@@ -106,7 +106,9 @@ async def get_map_thumbnail(map_name: str):
     """
     teamwork_secret_key = current_app.config.get("TEAMWORK_TF_SECRET_KEY")
     if teamwork_secret_key is None:
-        return Response(status=500)
+        err_response = await make_response()
+        err_response.status = "500"
+        return err_response
     target_tw_url = f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}" + \
                     f"?key={teamwork_secret_key}"
     async with aiohttp.ClientSession() as session:
@@ -114,8 +116,12 @@ async def get_map_thumbnail(map_name: str):
             response_json = await response.json()
             thumbnail_url = response_json.get("thumbnail")
     if thumbnail_url is not None:
-        return Response(thumbnail_url, mimetype="text/plain")
-    return Response(status=404)
+        response = await make_response(thumbnail_url)
+        response.mimetype = "text/plain"
+        return response
+    response = await make_response()
+    response.status = "404"
+    return response
 
 
 @bp.route("/sourcetv/<server_ip>")
@@ -129,18 +135,22 @@ async def get_source_tv(server_ip: str):
     server_port = request.args.get("port", default=27015, type=int)
     server_info = await format_a2s.info(server_ip, server_port)
     sourcetv_port = server_info.get("stv_port")
+    response = await make_response()
     if sourcetv_port != server_port:
-        return Response(status=400)
+        response.status = "400"
+        return response
     if sourcetv_port is None:
-        return Response(status=404)
+        response.status = "404"
+        return response
     sourcetv_info = await format_a2s.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
-        return Response(status=404)
+        response.status = "404"
+        return response
     sourcetv_response = {
         "address": f"{server_ip}:{sourcetv_port}",
         "password": sourcetv_info.get("password"),
     }
-    return jsonify(sourcetv_response)
+    return await make_response(jsonify(sourcetv_response))
 
 
 @bp.errorhandler(NotTF2)
