@@ -2,6 +2,8 @@
 
 import socket
 import asyncio
+
+import aiodns
 import aiohttp
 
 from flask import Blueprint, Response, current_app, request, render_template, jsonify, abort
@@ -33,7 +35,9 @@ async def get_info(server_ip: str):
     if not is_port_valid(server_port):
         return render_template("except.html", except_body="Invalid port number."), 400
 
-    server_ip = socket.gethostbyname(server_ip)
+    async with aiodns.DNSResolver() as resolver:
+        server_ip_res = await resolver.gethostbyname(server_ip, socket.AddressFamily.AF_INET) # pylint: disable = no-member
+    server_ip = server_ip_res.name
 
     try:
         server_info, server_rules_raw, player_list = await asyncio.gather(
@@ -159,6 +163,7 @@ def handle_timeout(_):
 
 
 @bp.errorhandler(socket.gaierror)
+@bp.errorhandler(aiodns.error.DNSError)
 def handle_invalid_address(_):
     """Invalid server address handler."""
     return render_template("except.html",

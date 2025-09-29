@@ -1,7 +1,8 @@
 """Utilities related to Steam."""
 
-import socket
+from socket import AddressFamily # pylint: disable = no-name-in-module
 import aiohttp
+import aiodns
 
 from flask import Flask
 
@@ -35,7 +36,10 @@ class SteamUtils:
                  cannot be found.
         :rtype: dict or None
         """
-        server_ip = socket.gethostbyname(server_addr)
+
+        async with aiodns.DNSResolver() as resolver:
+            serevr_ip_res = await resolver.gethostbyname(server_addr, AddressFamily.AF_INET)
+        server_ip = serevr_ip_res.addresses[0]
         query_params = {
             "key": self.steamworks_api_key,
             "filter": f"\\gameaddr\\{server_ip}:{server_port}",
