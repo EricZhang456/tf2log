@@ -37,12 +37,14 @@ async def get_info(server_ip: str):
 
     try:
         server_info, server_rules_raw, player_list = await asyncio.gather(
-            format_a2s.info(server_ip, server_port),
-            format_a2s.rules(server_ip, server_port),
-            format_a2s.players(server_ip, server_port)
+            asyncio.create_task(format_a2s.info(server_ip, server_port)),
+            asyncio.create_task(format_a2s.rules(server_ip, server_port)),
+            asyncio.create_task(format_a2s.players(server_ip, server_port)),
         )
     except OSError as e:
-        raise BadServerResponse from e
+        if type(e) is OSError: # pylint: disable = unidiomatic-typecheck
+            raise BadServerResponse from e
+        raise e
 
     if server_info.get("appid") != 440:
         raise NotTF2
@@ -101,7 +103,6 @@ async def get_map_thumbnail(map_name: str):
         return Response(status=500)
     target_tw_url = f"https://teamwork.tf/api/v1/map-stats/mapthumbnail/{map_name}" + \
                     f"?key={teamwork_secret_key}"
-    print(target_tw_url)
     async with aiohttp.ClientSession() as session:
         async with session.get(target_tw_url, timeout=aiohttp.ClientTimeout(30)) as response:
             response_json = await response.json()
@@ -150,7 +151,7 @@ def handle_server_sourcetv(_):
                            except_body="Server is a SourceTV relay."), 400
 
 
-@bp.errorhandler(socket.timeout)
+@bp.errorhandler(TimeoutError)
 def handle_timeout(_):
     """Timeout error handler."""
     return render_template("except.html",
