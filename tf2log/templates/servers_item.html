@@ -2,9 +2,12 @@
 <div class="server_list_item" data-server-name="{{ item['name'] }}" data-server-readable-map="{{ item['map'] }}" data-server-map="{{ item['raw_map'] }}" data-server-region="{{ item['region'] }}" data-server-mode="{{ item['game_mode'] }}" data-player-count="{{ item['players'] - item['bots'] }}">
     <div class="server_list_details">
         <div class="server_list_name_password">
+            {# Steam server list endpoint doesn't have info about password yet #}
+            {#
             {% if item["password"] %}
             <img title="Server is password protected" src="{{ url_for('static', filename='svg/key-fill.svg') }}" class="server_list_password" width="18" height="18">
             {% endif %}
+            #}
             <a href="{{ url_for('info.get_info', server_ip=item['addr'], port=item['port']) }}" title="{{ item['name'] }}" class="server_list_name">{{ item["name"] }}</a>
         </div>
         <div class="server_list_info">{{ item["map"] }} • {% if item["game_mode"] %}{{ item["game_mode"] }}{% else %}Unknown{% endif %} • {{ item["vanilla"] }} • {{ item["region"] }}</div>

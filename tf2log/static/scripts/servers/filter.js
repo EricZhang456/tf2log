@@ -3,11 +3,12 @@ const enabledTextColor = "#fff";
 
 const filterServerFull = document.getElementById("server_filter_full");
 const filterHasUserPlaying = document.getElementById("server_filter_has_users_playing");
-const filterNoPassword = document.getElementById("server_filter_no_password");
+// const filterNoPassword = document.getElementById("server_filter_no_password");
 
 const filterPresetVanilla = document.getElementById("server_filter_vanilla");
 const filterPresetSemiVanilla = document.getElementById("server_filter_vanilla_custom");
 const filterPresetCustom = document.getElementById("server_filter_custom");
+const filterPresetMvm = document.getElementById("server_filter_mvm");
 const filterPresetAll = document.getElementById("server_filter_all");
 
 const filterAlltalk = document.getElementById("server_filter_alltalk");
@@ -17,6 +18,7 @@ const filterIncreasedMaxPlayers = document.getElementById("server_filter_increas
 const filterNoRespawnTime = document.getElementById("server_filter_norespawntime");
 const filterRespawnTimes = document.getElementById("server_filter_respawntimes");
 const filterFriendlyFire = document.getElementById("server_filter_friendlyfire");
+const filterHighlander = document.getElementById("server_filter_highlander");
 const filterGravity = document.getElementById("server_filter_gravity");
 const filterReplay = document.getElementById("server_filter_replay");
 
@@ -45,12 +47,13 @@ function setFilterFormInput() {
     const queryNoRespawnTime = urlParams.get("norespawntime");
     const queryRespawnTimes = urlParams.get("respawntimes");
     const queryFriendlyFire = urlParams.get("friendlyfire");
+    const queryHighlander = urlParams.get("highlander");
     const queryGravity = urlParams.get("gravity");
     const queryReplay = urlParams.get("replay");
     const queryRegion = urlParams.get("region");
     filterServerFull.checked = Boolean(parseInt(queryServerFull));
     filterHasUserPlaying.checked = Boolean(parseInt(queryHasUserPlaying));
-    filterNoPassword.checked = Boolean(parseInt(queryNoPassword));
+    // filterNoPassword.checked = Boolean(parseInt(queryNoPassword));
     filterAlltalk.checked = Boolean(parseInt(queryAlltalk));
     filterNocrits.checked = Boolean(parseInt(queryNocrits));
     filterDmgSpread.checked = Boolean(parseInt(queryDmgSpread));
@@ -58,6 +61,7 @@ function setFilterFormInput() {
     filterNoRespawnTime.checked = Boolean(parseInt(queryNoRespawnTime));
     filterRespawnTimes.checked = Boolean(parseInt(queryRespawnTimes));
     filterFriendlyFire.checked = Boolean(parseInt(queryFriendlyFire));
+    filterHighlander.checked = Boolean(parseInt(queryHighlander));
     filterGravity.checked = Boolean(parseInt(queryGravity));
     filterReplay.checked = Boolean(parseInt(queryReplay));
     if (queryPreset) {
@@ -65,7 +69,8 @@ function setFilterFormInput() {
             case "1": filterPresetVanilla.checked = true; disableCustomFilters(); break;
             case "2": filterPresetSemiVanilla.checked = true; break;
             case "3": filterPresetCustom.checked = true; break;
-            case "4": filterPresetAll.checked = true; break;
+            case "4": filterPresetMvm.checked = true; break;
+            case "5": filterPresetAll.checked = true; break;
             default: filterPresetVanilla.checked = true; break;
         }
     }
@@ -109,7 +114,7 @@ filterToggle.addEventListener("click", () => {
 
 function reenableCustomFilters() {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
-                            filterFriendlyFire, filterGravity, filterGravity];
+                            filterFriendlyFire, filterGravity, filterGravity, filterHighlander];
     targetElements.forEach(item => {
         item.disabled = false;
         item.labels.item(0).style.color = enabledTextColor;
@@ -118,7 +123,7 @@ function reenableCustomFilters() {
 
 function disableCustomFilters() {
     const targetElements = [filterNocrits, filterDmgSpread, filterNoRespawnTime, filterRespawnTimes, 
-                            filterFriendlyFire, filterGravity, filterGravity];
+                            filterFriendlyFire, filterGravity, filterGravity, filterHighlander];
     targetElements.forEach(item => {
         item.checked = false;
         item.disabled = true;
@@ -129,6 +134,7 @@ function disableCustomFilters() {
 filterPresetVanilla.addEventListener("click", () => disableCustomFilters());
 filterPresetSemiVanilla.addEventListener("click" , () => reenableCustomFilters());
 filterPresetCustom.addEventListener("click" , () => reenableCustomFilters());
+filterPresetMvm.addEventListener("click", () => reenableCustomFilters());
 filterPresetAll.addEventListener("click" , () => reenableCustomFilters());
 
 function removeSortingArrows() {
@@ -176,11 +182,11 @@ filterForm.addEventListener("submit", event => {
 
 function populateFilterHint() {
     const filterHintText = [];
-    const targetElements = [filterServerFull, filterHasUserPlaying, filterNoPassword,
+    const targetElements = [filterServerFull, filterHasUserPlaying, // filterNoPassword,
                             filterPresetVanilla, filterPresetSemiVanilla, filterPresetCustom,
-                            filterPresetAll, filterAlltalk, filterNocrits, filterDmgSpread,
+                            filterPresetAll, filterPresetMvm, filterAlltalk, filterNocrits, filterDmgSpread,
                             filterIncreasedMaxPlayers, filterNoRespawnTime, filterRespawnTimes,
-                            filterFriendlyFire, filterGravity, filterReplay];
+                            filterFriendlyFire, filterHighlander, filterGravity, filterReplay];
     targetElements.forEach(item => {
         if (item.checked) {
             filterHintText.push(item.labels.item(0).innerHTML);

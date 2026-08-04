@@ -1,11 +1,12 @@
 """Utilities related to Steam."""
 
-import aiohttp
-import aiodns
+from typing import Iterable
 from enum import IntEnum
 from ipaddress import IPv4Address
 from socket import AddressFamily # pylint: disable = no-name-in-module
 
+import aiohttp
+import aiodns
 from quart import Quart
 
 
@@ -14,6 +15,10 @@ class _FakeIpQueryTypes(IntEnum):
     INFO = 1
     PLAYERS = 2
     RULES = 3
+
+
+def _build_nor_server_query(queries: Iterable[str], use_nand: bool = False):
+    return f"{"\\nor\\" if not use_nand else "\\nand\\"}{str(len(queries))}{"".join(queries)}"
 
 
 class SteamUtils:
@@ -147,3 +152,33 @@ class SteamUtils:
                     "time": i.get("time_played")
                 })
         return players
+
+
+    async def fetch_servers(self, aiohttp_session: aiohttp.ClientSession,
+                            query_params: Iterable[str] | None = None,
+                            additional_nors: Iterable[str] | None = None) -> list[dict]:
+        """Fetch a list of servers.
+
+        :param ClientSession aiohttp_session: An aiohttp client session.
+        :param Iterable[str] query_params: Additional query parameters
+        :param Iterable[str] additional_nors: Additional query parameters to blacklist.
+        :return: A list of servers.
+        :rtype: list[dict]
+        """
+        master_server_query_nor = ["\\gametype\\hidden", "\\proxy\\1"]
+        if additional_nors:
+            master_server_query_nor.extend(additional_nors)
+        nor_query_str = _build_nor_server_query(master_server_query_nor)
+        additional_params = "".join(query_params) if query_params else ""
+        query_str = "\\appid\\440" + additional_params + nor_query_str
+        print(query_str)
+        query_params = {
+            "key": self.steamworks_api_key,
+            "filter": query_str,
+            "limit": 200000
+        }
+        response = await self._make_http_request(aiohttp_session, "https://api.steampowered.com/IGameServersService/GetServerList/v1",
+                                                 query_params)
+        if not response:
+            return []
+        return response.get("servers")

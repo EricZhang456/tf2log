@@ -90,6 +90,8 @@ def get_vanilla_status_str(server_tags: tuple, item: dict) -> tuple:
         vanilla_status = GamePresets.SEMI_VANILLA
     if map_name_to_game_mode(item.get("map")) is None:
         vanilla_status = GamePresets.CUSTOM
+    if item.get("map").startswith("mvm_"):
+        vanilla_status = GamePresets.MVM
     match vanilla_status:
         case GamePresets.VANILLA:
             vanilla_str = "Vanilla"
@@ -97,4 +99,6 @@ def get_vanilla_status_str(server_tags: tuple, item: dict) -> tuple:
             vanilla_str = "Vanilla Custom"
         case GamePresets.CUSTOM:
             vanilla_str = "Custom"
+        case GamePresets.MVM:
+            vanilla_str = "Mann vs. Machine"
     return vanilla_status, vanilla_str

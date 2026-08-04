@@ -55,10 +55,10 @@
                             <input type="checkbox" id="server_filter_has_users_playing" name="has_user_playing" value="1">
                             <label for="server_filter_has_users_playing">Has users playing</label>
                         </div>
-                        <div class="server_filter_no_password">
+                        {# <div class="server_filter_no_password">
                             <input type="checkbox" id="server_filter_no_password" name="password" value="1">
                             <label for="server_filter_no_password">Is not password protected</label>
-                        </div>
+                        </div> #}
                     </fieldset>
                     <fieldset class="server_filter_vanilla">
                         <legend>Presets</legend>
@@ -74,8 +74,12 @@
                             <input type="radio" id="server_filter_custom" name="vanilla" value="3">
                             <label for="server_filter_custom">Custom</label>
                         </div>
+                        <div class="server_filter_preset_mvm">
+                            <input type="radio" id="server_filter_mvm" name="vanilla" value="4">
+                            <label for="server_filter_mvm">MVM</label>
+                        </div>
                         <div class="server_filter_preset_all">
-                            <input type="radio" id="server_filter_all" name="vanilla" value="4">
+                            <input type="radio" id="server_filter_all" name="vanilla" value="5">
                             <label for="server_filter_all">All</label>
                         </div>
                     </fieldset>
@@ -108,6 +112,10 @@
                         <div class="server_filter_friendlyfire">
                             <input type="checkbox" id="server_filter_friendlyfire" name="friendlyfire" value="1">
                             <label for="server_filter_friendlyfire">Friendly fire</label>
+                        </div>
+                        <div class="server_filter_highlander">
+                            <input type="checkbox" id="server_filter_highlander" name="highlander" value="1">
+                            <label for="server_filter_highlander">Highlander</label>
                         </div>
                         <div class="server_filter_gravity">
                             <input type="checkbox" id="server_filter_gravity" name="gravity" value="1">

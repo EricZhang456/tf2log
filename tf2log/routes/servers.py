@@ -12,16 +12,14 @@ from tf2log.extensions import steamutils
 from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
-from tf2log.utils.server_list import (get_region_str, fetch_servers, ServerRegions,
-                                      SERVERBROWSER_TF_GAMEMODES_NO_MVM,
-                                      SERVERBROWSER_TF_GAMEMODES_VANILLA)
+from tf2log.utils.server_list import get_region_str, ServerRegions
 from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
 from tf2log.utils.server_list import get_vanilla_status_str
 
 bp = Blueprint("servers", __name__, url_prefix="/servers")
 
 QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
-                "friendlyfire", "dmgspread", "norespawntime", "replays")
+                "friendlyfire", "dmgspread", "norespawntime", "replays", "highlander")
 
 
 @bp.route("/")
@@ -30,34 +28,53 @@ async def get_server_list():
     """Main server list view."""
     has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
     not_full = request.args.get("not_full", default=False, type=param_bool)
-    no_password = request.args.get("password", default=False, type=param_bool)
+    # no_password = request.args.get("password", default=False, type=param_bool)
 
     region_param = request.args.get("region", default=-1, type=int)
     region = ServerRegions(region_param) if region_param != -1 else None
     vanilla = GamePresets(request.args.get("vanilla", default=1, type=int))
 
-    server_list_raw = []
+    query_params = []
     server_list = []
-    game_mode_list = (SERVERBROWSER_TF_GAMEMODES_VANILLA
-                      if vanilla in {GamePresets.VANILLA, GamePresets.SEMI_VANILLA}
-                      else SERVERBROWSER_TF_GAMEMODES_NO_MVM)
+    additional_nors = []
+    if has_user_playing:
+        query_params.append("\\empty\\1")
+    if region:
+        query_params.append(f"\\region\\{str(region.value)}")
+    target_params = []
+    for param in QUERY_PARAMS:
+        if request.args.get(param, default=False, type=param_bool):
+            target_params.append(param)
+    if target_params:
+        query_params.append(f"\\gametype\\{",".join(target_params)}")
+    if vanilla  == GamePresets.VANILLA:
+        additional_nors.extend([
+            "\\gametype\\nocrits",
+            "\\gametype\\gravity",
+            "\\gametype\\dmgspread",
+            "\\gametype\\respawntimes",
+            "\\gametype\\norespawntime",
+            "\\gametype\\highlander",
+            "\\gametype\\trade",
+            "\\gametype\\friendlyfire"
+        ])
+    # doesn't seem to work with the steam backend
+    # if no_password:
+    #     query_params.append("\\password\\0")
 
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, has_user_playing))
-                       for item in game_mode_list]
-        fetch_result = await asyncio.gather(*fetch_tasks)
-    for item in fetch_result:
-        server_list_raw.extend(item)
+        server_list_raw = await steamutils.fetch_servers(session, query_params, additional_nors)
 
     for item in server_list_raw:
         item: dict
-        server_tags = item.get("keywords").split(",")
-        server_addr = parse_hostname(item.get("ip"))
+        server_gametype = item.get("gametype")
+        if server_gametype is None:
+            server_gametype = ""
+        server_tags = server_gametype.split(",")
+        server_addr = parse_hostname(item.get("addr"))
         if region and region != ServerRegions(item.get("region")):
             continue
-        if not_full and item.get("players") == item.get("maxPlayers"):
-            continue
-        if no_password and item.get("visibility") != 0:
+        if not_full and item.get("players") == item.get("max_players"):
             continue
         server_qualified = True
         for param in QUERY_PARAMS:
@@ -69,14 +86,14 @@ async def get_server_list():
             continue
 
         vanilla_status = get_vanilla_status_str(server_tags, item)
+        # if requested preset is not all and is not the preset selected
         if vanilla not in {vanilla_status[0], GamePresets.ALL}:
             continue
 
         server_list.append({"name": item.get("name"),
-                            "ip": item.get("ip"),
+                            "ip": item.get("addr"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
-                            "password": item.get("visibility"),
                             "tags": ", ".join(server_tags),
                             "region": get_region_str(item.get("region")),
                             "vanilla": vanilla_status[1],
@@ -84,7 +101,7 @@ async def get_server_list():
                             "game_mode": map_name_to_game_mode(item.get("map")),
                             "map": map_name_to_readable_name(item.get("map")),
                             "players": item.get("players"),
-                            "maxPlayers": item.get("maxPlayers"),
+                            "maxPlayers": item.get("max_players"),
                             "bots": item.get("bots")})
 
     subview_header = request.headers.get("x-fetch-subview")
@@ -134,7 +151,6 @@ async def get_favorites_subview():
                             "ip": item.get("addr"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
-                            "password": False,
                             "tags": ", ".join(server_tags),
                             "region": get_region_str(item.get("region")),
                             "vanilla": vanilla_status[1],
@@ -153,14 +169,9 @@ async def get_favorites_subview():
 @rate_limit(90, timedelta(minutes=1))
 async def get_server_count():
     """Get the amount of active servers."""
-    server_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))
-                       for item in SERVERBROWSER_TF_GAMEMODES_NO_MVM]
-        fetch_result = await asyncio.gather(*fetch_tasks)
-    for item in fetch_result:
-        server_count += len(item)
-    response = await make_response(str(server_count))
+        fetch_result = await steamutils.fetch_servers(session)
+    response = await make_response(str(len(fetch_result)))
     response.mimetype = "text/plain"
     return response
 
@@ -171,12 +182,9 @@ async def get_player_count():
     """Get the amount of active players."""
     player_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_tasks = [asyncio.create_task(fetch_servers(session, item, False))
-                       for item in SERVERBROWSER_TF_GAMEMODES_NO_MVM]
-        fetch_result = await asyncio.gather(*fetch_tasks)
-    for item in fetch_result:
-        for server in item:
-            player_count += server.get("players") - server.get("bots")
+        fetch_result = await steamutils.fetch_servers(session, ("\\empty\\1"))
+    for server in fetch_result:
+        player_count += server.get("players") - server.get("bots")
     response = await make_response(str(player_count))
     response.mimetype = "text/plain"
     return response

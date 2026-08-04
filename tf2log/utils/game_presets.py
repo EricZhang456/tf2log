@@ -8,7 +8,8 @@ class GamePresets(Enum):
     VANILLA = 1
     SEMI_VANILLA = 2
     CUSTOM = 3
-    ALL = 4
+    MVM = 4
+    ALL = 5
 
     @classmethod
     def _missing_(cls, _):
