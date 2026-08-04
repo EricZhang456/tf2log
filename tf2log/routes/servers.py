@@ -21,6 +21,8 @@ bp = Blueprint("servers", __name__, url_prefix="/servers")
 QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respawntimes",
                 "friendlyfire", "dmgspread", "norespawntime", "replays", "highlander")
 
+ILLEGAL_VANILLA_PARAMS = ("nocrits", "gravity", "dmgspread", "respawntimes", "norespawntimes",
+                          "highlander", "trade", "friendlyfire")
 
 @bp.route("/")
 @rate_limit(90, timedelta(minutes=1))
@@ -39,25 +41,22 @@ async def get_server_list():
     additional_nors = []
     if has_user_playing:
         query_params.append("\\empty\\1")
+    if not_full:
+        query_params.append("\\full\\1")
     if region:
         query_params.append(f"\\region\\{str(region.value)}")
     target_params = []
     for param in QUERY_PARAMS:
-        if request.args.get(param, default=False, type=param_bool):
+        if request.args.get(param, default=False, type=param_bool) and not (
+            vanilla == GamePresets.VANILLA and param in ILLEGAL_VANILLA_PARAMS):
             target_params.append(param)
     if target_params:
         query_params.append(f"\\gametype\\{",".join(target_params)}")
-    if vanilla  == GamePresets.VANILLA:
-        additional_nors.extend([
-            "\\gametype\\nocrits",
-            "\\gametype\\gravity",
-            "\\gametype\\dmgspread",
-            "\\gametype\\respawntimes",
-            "\\gametype\\norespawntime",
-            "\\gametype\\highlander",
-            "\\gametype\\trade",
-            "\\gametype\\friendlyfire"
-        ])
+
+    if vanilla == GamePresets.VANILLA:
+        for i in ILLEGAL_VANILLA_PARAMS:
+            additional_nors.append(f"\\gametype\\{i}")
+
     # doesn't seem to work with the steam backend
     # if no_password:
     #     query_params.append("\\password\\0")
@@ -76,10 +75,6 @@ async def get_server_list():
             server_gametype = ""
         server_tags = server_gametype.split(",")
         server_addr = parse_hostname(item.get("addr"))
-        if region and region != ServerRegions(item.get("region")):
-            continue
-        if not_full and item.get("players") == item.get("max_players"):
-            continue
         server_qualified = True
         for param in QUERY_PARAMS:
             if (request.args.get(param, default=False, type=param_bool)

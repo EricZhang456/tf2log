@@ -165,7 +165,7 @@ class SteamUtils:
         :return: A list of servers.
         :rtype: list[dict]
         """
-        master_server_query_nor = ["\\gametype\\hidden", "\\proxy\\1"]
+        master_server_query_nor = ["\\gametype\\hidden"]
         if additional_nors:
             master_server_query_nor.extend(additional_nors)
         nor_query_str = _build_nor_server_query(master_server_query_nor)
