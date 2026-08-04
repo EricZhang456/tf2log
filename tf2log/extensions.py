@@ -5,7 +5,7 @@
 from datetime import timedelta
 
 from quart import render_template, Quart
-from flask_caching import Cache
+#from flask_caching import Cache
 from quart_rate_limiter import RateLimiter, RateLimit
 
 from geoip2 import database
@@ -25,7 +25,6 @@ async def internal_server_error(_):
                                                 except_title="Internal Server Error"), 500
 
 
-cache = Cache()
 limiter = RateLimiter(default_limits=[RateLimit(120, timedelta(minutes=1))])
 
 

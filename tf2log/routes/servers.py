@@ -8,7 +8,7 @@ import aiohttp
 from quart import Blueprint, render_template, request, make_response
 from quart_rate_limiter import rate_limit
 
-from tf2log.extensions import cache, steamutils
+from tf2log.extensions import steamutils
 from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
@@ -26,7 +26,6 @@ QUERY_PARAMS = ("alltalk", "nocrits", "gravity", "increased_maxplayers", "respaw
 
 @bp.route("/")
 @rate_limit(90, timedelta(minutes=1))
-@cache.cached(timeout=5, query_string=True)
 async def get_server_list():
     """Main server list view."""
     has_user_playing = request.args.get("has_user_playing", default=True, type=param_bool)
@@ -52,7 +51,7 @@ async def get_server_list():
 
     for item in server_list_raw:
         item: dict
-        server_tags = tuple(item.get("keywords").split(","))
+        server_tags = item.get("keywords").split(",")
         server_addr = parse_hostname(item.get("ip"))
         if region and region != ServerRegions(item.get("region")):
             continue
@@ -102,7 +101,6 @@ async def get_server_list():
 
 @bp.route("/favorites")
 @rate_limit(90, timedelta(minutes=1))
-@cache.cached(timeout=5)
 async def get_favorites():
     """Favorite servers view."""
     return await render_template("servers.html", show_server_list=False)
@@ -130,7 +128,7 @@ async def get_favorites_subview():
         if not item:
             continue
         server_addr = parse_hostname(item.get("addr"))
-        server_tags = tuple(item.get("gametype").split(","))
+        server_tags = item.get("gametype").split(",")
         vanilla_status = get_vanilla_status_str(server_tags, item)
         server_list.append({"name": item.get("name"),
                             "ip": item.get("addr"),
@@ -153,7 +151,6 @@ async def get_favorites_subview():
 
 @bp.route("/server_count")
 @rate_limit(90, timedelta(minutes=1))
-@cache.cached(timeout=600)
 async def get_server_count():
     """Get the amount of active servers."""
     server_count = 0
@@ -170,7 +167,6 @@ async def get_server_count():
 
 @bp.route("/player_count")
 @rate_limit(90, timedelta(minutes=1))
-@cache.cached(timeout=300)
 async def get_player_count():
     """Get the amount of active players."""
     player_count = 0

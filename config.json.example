@@ -1,7 +1,5 @@
 {
     "ENV": "dev",
     "TEAMWORK_TF_SECRET_KEY": "very secret key",
-    "STEAMWORKS_SECRET_KEY": "also a very secret key",
-    "CACHE_TYPE": "SimpleCache",
-    "CACHE_DEFAULT_TIMEOUT": "300"
+    "STEAMWORKS_SECRET_KEY": "also a very secret key"
 }

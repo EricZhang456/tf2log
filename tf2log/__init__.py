@@ -2,13 +2,13 @@
 
 # pylint: disable = import-outside-toplevel
 
+import asyncio
 import os
 import json
 
-import quart_flask_patch
 from quart import Quart
 
-from .extensions import (cache, geoip, limiter, steamutils,
+from .extensions import (geoip, limiter, steamutils,
                          page_not_found, internal_server_error)
 from .routes import info, servers, index
 
@@ -35,9 +35,9 @@ def create_app():
                                                             "GeoLite2-City.mmdb"))
 
     app.register_error_handler(404, page_not_found)
-    app.register_error_handler(500, internal_server_error)
+    if app.config.get("ENV") == "prod":
+        app.register_error_handler(500, internal_server_error)
 
-    cache.init_app(app)
     geoip.init_app(app)
     limiter.init_app(app)
 
