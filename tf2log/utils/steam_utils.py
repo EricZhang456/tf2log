@@ -102,7 +102,7 @@ class SteamUtils:
         result_gametype = result_data.get("gametype")
         if result_gametype:
             ret["tags"] = filter(None, result_gametype.split(","))
-        result_stv_port = result_data.get("spectator_server_name")
+        result_stv_port = result_data.get("spectator_port")
         if result_stv_port:
             ret["stv_port"] = result_stv_port
         return ret

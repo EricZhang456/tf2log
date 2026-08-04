@@ -159,17 +159,24 @@ async def get_source_tv(server_ip: str):
 
     :param server_ip: IP of the server with a SourceTV port.
     """
-    server_port = request.args.get("port", default=27015, type=int)
-    server_info = await format_a2s.info(server_ip, server_port)
-    sourcetv_port = server_info.get("stv_port")
+    sourcetv_port = request.args.get("port", default=27015, type=int)
+    # can't query fakeip sourcetv info, assume it's not password protected
+    if is_ip_fake_ip(server_ip):
+        try:
+            ipaddress.ip_address(server_ip)
+        except ValueError:
+            response = await make_response()
+            response.status = "400"
+            return response
+        return await make_response(jsonify({
+            "address": f"{server_ip}:{sourcetv_port}",
+            "password": False
+        }))
+    sourcetv_info = await format_a2s.info(server_ip, sourcetv_port)
     response = await make_response()
-    if sourcetv_port != server_port:
-        response.status = "400"
-        return response
-    if sourcetv_port is None:
+    if not sourcetv_info.get("stv_port"):
         response.status = "404"
         return response
-    sourcetv_info = await format_a2s.info(server_ip, sourcetv_port)
     if sourcetv_info.get("max_players") == 0:
         response.status = "404"
         return response
