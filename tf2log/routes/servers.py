@@ -13,7 +13,6 @@ from tf2log.utils.game_presets import GamePresets
 from tf2log.utils.parse_hostname import parse_hostname
 from tf2log.utils.param_bool import param_bool
 from tf2log.utils.server_list import get_region_str, ServerRegions
-from tf2log.utils.server_info_utils import is_ip_fake_ip
 from tf2log.utils.map_utils import map_name_to_game_mode, map_name_to_readable_name
 from tf2log.utils.server_list import get_vanilla_status_str
 
