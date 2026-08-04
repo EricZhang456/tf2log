@@ -171,7 +171,6 @@ class SteamUtils:
         nor_query_str = _build_nor_server_query(master_server_query_nor)
         additional_params = "".join(query_params) if query_params else ""
         query_str = "\\appid\\440" + additional_params + nor_query_str
-        print(query_str)
         query_params = {
             "key": self.steamworks_api_key,
             "filter": query_str,
