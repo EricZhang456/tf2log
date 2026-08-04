@@ -82,20 +82,20 @@ async def get_info(server_ip: str):
         raise ServerSourceTV()
 
     server_rules = {}
+    server_tags = ", ".join(server_info.get("tags"))
+    current_map_raw = server_info.get("map")
+    game_mode = map_name_to_game_mode(current_map_raw)
+    current_map = map_name_to_readable_name(current_map_raw)
+    next_map = None
+    next_map_game_mode = None
+    next_map_workshop_id = None
     if server_rules_raw:
         server_rules_raw["tf2log_vac"] = 1 if server_info.get("vac") else 0
         server_rules = rules_to_readable_dict(server_rules_raw)
-        current_map_raw = server_info.get("map")
-        server_tags = ", ".join(server_info.get("tags"))
         next_map_raw = get_next_map(server_rules_raw)
-        next_map_workshop_id = None
         if next_map_raw is not None:
             next_map_raw = resolve_workshop_map_name(next_map_raw)
             next_map_workshop_id = get_workshop_map_id(get_next_map(server_rules_raw))
-        game_mode = map_name_to_game_mode(current_map_raw)
-        current_map = map_name_to_readable_name(current_map_raw)
-        next_map = None
-        next_map_game_mode = None
         if next_map_raw is not None:
             next_map = map_name_to_readable_name(next_map_raw)
             next_map_game_mode = map_name_to_game_mode(next_map_raw)
