@@ -53,8 +53,8 @@ def get_region_str(region: int) -> str:
     :rtype: str
     """
     resolved_region = REGION_STR.get(region)
-    if resolved_region is None:
-        return REGION_STR.get("World")
+    if not resolved_region:
+        return REGION_STR.get(255)
     return resolved_region
 
 

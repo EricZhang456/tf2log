@@ -18,7 +18,7 @@ class _FakeIpQueryTypes(IntEnum):
 
 
 def _build_nor_server_query(queries: Iterable[str], use_nand: bool = False):
-    return f"{"\\nor\\" if not use_nand else "\\nand\\"}{str(len(queries))}{"".join(queries)}"
+    return f"{"\\nor\\" if not use_nand else "\\nand\\"}{len(queries)}{"".join(queries)}"
 
 
 class SteamUtils:
@@ -176,6 +176,7 @@ class SteamUtils:
             "filter": query_str,
             "limit": 200000
         }
+        print(query_str)
         response = await self._make_http_request(aiohttp_session, "https://api.steampowered.com/IGameServersService/GetServerList/v1",
                                                  query_params)
         if not response:

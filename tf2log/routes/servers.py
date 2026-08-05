@@ -43,8 +43,8 @@ async def get_server_list():
         query_params.append("\\empty\\1")
     if not_full:
         query_params.append("\\full\\1")
-    if region:
-        query_params.append(f"\\region\\{str(region.value)}")
+    if region and region != ServerRegions.WORLD:
+        query_params.append(f"\\region\\{region.value}")
     target_params = []
     for param in QUERY_PARAMS:
         if request.args.get(param, default=False, type=param_bool) and not (
@@ -76,9 +76,11 @@ async def get_server_list():
         server_tags = server_gametype.split(",")
         server_addr = parse_hostname(item.get("addr"))
         server_qualified = True
+        server_region = item.get("region")
+        if region == ServerRegions.WORLD and ServerRegions(server_region) != ServerRegions.WORLD:
+            continue
         for param in QUERY_PARAMS:
-            if (request.args.get(param, default=False, type=param_bool)
-                    and param not in server_tags):
+            if request.args.get(param, default=False, type=param_bool) and param not in server_tags:
                 server_qualified = False
                 break
         if not server_qualified:
@@ -94,7 +96,7 @@ async def get_server_list():
                             "addr": server_addr[0],
                             "port": server_addr[1],
                             "tags": ", ".join(server_tags),
-                            "region": get_region_str(item.get("region")),
+                            "region": get_region_str(server_region),
                             "vanilla": vanilla_status[1],
                             "raw_map": item.get("map"),
                             "game_mode": map_name_to_game_mode(server_map),
