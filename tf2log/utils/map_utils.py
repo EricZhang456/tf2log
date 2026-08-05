@@ -18,7 +18,10 @@ GAMEMODE_DICT = {
     "pd": "Player Destruction",
     "vsh": "Versus Saxton Hale",
     "zi": "Zombie Infection",
-    "tow": "Tug of War"
+    "tow": "Tug of War",
+    "htf": "Hold the Flag",
+    "2koth": "King of the Hill",
+    "cppl": "Payload Attack/Defend"
 }
 
 AD_MAPS = {
@@ -48,7 +51,12 @@ AD_MAPS = {
     "cp_spookeyridge",
     "cp_steel",
     "cp_sulfur",
-    "cp_overgrown"
+    "cp_overgrown",
+    "cp_fulgur",
+    "cp_cargo",
+    "cp_conifer",
+    "cp_premuda",
+    "cp_mojave"
 }
 
 DOMINATION_MAPS = {
@@ -64,6 +72,7 @@ MANNPOWER_MAPS = {
 
 MAP_SPECIAL_NAMES = {
     "ctf_doublecross": "Double Cross",
+    "ctf_doublecross_event": "Devilcross",
     "ctf_doublecross_snowy": "Doublefrost",
     "ctf_helltrain_event": "Helltrain",
     "ctf_turbine_winter": "Turbine Center",
@@ -142,16 +151,17 @@ def map_name_to_readable_name(map_name: str) -> str:
     :return: Fancy map name.
     :rtype: str
     """
-    if MAP_SPECIAL_NAMES.get(map_name) is None:
-        game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
-        readable_map_name = map_name
-        if game_mode_pattern is not None:
-            if re.search(r'[a-zA-Z]+_.*_(final*)', map_name) is not None:
-                readable_map_name = re.sub(r'_final.*', '', readable_map_name)
-            if GAMEMODE_DICT.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
-                readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
-        return readable_map_name.replace("_", " ").title()
-    return MAP_SPECIAL_NAMES.get(map_name)
+    special_name = MAP_SPECIAL_NAMES.get(map_name)
+    if special_name:
+        return special_name
+    game_mode_pattern = re.search(r'([a-zA-Z]+_)', map_name)
+    readable_map_name = map_name
+    if game_mode_pattern is not None:
+        if re.search(r'[a-zA-Z]+_.*_(final*)', map_name) is not None:
+            readable_map_name = re.sub(r'_final.*', '', readable_map_name)
+        if GAMEMODE_DICT.get(game_mode_pattern.group(1).removesuffix("_")) is not None:
+            readable_map_name = readable_map_name.removeprefix(game_mode_pattern.group(1))
+    return readable_map_name.replace("_", " ").title()
 
 
 def resolve_workshop_map_name(map_name: str) -> str:
