@@ -38,7 +38,7 @@ async def get_server_list():
 
     query_params = []
     server_list = []
-    additional_nors = []
+    additional_nors = ["\\map\\nothing"]
     if has_user_playing:
         query_params.append("\\empty\\1")
     if not_full:
@@ -176,7 +176,7 @@ async def get_favorites_subview():
 async def get_server_count():
     """Get the amount of active servers."""
     async with aiohttp.ClientSession() as session:
-        fetch_result = await steamutils.fetch_servers(session)
+        fetch_result = await steamutils.fetch_servers(session, additional_nors=("\\map\\nothing",))
     response = await make_response(str(len(fetch_result)))
     response.mimetype = "text/plain"
     return response
@@ -188,7 +188,7 @@ async def get_player_count():
     """Get the amount of active players."""
     player_count = 0
     async with aiohttp.ClientSession() as session:
-        fetch_result = await steamutils.fetch_servers(session, ("\\empty\\1"))
+        fetch_result = await steamutils.fetch_servers(session, ("\\empty\\1",), ("\\map\\nothing",))
     for server in fetch_result:
         player_count += server.get("players") - server.get("bots")
     response = await make_response(str(player_count))

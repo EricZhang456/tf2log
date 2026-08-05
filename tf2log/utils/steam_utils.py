@@ -176,7 +176,6 @@ class SteamUtils:
             "filter": query_str,
             "limit": 200000
         }
-        print(query_str)
         response = await self._make_http_request(aiohttp_session, "https://api.steampowered.com/IGameServersService/GetServerList/v1",
                                                  query_params)
         if not response:
