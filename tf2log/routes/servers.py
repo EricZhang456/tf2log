@@ -70,6 +70,11 @@ async def get_server_list():
         server_map = item.get("map")
         if not server_map:
             continue
+        server_map = server_map.strip().lower()
+        if not server_map:
+            continue
+        if server_map == "nothing":
+            continue
         server_gametype = item.get("gametype")
         if server_gametype is None:
             server_gametype = ""
