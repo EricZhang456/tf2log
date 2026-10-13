@@ -118,7 +118,10 @@ MAP_SPECIAL_NAMES = {
     "pd_pit_of_death_event": "Pit of Death",
     "pd_snowville_event": "SnowVille",
     "vsh_nucleus": "Nucleus VSH",
-    "vsh_tinyrock": "Tiny Rock"
+    "vsh_tinyrock": "Tiny Rock",
+    "ctf_medi_evil": "Medi-Evil",
+    "cp_wildcat_event": "Scaredy-Cat",
+    "pl_aridpass_event": "Scarypass"
 }
 
 
