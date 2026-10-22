@@ -70,6 +70,9 @@ async def get_server_list():
         server_map = item.get("map")
         if not server_map:
             continue
+        server_name = item.get("name")
+        if not server_name:
+            continue
         server_map = server_map.strip().lower()
         if not server_map:
             continue
@@ -96,14 +99,14 @@ async def get_server_list():
         if vanilla not in {vanilla_status[0], GamePresets.ALL}:
             continue
 
-        server_list.append({"name": item.get("name"),
+        server_list.append({"name": server_name,
                             "ip": item.get("addr"),
                             "addr": server_addr[0],
                             "port": server_addr[1],
                             "tags": ", ".join(server_tags),
                             "region": get_region_str(server_region),
                             "vanilla": vanilla_status[1],
-                            "raw_map": item.get("map"),
+                            "raw_map": server_map,
                             "game_mode": map_name_to_game_mode(server_map),
                             "map": map_name_to_readable_name(server_map),
                             "players": item.get("players"),
