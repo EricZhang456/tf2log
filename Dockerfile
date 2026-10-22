@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.4
-FROM python:3.14-alpine
+FROM python:3.15-alpine
 
 WORKDIR /app
 
